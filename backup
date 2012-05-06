@@ -1,0 +1,141 @@
+
+
+        solve : function(depth)
+        {
+            return;
+            // 16 possible state changes per round
+            var maxDepth = 7;
+
+            for (var i = 0; i < maxDepth; ++ i)
+            {
+                var start = new Date().getTime();
+                this.solve2(i, 0);
+                var elapsed = Math.floor(new Date().getTime() - start);
+
+                console.log('[' + i + '] elasped = ' + elapsed + ' - ' + (elapsed / this.iterCount));
+
+                if (this.bestSolution)
+                {
+                    break;
+                }
+            }
+        },
+
+        solve2 : function(maxDepth, depth)
+        {
+            if (!depth)
+            {
+                console.log(maxDepth);
+                this.bestSolution = null;
+                this.stack = Array();
+                this.iterCount = 0;
+                this.evalMovers = Array();
+
+                this.evalMovers.push(this.movers[this.captureTile.target.groupId]);
+
+                for (var i = 0; i < this.movers.length; ++i)
+                {
+                    if (i != this.captureTile.target.groupId)
+                    {
+                        this.evalMovers.push(this.movers[i]);
+                    }
+                }
+
+                depth = 0;
+            }
+
+            // this.printStack(this.stack);
+
+            if (depth > maxDepth || this.bestSolution) return false;
+
+            var maxMover = (depth == maxDepth) ? 1 : 4;
+
+            for (var piece = 0; piece < maxMover; ++piece)
+            {
+                var mover = this.evalMovers[piece];
+
+                for (var dir = 0; dir < 4; ++dir)
+                {
+                    var condition = this.conditions[dir];
+                    var from = mover.tile;
+                    var to = this.walkPath(from, condition.condition, condition.increment);
+
+                    if (to && to != from)
+                    {
+                        // recurse
+                        this.stack.push({ p: piece, d: dir });
+
+                        to.piece = from.piece;
+                        from.piece = null;
+                        to.piece.tileIndex = to.index;
+
+                        this.iterCount++;
+                        var hasSolution = false;
+
+                        if (to.target && to.target.groupId === mover.groupId)
+                        {
+                            var solution = '[' + maxDepth + '] ' + '[' + this.stack.length + '] - ';
+
+                            for (var i = 0; i < this.stack.length; ++i)
+                            {
+                                solution = solution + '{ p: ' + this.stack[i].p + ', d: ' + this.stack[i].d + ' }, ';
+                            }
+
+                            console.log(solution);
+
+                            if (!this.bestSolution || this.stack.length < this.bestSolution.length)
+                            {
+                                this.bestSolution = this.stack.slice(0);
+                            }
+
+                            hasSolution = true;
+                        }
+
+                        if (hasSolution || !this.bestSolution || depth+1 < this.bestSolution.length)
+                        {
+                            this.solve2(maxDepth, depth + 1);
+                        }
+
+                        from.piece = to.piece;
+                        to.piece = null;
+                        from.piece.tileIndex = from.index;
+
+                        this.stack.pop();
+
+                        if (hasSolution)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (!depth)
+            {
+                console.log('iter: ' + this.iterCount);
+                console.log('best: ' + (this.bestSolution ? this.bestSolution.length : -1));
+                //_alert('done');
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+{"boardPieces":[3,2,1,0],"movers":[{"groupId":3,"position":87},{"groupId":0,"position":111},{"groupId":1,"position":127},{"groupId":2,"position":182}],"targets":[{"id":0,"color":"#c22","groupId":0},{"id":1,"color":"#2c2","groupId":1},{"id":2,"color":"#22c","groupId":2},{"id":3,"color":"#cc2","groupId":3},{"id":4,"color":"#c22","groupId":0},{"id":5,"color":"#2c2","groupId":1},{"id":6,"color":"#22c","groupId":2},{"id":7,"color":"#cc2","groupId":3},{"id":8,"color":"#c22","groupId":0},{"id":9,"color":"#2c2","groupId":1},{"id":10,"color":"#22c","groupId":2},{"id":12,"color":"#c22","groupId":0},{"id":13,"color":"#2c2","groupId":1},{"id":14,"color":"#22c","groupId":2},{"id":15,"color":"#cc2","groupId":3},{"id":16,"color":"#c22","groupId":0}],"activeTarget":{"id":11,"color":"#cc2","groupId":3}}
+{"boardPieces":[3,2,1,0],"movers":[{"groupId":3,"position":87},{"groupId":0,"position":111},{"groupId":1,"position":127},{"groupId":2,"position":182}],"targets":[{"id":0,"color":"#c22","groupId":0},{"id":1,"color":"#2c2","groupId":1},{"id":2,"color":"#22c","groupId":2},{"id":3,"color":"#cc2","groupId":3},{"id":4,"color":"#c22","groupId":0},{"id":5,"color":"#2c2","groupId":1},{"id":6,"color":"#22c","groupId":2},{"id":7,"color":"#cc2","groupId":3},{"id":8,"color":"#c22","groupId":0},{"id":9,"color":"#2c2","groupId":1},{"id":10,"color":"#22c","groupId":2},{"id":12,"color":"#c22","groupId":0},{"id":13,"color":"#2c2","groupId":1},{"id":15,"color":"#cc2","groupId":3},{"id":16,"color":"#c22","groupId":0}],"activeTarget":{"id":14,"color":"#22c","groupId":2}}
+
+120 + 60k equity
+120 + 6-8k + 60k
+127k + 60k
+127k + 92k
+127k + 100k
+
+
+
+{"boardPieces":[1,0,2,3],"movers":[{"groupId":1,"position":26},{"groupId":2,"position":74},{"groupId":0,"position":113},{"groupId":3,"position":117}],"targets":[{"id":0,"color":"#c22","groupId":0},{"id":1,"color":"#2c2","groupId":1},{"id":2,"color":"#22c","groupId":2},{"id":4,"color":"#c22","groupId":0},{"id":5,"color":"#2c2","groupId":1},{"id":6,"color":"#22c","groupId":2},{"id":7,"color":"#cc2","groupId":3},{"id":8,"color":"#c22","groupId":0},{"id":9,"color":"#2c2","groupId":1},{"id":10,"color":"#22c","groupId":2},{"id":11,"color":"#cc2","groupId":3},{"id":12,"color":"#c22","groupId":0},{"id":13,"color":"#2c2","groupId":1},{"id":14,"color":"#22c","groupId":2},{"id":15,"color":"#cc2","groupId":3},{"id":16,"color":"#c22","groupId":0}],"activeTarget":{"id":3,"color":"#cc2","groupId":3}}

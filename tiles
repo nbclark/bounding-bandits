@@ -1,0 +1,153 @@
+
+
+/*
+this.tiles[00*16 + 03].wallMask = 4;
+this.tiles[00*16 + 10].wallMask = 1;
+
+this.tiles[01*16 + 13].wallMask = 4 | 8;
+this.tiles[01*16 + 13].targetId = 0;
+
+this.tiles[01*16 + 15].wallMask = 8;
+
+this.tiles[02*16 + 05].wallMask = 4 | 8;
+this.tiles[02*16 + 05].targetId = 1;
+
+this.tiles[03*16 + 09].wallMask = 4 | 8;
+this.tiles[03*16 + 09].targetId = 2;
+
+this.tiles[04*16 + 00].wallMask = 8;
+
+this.tiles[04*16 + 02].wallMask = 2 | 4;
+this.tiles[04*16 + 02].targetId = 3;
+
+this.tiles[04*16 + 14].wallMask = 2 | 4;
+this.tiles[04*16 + 14].targetId = 4;
+
+this.tiles[05*16 + 07].wallMask = 1 | 8;
+this.tiles[05*16 + 07].targetId = 5;
+
+this.tiles[06*16 + 01].wallMask = 1 | 2;
+this.tiles[06*16 + 01].targetId = 6;
+
+this.tiles[06*16 + 12].wallMask = 1 | 8;
+this.tiles[06*16 + 12].targetId = 7;
+
+this.tiles[07*16 + 07].wallMask = 1 | 2 | 4 | 8;
+this.tiles[07*16 + 08].wallMask = 1 | 2 | 4 | 8;
+this.tiles[08*16 + 07].wallMask = 1 | 2 | 4 | 8;
+this.tiles[08*16 + 08].wallMask = 1 | 2 | 4 | 8;
+
+this.tiles[09*16 + 04].wallMask = 1 | 8;
+this.tiles[09*16 + 04].targetId = 8;
+
+this.tiles[09*16 + 13].wallMask = 1 | 8;
+this.tiles[09*16 + 13].targetId = 9;
+
+this.tiles[10*16 + 00].wallMask = 8;
+
+this.tiles[10*16 + 06].wallMask = 1 | 2;
+this.tiles[10*16 + 06].targetId = 10;
+
+this.tiles[11*16 + 09].wallMask = 4 | 8;
+this.tiles[11*16 + 09].targetId = 11;
+
+this.tiles[12*16 + 07].wallMask = 2 | 4;
+this.tiles[12*16 + 07].targetId = 12;
+
+this.tiles[12*16 + 15].wallMask = 2;
+
+this.tiles[13*16 + 01].wallMask = 2 | 4;
+this.tiles[13*16 + 01].targetId = 13;
+
+this.tiles[13*16 + 14].wallMask = 2 | 4;
+this.tiles[13*16 + 14].targetId = 14;
+
+this.tiles[14*16 + 03].wallMask = 4 | 8;
+this.tiles[14*16 + 03].targetId = 15;
+
+this.tiles[14*16 + 10].wallMask = 1 | 2;
+this.tiles[14*16 + 10].targetId = 16;
+
+this.tiles[15*16 + 04].wallMask = 4;
+this.tiles[15*16 + 11].wallMask = 4;
+
+for (var i = 0; i < 4; ++i)
+{
+    this.tiles.printQuad(0);
+    this.tiles.rotate(1);
+}*/
+
+
+
+
+
+
+
+<!--
+        <table width="100%" height="100%" style="z-index: 10; display: none;">
+            <tr>
+                <td>
+                    <div class="player1Data" style="-webkit-transform:rotate(-180deg); border-top: 1px solid #888; padding: 10px 2px">
+                        <div style="display:table-cell">Player 1: </div>
+                        
+                        <div style="width: 100%; margin-top: 1em; position: relative;">
+                            <button class="player1Up" style="display: inline-block; height: 60px; width: 60px;">
+                                Up
+                            </button>
+                            <button class="player1Down" style="display: inline-block; height: 60px; width: 60px;">
+                                Down
+                            </button>
+                            <div class="player1Bid" style="display: inline-block; height:60px; width: 60px; font-size: 50px; vertical-align: middle; text-align: center;">-</div>
+                            
+                            <button class="player1Set" style="position: absolute; display: inline-block; right: 2px; height: 60px; width: 60px;">
+                                Set
+                            </button>
+                        </div>
+                        <div class="player1Cache" style="margin-top:1em"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="timer" style="text-align:center; height: 100px; padding-top: 5px;">
+                        <canvas class="timerCanvas" height="1000" width="1000" style="height:100px; width:100px">
+                        </canvas>
+                    </div>
+                </td>
+            <tr>
+                <td height="100%" valign="top">
+                    <div class="activeCache" style="text-align:center; "></div>
+                    
+                    <button class="getStarted" style="position: absolute; display: inline-block; margin-top: 10px; right: 2px; left: 2px; height: 60px; ">
+                        Let's Go!
+                    </button>
+                    
+                    <div class="moveLog" style="visibility: hidden;height: 100%; overflow-y: scroll;">
+                    
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="player2Data" style="border-top:  1px solid #888; padding: 10px 2px;">
+                        <div style="display:table-cell">Player 2: </div>
+                        
+                        <div style="width: 100%; margin-top: 1em;">
+                            <button class="player2Up" style="display: inline-block; height: 60px; width: 60px;">
+                                Up
+                            </button>
+                            <button class="player2Down" style="display: inline-block; height: 60px; width: 60px;">
+                                Down
+                            </button>
+                            <div class="player2Bid" style="display: inline-block; height:60px; width: 60px; font-size: 50px; vertical-align: middle; text-align: center;">-</div>
+                                                      
+                            <button class="player2Set" style="position: absolute; display: inline-block; right: 2px; height: 60px; width: 60px;">
+                                Set
+                            </button>
+                        </div>
+                        <div class="player2Cache" style="margin-top: 1em"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        -->

@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=320, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bounding Bandits</title>
+    <script src="zepto-min.js" type="text/javascript"></script>
+    <script src="utils.js" type="text/javascript"></script>
+    <script src="lazyload.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="people.css" />
+    
+    <script>
+    
+        var _clickHandler = function(index) { /*alert(index);*/ };
+        
+        function setClickHandler(fn)
+        {
+            _clickHandler = fn;
+        }
+        
+        function clickHandler(index)
+        {
+            _clickHandler(index);
+        }
+        
+        function getClickHandler(index)
+        {
+            return function() { clickHandler(index); };
+        }
+
+        var isLoaded = false;
+        var _people = null;
+
+        function lateLoad()
+        {
+            isLoaded = true;
+
+            if (_people)
+            {
+                load(_people);
+            }
+        }
+    
+        function load(people)
+        {
+            if (!isLoaded)
+            {
+                _people = people;
+                return;
+            }
+
+            var container = document.getElementById('container');
+
+            setTimeout(function()
+            {
+                for (var i = 0; i < people.length; ++i)
+                {
+                    var person = people[i];
+                    var tile = document.createElement('div');
+                    var contents = document.createElement('div');
+                    var image = document.createElement('img');
+                    var name = document.createElement('div');
+
+                    tile.appendChild(contents);
+                    contents.appendChild(image);
+                    contents.appendChild(name);
+
+                    tile.className = 'tile';
+                    contents.className = 'contents';
+                    image.className = 'image';
+                    name.className = 'name';
+
+                    name.innerHTML = person.name;
+                    image.setAttribute('data-src', 'http://graph.facebook.com/' + person.id + '/picture?type=large');
+                    image.src = 'noface.png';
+
+                    if (person.exists)
+                    {
+                        var badge = document.createElement('div');
+                        badge.className = 'badge';
+
+                        contents.appendChild(badge);
+                    }
+
+                    tile.onclick = getClickHandler(i);
+
+                    container.appendChild(tile);
+                    scaleImage(image);
+                    lzld(image);
+
+                    image.onload = function() { scaleImage(this); };
+                }
+            }, 250);
+        };
+        
+        function scaleImage(img)
+        {
+            var scale = 140;
+            
+            if (img.naturalWidth > img.naturalHeight)
+            {
+                var ratio = scale / img.naturalHeight;
+
+                img.style.width = 'auto';
+                img.style.height = scale + 'px';
+                img.style.marginTop = '0';
+                img.style.marginLeft = (-( img.naturalWidth*ratio - scale ) / 2) + 'px';
+            }
+            else
+            {
+                var ratio = scale / img.naturalWidth;
+                
+                img.style.height = 'auto';
+                img.style.width = scale + 'px';
+                img.style.marginLeft = '0';
+                img.style.marginTop = (-( img.naturalHeight*ratio - scale ) / 2) + 'px';
+            }
+            
+            //alert(img.naturalWidth);
+        }
+        
+        window.load = load;
+        window.setClickHandler = setClickHandler;
+    
+    </script>
+    
+  </head>
+
+  <body style="margin:0; font-family: helvetica; overflow-x:hidden" onload="window.lateLoad();return;window.load([{ name: 'Nicholas Clark', id: '100002245216241', exists: true }, { name: 'Aaron Lapierre', id: '13603321', exists: false }, { name: 'Aaron Samuels', id: '1716461434', exists: false }, { name: 'Adam Cannane', id: '606777606', exists: false }, { name: 'Adam Liechty', id: '415892', exists: false }, { name: 'Adam Sinovsky', id: '404445', exists: false }, { name: 'Aileen Hanlon', id: '521527899', exists: false }, { name: 'Alex Chi', id: '789928068', exists: false }, { name: 'Alexander Clark', id: '300201', exists: false }, { name: 'Amarasri Songcharoen', id: '599580145', exists: false }, { name: 'Amit Gupta', id: '634980852', exists: false }, { name: 'Amit Kumar Goel', id: '1540920194', exists: false }, { name: 'Amrutha Sathyan', id: '513927664', exists: false }, { name: 'Andrew Harrison', id: '3000732', exists: false }, { name: 'Andrew Matthewson', id: '25901290', exists: false }, { name: 'Andrew Over', id: '400545', exists: false }, { name: 'Anna-Christina Siegl', id: '855360412', exists: false }, { name: 'Anne Bryant', id: '34603077', exists: false }, { name: 'Annie Wang', id: '620947555', exists: false }, { name: 'Ansgar M.J. Siegl', id: '763933426', exists: false }, { name: 'Anthony Tran', id: '516666479', exists: false }, { name: 'April Dyer', id: '551305575', exists: false }, { name: 'Arvind Jayasundar', id: '535652454', exists: false }, { name: 'Aseem Kishore', id: '704844', exists: false }, { name: 'Ashkan G.Zadeh', id: '748811264', exists: false }, { name: 'Austin Moy', id: '400388', exists: false }, { name: 'BJ Agnew Brillard', id: '7006253', exists: false }, { name: 'Benjamin Rampson', id: '402887', exists: false }, { name: 'Beverly Dale', id: '1327304658', exists: false }, { name: 'Bob Neill', id: '504751', exists: false }, { name: 'Brandon Miniman', id: '6105014', exists: false }, { name: 'Bruce Marks', id: '655121756', exists: false }, { name: 'Burney King', id: '100000342472014', exists: false }, { name: 'Candace Deer', id: '6500842', exists: false }, { name: 'Carey Brown', id: '1107147637', exists: false }, { name: 'Carrie Smith', id: '26506637', exists: false }, { name: 'Charley McMillan', id: '107361', exists: false }, { name: 'Chelsea Taylor Freeman', id: '69800379', exists: false }, { name: 'Chris Benedict', id: '404474', exists: false }, { name: 'Chris Cobb', id: '25909713', exists: false }, { name: 'Chris Rayner', id: '667391392', exists: false }, { name: 'Crystle Reed', id: '549769122', exists: false }, { name: 'Curt Fuhlman', id: '723404761', exists: false }, { name: 'Cynthia Winkelmann', id: '100001892823748', exists: false }, { name: 'Daniel Walzenbach', id: '527397301', exists: false }, { name: 'David Bromberg', id: '587025584', exists: false }, { name: 'Derek Snyder', id: '63000704', exists: false }, { name: 'Eleanor Bryant', id: '1060691425', exists: false }, { name: 'Elizabeth Buyan', id: '617995824', exists: false }, { name: 'Ellen Underwood', id: '7908279', exists: false }, { name: 'Erhan Soyer-Osman', id: '28102637', exists: false }, { name: 'Eric Grysko', id: '403753', exists: false }, { name: 'Forrest Dillaway', id: '413381', exists: false }, { name: 'Fran Armstrong', id: '1560259207', exists: false }, { name: 'Gregor Siegl', id: '555820708', exists: false }, { name: 'Hemant Banavar', id: '648115328', exists: false }, { name: 'Hemanth Srinivas', id: '407393', exists: false }, { name: 'Hilary Armstrong Winkelmann', id: '313526', exists: false }, { name: 'Ian Fraser', id: '760094417', exists: false }, { name: 'J.R. Hughson', id: '1207097030', exists: false }, { name: 'Jabari Smith', id: '569826103', exists: false }, { name: 'Jay Songcharoen', id: '777435384', exists: false }, { name: 'Jeff Fisher', id: '13902699', exists: false }, { name: 'Jennie Garner Clark', id: '100000033499647', exists: false }, { name: 'Jennifer Hawkins', id: '1406168', exists: false }, { name: 'Jennifer Staple Clark', id: '581801411', exists: false }, { name: 'Jody Clark', id: '6518386', exists: false }, { name: 'Joe Callans', id: '1446661896', exists: false }, { name: 'John Davidson', id: '1444578894', exists: false }, { name: 'John Terenzio', id: '100003491214227', exists: false }, { name: 'Jonathan Lyons', id: '405638', exists: false }, { name: 'Jordan Cole', id: '56100541', exists: false }, { name: 'Josh Rose', id: '3303575', exists: false }, { name: 'Joshua Smith', id: '10013576', exists: false }, { name: 'Julia Allison', id: '1402715', exists: false }, { name: 'Justin Yorke', id: '2207085', exists: false }, { name: 'Kai Thaler', id: '311108', exists: false }, { name: 'Kaitlyn Simpson Lyons', id: '409342', exists: false }, { name: 'Kate Kapoor', id: '80300239', exists: false }, { name: 'Kathy Nontasak', id: '27403860', exists: false }, { name: 'Kedar Hirve', id: '1502474', exists: false }, { name: 'Kelly Clark Putt', id: '1410324269', exists: false }, { name: 'Kevin Malphurs', id: '7705350', exists: false }, { name: 'Khushboo Agrawal', id: '4703519', exists: false }, { name: 'Lauren Hensarling', id: '638785598', exists: false }, { name: 'Lauren Liechty', id: '10735245', exists: false }, { name: 'Lauren Shores', id: '26501409', exists: false }, { name: 'Lawrence Coburn', id: '691810321', exists: false }, { name: 'Leah Thomason Bromberg', id: '413675', exists: false }, { name: 'Lee Hall', id: '42811706', exists: false }, { name: 'Levent B', id: '517250220', exists: false }, { name: 'Liana Shanes', id: '508294100', exists: false }, { name: 'Lisa Clark', id: '570981126', exists: false }, { name: 'Luke Williams', id: '2231572', exists: false }, { name: 'Mara Rilko', id: '56101120', exists: false }, { name: 'Marty Hitt Kelly', id: '6502364', exists: false }, { name: 'Mary Eck Malphurs', id: '1182226290', exists: false }, { name: 'Matthew Tyhach', id: '406432', exists: false }, { name: 'Megan Doyle', id: '1019700173', exists: false }, { name: 'Megan Gray', id: '1332379121', exists: false }, { name: 'Megan Hitt Mayhan', id: '506218170', exists: false }, { name: 'Melanie Iwasaki Cobb', id: '25901423', exists: false }, { name: 'Melody Yuen', id: '400321', exists: false }, { name: 'Michael Stephan Voitle', id: '762257732', exists: false }, { name: 'Mike Decker', id: '545298014', exists: false }, { name: 'Mike Shi', id: '15501298', exists: false }, { name: 'Mukul Sabharwal', id: '16902059', exists: false }, { name: 'Nancy Winkelmann Clark', id: '761777437', exists: false }, { name: 'Natalie Krishna Das', id: '588351539', exists: false }, { name: 'Nick Modisett', id: '1376934486', exists: false }, { name: 'Niels Gabel', id: '506313888', exists: false }, { name: 'Odiri Dafe', id: '8900106', exists: false }, { name: 'Olivia Ware', id: '2406543', exists: false }, { name: 'Oscar Hawkins', id: '100001588835856', exists: false }, { name: 'Parakram Khandpur', id: '100001046831138', exists: false }, { name: 'Patrick Welsh', id: '780243082', exists: false }, { name: 'Paul Hagger', id: '1055535517', exists: false }, { name: 'Peter Clark', id: '1908764', exists: false }, { name: 'Peter Clericuzio', id: '619528', exists: false }, { name: 'Peter Scully', id: '673371982', exists: false }, { name: 'Phil Bobbs', id: '405305', exists: false }, { name: 'Phyllis Joe', id: '5306340', exists: false }, { name: 'Praveen Kumar', id: '754611220', exists: false }, { name: 'RaShard Johnson', id: '6514506', exists: false }, { name: 'Rahul BhaktaDre Bhakta', id: '26504344', exists: false }, { name: 'Ravi Rao', id: '48301969', exists: false }, { name: 'Reggie D. White', id: '77002404', exists: false }, { name: 'Robert M Winkelmann', id: '1287870009', exists: false }, { name: 'Robin Lim', id: '422991', exists: false }, { name: 'Saket Agarwal', id: '100000910266702', exists: false }, { name: 'Sally Clark', id: '1392510047', exists: false }, { name: 'Sally Clark Adams', id: '1403694255', exists: false }, { name: 'Sally Liu', id: '547188828', exists: false }, { name: 'Sarah Hensley Ware', id: '7201286', exists: false }, { name: 'Scott Wilson', id: '26500027', exists: false }, { name: 'Sean Kochtitzky', id: '42804925', exists: false }, { name: 'Serenity Delaney Dillaway', id: '2244147', exists: false }, { name: 'Sharon Hong', id: '4701567', exists: false }, { name: 'Shibani Nayak', id: '541135706', exists: false }, { name: 'Simon Bernstein', id: '728031926', exists: false }, { name: 'Sloan Street Toler', id: '584865205', exists: false }, { name: 'Talia Nour-Omid', id: '1075682103', exists: false }, { name: 'Taylor Neely', id: '615515149', exists: false }, { name: 'Tennis Loop', id: '100001656414408', exists: false }, { name: 'Thomas Hogroar', id: '100000529338597', exists: false }, { name: 'Tim Glass', id: '1931924', exists: false }, { name: 'Tristan Lahey', id: '628674967', exists: false }, { name: 'Victoria Baugher Clark', id: '1139923046', exists: false }, { name: 'Will Cole', id: '1035270003', exists: false }, { name: 'Will Morton', id: '1102521', exists: false }, { name: 'William Hunter', id: '515653463', exists: false }, { name: 'William R. Armstrong', id: '2800075', exists: false }, { name: 'William Stoltzman', id: '100002477633509', exists: false }, ])">
+      <!--
+      <div class="tile">
+          <div class="contents">
+              <div class="image" style="background-image:url('http://graph.facebook.com/100003491214227/picture?type=large')">
+              </div>
+              <div class="name">
+                  Nicholas Clark
+              </div>
+          </div>
+      </div>
+      -->
+    <button id="newGame" onclick="document.location='bb://local'">Start New Local Game</button>
+    
+    <button id="newGame" onclick="document.location='bb://blitz'">Start New Blitz Game</button>
+
+      <div id='container' style="width:100%"></div>
+  </body>
+  
+</html>

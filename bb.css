@@ -1,0 +1,123 @@
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+.moveLogItem
+{
+    display:  table-row;
+    height: 50px;
+    vertical-align: middle;
+    font-size: 24px;
+}
+
+.moveLogItem > .description, .moveLogItem > .index
+{
+    display:  table-cell;
+    vertical-align: middle;
+}
+
+.moveLogItem > .description
+{
+    padding: 0 5px;
+}
+
+.moveLogItem > .index
+{
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    text-align: center;
+}
+
+.modeContainer
+{
+    display: none;float: right; position:absolute; right: 5px; top: 5px; bottom: 5px; width: 242px; background-color: #888; border:1px solid black; border-radius: 5px; padding: 4px; background-color: #ddd;
+}
+
+.modeContainer > table
+{
+    width: 100%;
+}
+
+.playerButtons
+{
+    width: 100%; margin-top: 1em; position: relative;
+}
+
+.player1Data
+{
+    border-top:  1px solid #888; padding: 10px 2px;
+}
+
+.player2Data
+{
+    -webkit-transform:rotate(-180deg); border-top: 1px solid #888; padding: 10px 2px;
+}
+
+#player1Set, #player2Set
+{
+    position: absolute; right: 2px;
+}
+
+#localModeContainer > table
+{
+    width: 100%;
+    height:100%;
+    z-index: 10;
+}
+
+.playerButtons > *
+{
+    display: inline-block; height: 55px; width: 55px;
+}
+
+.playerButtons > div
+{
+    font-size: 45px; vertical-align: middle; text-align: center;
+}
+
+.player1Cache, .player2Cache
+{
+    margin-top:1em;
+}
+
+.counter, .mcounter
+{
+    text-align:center;
+    line-height: 100px;
+    height: 100px;
+    width: 100%;
+    font-size: 80px;
+}
+
+.timer 
+{
+    text-align:center; height: 100px; padding-top: 5px;
+}
+
+.timerCanvas
+{
+    height:100px; width:100px;
+}
+
+.activeCache
+{
+    text-align:center;
+}
+
+.getStarted
+{
+    position: absolute; display: inline-block; margin-top: 10px; right: 2px; left: 2px; height: 60px;
+}
+
+.moveLog
+{
+    visibility: hidden;height: 100%; overflow-y: scroll;
+}
+
+.modeContainer > table
+{
+    height:  100%;
+    overflow: hidden;
+}

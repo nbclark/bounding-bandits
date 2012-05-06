@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1171" systemVersion="11D50d" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="CollabGames" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="objectId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FacebookFriends" syncable="YES"/>
+    <elements>
+        <element name="FacebookFriends" positionX="160" positionY="192" width="128" height="45"/>
+        <element name="CollabGames" positionX="160" positionY="192" width="128" height="75"/>
+    </elements>
+</model>

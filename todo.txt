@@ -1,0 +1,5 @@
+-> End of round stats (showing who won, how many moves, how long)
+-> Push notifications
+-> End of game stats
+-> Make shared tokens count for 0.5
+-> pulling curtain should pause game

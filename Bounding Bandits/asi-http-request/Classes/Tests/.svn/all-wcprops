@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/doubledutch2/!svn/ver/5271/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests
+END
+PerformanceTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/PerformanceTests.m
+END
+ASIFormDataRequestTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIFormDataRequestTests.m
+END
+BlocksTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/BlocksTests.h
+END
+ASIWebPageRequestTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIWebPageRequestTests.h
+END
+ClientCertificateTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ClientCertificateTests.h
+END
+ProxyTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ProxyTests.h
+END
+BlocksTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/BlocksTests.m
+END
+ASIDataCompressorTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIDataCompressorTests.h
+END
+StressTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/StressTests.h
+END
+ASITestCase.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASITestCase.h
+END
+ASIHTTPRequestTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIHTTPRequestTests.h
+END
+ASIWebPageRequestTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIWebPageRequestTests.m
+END
+GHUnitTestMain.m
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/GHUnitTestMain.m
+END
+ClientCertificateTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ClientCertificateTests.m
+END
+ProxyTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ProxyTests.m
+END
+ASIDownloadCacheTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIDownloadCacheTests.h
+END
+ASIDataCompressorTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIDataCompressorTests.m
+END
+StressTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/StressTests.m
+END
+ASITestCase.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASITestCase.m
+END
+ASIHTTPRequestTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIHTTPRequestTests.m
+END
+ASIS3RequestTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIS3RequestTests.h
+END
+ASINetworkQueueTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASINetworkQueueTests.h
+END
+ASIDownloadCacheTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIDownloadCacheTests.m
+END
+ASICloudFilesRequestTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASICloudFilesRequestTests.h
+END
+ASIS3RequestTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIS3RequestTests.m
+END
+ASINetworkQueueTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASINetworkQueueTests.m
+END
+PerformanceTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/PerformanceTests.h
+END
+ASIFormDataRequestTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASIFormDataRequestTests.h
+END
+ASICloudFilesRequestTests.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/Tests/ASICloudFilesRequestTests.m
+END

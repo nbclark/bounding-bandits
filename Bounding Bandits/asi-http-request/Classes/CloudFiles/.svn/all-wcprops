@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/doubledutch2/!svn/ver/5271/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles
+END
+ASICloudFilesCDNRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesCDNRequest.m
+END
+ASICloudFilesContainer.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainer.h
+END
+ASICloudFilesObjectRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesObjectRequest.m
+END
+ASICloudFilesObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesObject.h
+END
+ASICloudFilesContainer.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainer.m
+END
+ASICloudFilesRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesRequest.h
+END
+ASICloudFilesContainerRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainerRequest.h
+END
+ASICloudFilesContainerXMLParserDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainerXMLParserDelegate.h
+END
+ASICloudFilesObject.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesObject.m
+END
+ASICloudFilesCDNRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesCDNRequest.h
+END
+ASICloudFilesRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesRequest.m
+END
+ASICloudFilesObjectRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesObjectRequest.h
+END
+ASICloudFilesContainerRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainerRequest.m
+END
+ASICloudFilesContainerXMLParserDelegate.m
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Classes/CloudFiles/ASICloudFilesContainerXMLParserDelegate.m
+END

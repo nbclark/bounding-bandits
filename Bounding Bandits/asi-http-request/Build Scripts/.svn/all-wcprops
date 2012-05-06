@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/doubledutch2/!svn/ver/5271/branches/iOS/Customers/SellIT/asi-http-request/Build%20Scripts
+END
+fetch_ios_ghunit.rb
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Build%20Scripts/fetch_ios_ghunit.rb
+END
+fetch_mac_ghunit.rb
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Build%20Scripts/fetch_mac_ghunit.rb
+END
+set_version_number.rb
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/doubledutch2/!svn/ver/5098/branches/iOS/Customers/SellIT/asi-http-request/Build%20Scripts/set_version_number.rb
+END
