@@ -19,5 +19,6 @@
 @property (nonatomic, readwrite) NSUInteger moves;
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* moveLog;
+@property (nonatomic, strong) NSString* state;
 
 @end

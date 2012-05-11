@@ -30,7 +30,7 @@
             
     ];
     
-    var colors = [ '#c22', '#2c2', '#22c', '#cc2' ];
+    var colors = [ 'rgb(176,101,185)', 'rgb(50,164,57)', 'rgb(216,136,56)', 'rgb(0,172,189)' ];
     
     Array.prototype.select = function(lambda)
     {
@@ -235,7 +235,7 @@
     	this.render = function (context, pass) {
     	
     	    if (pass > 0) return;
-    		context.ctx.globalAlpha = 0.25;
+    		context.ctx.globalAlpha = 0.55;
     		
     		var startX = context.boardLeft + context.tileSize * this.startCol;
     		var endX = context.boardLeft + context.tileSize * this.endCol;
@@ -245,7 +245,7 @@
     		
     		context.ctx.fillStyle = this.color;
     		
-    		var barSize = 20;
+    		var barSize = context.tileSize / 8;
     		var hbarSize = barSize / 2;
     		
     		if (startX == endX)
@@ -274,7 +274,7 @@
             if (this.isActive)
             {
                 this.streak.render(context);
-                this.endTile.renderHighlight(context, this.color);
+                this.endTile.renderDot(context, this.color);
             }
         }
     };
@@ -289,15 +289,34 @@
     	this.target = null;
     	this.highlight = null;
 
-    	this.renderHighlight = function (context, color)
-    	{
-    	    context.ctx.globalAlpha = 0.9;
-    	
-    		context.ctx.fillStyle = color;
-    		context.ctx.fillRect(context.boardLeft + context.tileSize * this.col, context.boardTop + context.tileSize * this.row, context.tileSize, context.tileSize);
-    		
-    		context.ctx.globalAlpha = 1;
-    	}
+        this.renderDot = function (context, color)
+        {
+            context.ctx.globalAlpha = 1.0;
+
+            context.ctx.fillStyle = color;
+
+            var size = context.tileSize;
+            var radius = size / 4.0;
+
+            context.ctx.beginPath();
+            context.ctx.arc(context.boardLeft + context.tileSize * this.col + size / 2, context.boardTop + context.tileSize * this.row + size / 2, radius, 0, 2 * Math.PI, false);
+            context.ctx.closePath();
+            context.ctx.fill();
+
+            //context.ctx.fillRect(context.boardLeft + context.tileSize * this.col, context.boardTop + context.tileSize * this.row, context.tileSize, context.tileSize);
+
+            context.ctx.globalAlpha = 1;
+        }
+
+        this.renderHighlight = function (context, color)
+        {
+            context.ctx.globalAlpha = 0.9;
+
+            context.ctx.fillStyle = color;
+            context.ctx.fillRect(context.boardLeft + context.tileSize * this.col, context.boardTop + context.tileSize * this.row, context.tileSize, context.tileSize);
+
+            context.ctx.globalAlpha = 1;
+        }
     	
     	this.render = function (context, pass) {
     		
@@ -377,7 +396,7 @@
         this.tileIndex = -1;
     	
     	this.render = function (context, x, y, size) {
-    	    var radius = size / 3.0;
+    	    var radius = (size / 2.0) - (size / 10.0);
     	    
     		context.ctx.beginPath();
     		context.ctx.arc(x + size / 2, y + size / 2, radius, 0, 2 * Math.PI, false);
@@ -1094,15 +1113,19 @@
             //
         }
 
-        this.width = container.offsetWidth;
-        this.height = container.offsetHeight;
+        // padding = 15
+        var padding = 15;
 
-        this.canvas.width = this.width-260;
+        var size = Math.min(container.offsetWidth - padding*2, container.offsetHeight - padding*2);
+
+        this.width = size;//container.offsetWidth;
+        this.height = size;//container.offsetHeight;
+
+        this.canvas.width = this.width;//-260;
         this.canvas.height = this.height;
 
-        this.canvas.style.width = (this.width-260)+ 'px';
+        this.canvas.style.width = (this.width/*-260*/)+ 'px';
         this.canvas.style.height = this.height + 'px';
-
 
         this.context.tileSize = Math.min((this.height-this.context.boardTop*2) / 16, (this.width-this.context.boardLeft*2) / 16);
 
@@ -1130,7 +1153,7 @@
     gameboard.prototype.uninit = function()
     {
         this.hideMessage();
-        this.canvas.parentNode.removeChild(this.canvas);
+        this.canvasContainer.parentNode.removeChild(this.canvasContainer);
     };
     
     gameboard.prototype.encodeBoard = function ()
@@ -1255,8 +1278,11 @@
     gameboard.prototype.init = function()
     {
         if (!this.canvas) {
+            this.canvasContainer = document.createElement('div');
+            this.canvasContainer.id = 'canvasContainer';
             this.canvas = document.createElement('canvas');
             this.canvas.id = 'canvas';
+
             this.container = document.getElementById('container');
             
 			if (!('ontouchstart' in window)) {
@@ -1276,7 +1302,8 @@
 			document.body.onkeydown = this.wrapCallback('keyDown');
 			this.canvas.onkeydown = this.wrapCallback('keyDown');
 
-            this.container.appendChild(this.canvas);
+            this.canvasContainer.appendChild(this.canvas);
+            this.container.appendChild(this.canvasContainer);
             this.context = new context(this.canvas.getContext("2d"));
             this.context.boardLeft = 0;//15;
             this.context.boardTop = 0;//15;

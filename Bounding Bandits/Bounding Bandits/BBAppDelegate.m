@@ -31,9 +31,6 @@ static BBAppDelegate* _sharedDelegate;
 {
     _sharedDelegate = self;
     
-    [Parse setApplicationId:@"7KB796qaAeIWKNZQQySnKPhPnysl9iaCeEbIlwff" clientKey:@"1lCUQCeVs6nMFHAqz1RJmp8LhJP6F5tr9Z5Gyf9M"];
-    
-    [PFFacebookUtils initializeWithApplicationId:@"345467858832397"];
     [ [UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone ];
     
     [ application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound ];

@@ -254,7 +254,7 @@
         [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     }
     
-    NSMutableArray* games = [ PFObjectExt arrayWithArray:objects className:@"CollabGame" ];
+    NSMutableArray* games = [ PFObjectExt arrayWithArray:objects className:@"CollabGame" loadSubObjects:NO ];
     
     [ self.completedGames removeAllObjects ];
     [ self.myTurnGames removeAllObjects ];
@@ -305,7 +305,7 @@
     self.navigationController.navigationBarHidden = YES;
     
     {
-        NSString *urlAddress = [[NSBundle mainBundle] pathForResource:@"robots" ofType:@"html"];
+        NSString *urlAddress = [[NSBundle mainBundle] pathForResource:@"bb" ofType:@"html"];
         
         NSURL *url = [NSURL fileURLWithPath:urlAddress];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];

@@ -93,6 +93,8 @@
 {
     [ self.myTurnGames insertObject:game atIndex:0 ];
     [ self.tableView reloadData ];
+    
+    [[ UIApplication sharedApplication ] setApplicationIconBadgeNumber:[ self.myTurnGames count ] ];
 }
 
 -(void)gameTurnEnded:(CollabGame*)game
@@ -103,6 +105,8 @@
         [ self.theirTurnGames insertObject:game atIndex:0 ];
         [ self.tableView reloadData ];
     }
+    
+    [[ UIApplication sharedApplication ] setApplicationIconBadgeNumber:[ self.myTurnGames count ] ];
 }
 
 -(void)finishedLoading
@@ -124,9 +128,9 @@
 
 -(void)loadGames:(BOOL)forceRefresh
 {
-    if ([PFUser currentUser])
+    if ([ PFUser currentUser ])
     {
-        PFQuery *query = [PFQuery queryWithClassName:@"CollabGame"];
+        PFQuery *query = [ PFQuery queryWithClassName:@"CollabGame" ];
         
         forceRefresh = YES;
         
@@ -149,12 +153,11 @@
             query.cachePolicy = kPFCachePolicyIgnoreCache;
         }
         
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+        [ query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
          {
-             
              [ self processLoadedGames:objects fromCache:NO ];
              
-         }];
+         } ];
     }
 }
 
@@ -165,7 +168,76 @@
         [self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     }
     
-    NSMutableArray* games = [ PFObjectExt arrayWithArray:objects className:@"CollabGame" ];
+    NSMutableArray* games = [ PFObjectExt arrayWithArray:objects className:@"CollabGame" loadSubObjects:NO ];
+    NSMutableDictionary* roundObjects = [ NSMutableDictionary dictionary ];
+    NSMutableDictionary* userObjects = [ NSMutableDictionary dictionary ];
+    NSMutableArray* roundLists = [ NSMutableArray array ];
+    NSMutableArray* userLists = [ NSMutableArray array ];
+    
+    for (CollabGame* game in games)
+    {
+        for (PFUser* user in game.users)
+        {
+            if (![ userObjects objectForKey:user.objectId ])
+            {
+                [ userObjects setObject:user forKey:user.objectId ];
+            }
+        }
+        for (PFObject* round in game.rounds)
+        {
+            if (![ roundObjects objectForKey:round.objectId ])
+            {
+                [ roundObjects setObject:round forKey:round.objectId ];
+            }
+        }
+        
+        [ userLists addObject:game.users ];
+        [ roundLists addObject:game.rounds ];
+    }
+    
+    // I don't like having to do this, but fetchAllIfNeeded is really slow to call on each object...More optimizations to come...
+    if ([ roundObjects count ])
+    {
+        PFQuery* query = [ PFQuery queryWithClassName:@"CollabRound" ];
+        [ query whereKey:@"objectId" containedIn:[ roundObjects allKeys ]];
+        for (PFObject* obj in [ query findObjects ])
+        {
+            for (NSMutableArray* array in roundLists)
+            {
+                for (uint i = 0; i < [ array count ]; ++i)
+                {
+                    PFObject* roundObj = [ array objectAtIndex:i ];
+                    
+                    if ([ roundObj.objectId isEqualToString:obj.objectId ])
+                    {
+                        [ array replaceObjectAtIndex:i withObject:obj ];
+                    }
+                }
+            }
+        }
+    }
+    
+    if ([ userObjects count ])
+    {
+        PFQuery* query = [ PFQuery queryWithClassName:@"_User" ];
+        [ query whereKey:@"objectId" containedIn:[ userObjects allKeys ]];
+        
+        for (PFObject* obj in [ query findObjects ])
+        {
+            for (NSMutableArray* array in userLists)
+            {
+                for (uint i = 0; i < [ array count ]; ++i)
+                {
+                    PFObject* userObj = [ array objectAtIndex:i ];
+                    
+                    if ([ userObj.objectId isEqualToString:obj.objectId ])
+                    {
+                        [ array replaceObjectAtIndex:i withObject:obj ];
+                    }
+                }
+            }
+        }
+    }
     
     [ self.completedGames removeAllObjects ];
     [ self.myTurnGames removeAllObjects ];

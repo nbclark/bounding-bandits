@@ -7,8 +7,8 @@
     <script src="bb.js" type="text/javascript"></script>
     <script src="bb.localmode.js" type="text/javascript"></script>
     <script src="bb.blitzmode.js" type="text/javascript"></script>
-      <script src="bb.turnmode.js" type="text/javascript"></script>
-      <script src="bb.demomode.js" type="text/javascript"></script>
+     <script src="bb.turnmode.js" type="text/javascript"></script>
+    <script src="bb.demomode.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="bb.css" />
     
     <script>
@@ -149,8 +149,8 @@
     {
         if (!('ontouchstart' in window))
         {
-            return loadGame(3, true, '', false, 0.000000);
-            return loadGame(0);
+            //return loadGame(3, true, '', false, 0.000000);
+            //return loadGame(0);
             return loadGame(2, false, {"boardPieces":[1,2,0,3],"movers":[{"groupId":1,"position":4},{"groupId":0,"position":35},{"groupId":2,"position":179},{"groupId":3,"position":224}],"targets":[{"groupId":0,"id":0,"color":"#f00"},{"groupId":1,"id":1,"color":"#0f0"},{"groupId":2,"id":2,"color":"#00f"},{"groupId":3,"id":3,"color":"#ff0"},{"groupId":0,"id":4,"color":"#f00"},{"groupId":1,"id":5,"color":"#0f0"},{"groupId":2,"id":6,"color":"#00f"},{"groupId":3,"id":7,"color":"#ff0"},{"groupId":0,"id":8,"color":"#f00"},{"groupId":1,"id":9,"color":"#0f0"},{"groupId":2,"id":10,"color":"#00f"},{"groupId":3,"id":11,"color":"#ff0"},{"groupId":0,"id":12,"color":"#f00"},{"groupId":1,"id":13,"color":"#0f0"},{"groupId":2,"id":14,"color":"#00f"},{"groupId":3,"id":15,"color":"#ff0"},{"groupId":0,"id":16,"color":"#f00"}], "activeTargetIndex" : 12 });
         }
     }

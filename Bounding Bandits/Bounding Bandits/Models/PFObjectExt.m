@@ -12,13 +12,13 @@
 
 @synthesize baseObj;
 
-+(NSMutableArray*)arrayWithArray:(NSArray*)objects className:(NSString*)className
++(NSMutableArray*)arrayWithArray:(NSArray*)objects className:(NSString*)className loadSubObjects:(BOOL)loadSubObjects
 {
     NSMutableArray* arr = [ NSMutableArray array ];
     
     for (PFObject* obj in objects)
     {
-        [ arr addObject:[[ NSClassFromString(className) alloc ] initWithObject:obj ]];
+        [ arr addObject:[[ NSClassFromString(className) alloc ] initWithObject:obj loadSubObjects:loadSubObjects ]];
     }
     
     return arr;
@@ -28,22 +28,29 @@
 {
     PFObject* obj = [ PFObject objectWithClassName:className ];
     
-    return [[ NSClassFromString(className) alloc ] initWithObject:obj ];
+    return [[ NSClassFromString(className) alloc ] initWithObject:obj loadSubObjects:YES ];
 }
 
 +(id)objectWithObject:(PFObject*)obj
 {    
-    return [[ NSClassFromString(obj.className) alloc ] initWithObject:obj ];
+    return [[ NSClassFromString(obj.className) alloc ] initWithObject:obj loadSubObjects:YES ];
 }
 
--(id)initWithObject:(PFObject*)obj
+-(id)initWithObject:(PFObject*)obj loadSubObjects:(BOOL)loadSubObjects
 {
     if ((self = [ super init ]))
     {
         self.baseObj = obj;
-        [ obj fetchIfNeeded ];
         
-        [ self prepare ];
+        if (![ obj isDataAvailable ])
+        {
+            self.baseObj = [ obj fetchIfNeeded ];
+        }
+        
+        if (loadSubObjects)
+        {
+            [ self prepare ];
+        }
     }
     
     return self;

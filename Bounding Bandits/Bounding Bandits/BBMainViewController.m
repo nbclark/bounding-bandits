@@ -204,6 +204,7 @@
         self.currentRound.elapsed = 0;
         self.currentRound.moves = 0;
         self.currentRound.moveLog = @"[]";
+        self.currentRound.state = json;
         
         [ rounds addObject:self.currentRound.baseObj ];
         
@@ -247,6 +248,51 @@
         self.currentRound.duration = [[ results objectForKey:@"Duration" ] floatValue ];
         self.currentRound.moves = [[ results objectForKey:@"Moves" ] integerValue ];
         self.currentRound.moveLog = [[ results objectForKey:@"MoveLog" ] JSONString ];
+        
+        PFUser* otherUser = [ self.currentGame otherUser ];
+        NSString* message = [ NSString stringWithFormat:@"Your move with %@!", [ otherUser objectForKey:@"name" ] ];
+        
+        // Game is over after 17 rounds
+        if ([ self.currentGame.rounds count ] == 17*2)
+        {
+            NSDictionary* scores = [ self.currentGame scoresForUsers ];
+            int yourScore = [[ scores objectForKey:[ PFUser currentUser ].objectId ] intValue ];
+            int theirScore = [[ scores objectForKey:otherUser.objectId ] intValue ];
+            
+            if (yourScore > theirScore)
+            {
+                message = [ NSString stringWithFormat:@"You beat %@ (%d to %d)!", [ otherUser objectForKey:@"name" ], yourScore, theirScore ];
+            }
+            else if (theirScore > yourScore)
+            {
+                message = [ NSString stringWithFormat:@"%@ beat you (%d to %d)!", [ otherUser objectForKey:@"name" ], yourScore, theirScore ];
+            }
+            else
+            {
+                message = [ NSString stringWithFormat:@"You tied %@ (%d to %d)!", [ otherUser objectForKey:@"name" ], yourScore, theirScore ];
+            }
+            
+            self.currentGame.completed = YES;
+        }
+        
+        PFQuery* query = [ PFQuery queryWithClassName:@"CollabGame" ];
+        [ query whereKey:@"ActiveUser" equalTo:otherUser ];
+        [ query whereKey:@"objectId" notEqualTo:self.currentGame.objectId ];
+        
+        [ query countObjectsInBackgroundWithBlock:^(int number, NSError *error)
+        {
+            // Exclude the current game and add 1
+            NSDictionary* data = [ NSMutableDictionary dictionaryWithCapacity:5 ];
+            [ data setValue:message forKey:@"alert" ];
+            [ data setValue:[ NSString stringWithFormat:@"%d", number+1 ] forKey:@"badge" ];
+            
+            PFPush* push = [[ PFPush alloc ] init ];
+            [ push setChannel:otherUser.objectId ];
+            [ push setData:data ];
+            [ push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                sleep(0);
+            } ];
+        }];
         
         [ self.currentRound saveInBackground ];
         [ self.currentGame saveInBackground ];

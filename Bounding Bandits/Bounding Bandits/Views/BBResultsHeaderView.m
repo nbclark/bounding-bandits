@@ -27,8 +27,8 @@
     PFUser* user1 = [ view.game.users objectAtIndex:0 ];
     PFUser* user2 = [ view.game.users objectAtIndex:1 ];
     
-    //[ view.profileImage1 loadImageWithURL:[ NSURL URLWithString:[ user1 objectForKey:@"profilePicture" ]] onComplete:nil ];
-    //[ view.profileImage2 loadImageWithURL:[ NSURL URLWithString:[ user2 objectForKey:@"profilePicture" ]] onComplete:nil ];
+    [ view.profileImage1 loadImageWithURL:[ NSURL URLWithString:[ user1 objectForKey:@"profilePicture" ]] onComplete:nil ];
+    [ view.profileImage2 loadImageWithURL:[ NSURL URLWithString:[ user2 objectForKey:@"profilePicture" ]] onComplete:nil ];
     
     NSString* user1Id = user1.objectId;
     NSString* user2Id = user2.objectId;

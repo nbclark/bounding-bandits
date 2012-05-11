@@ -85,4 +85,14 @@
     [ self.baseObj setObject:moveLog forKey:@"MoveLog" ];
 }
 
+-(NSString*)state
+{
+    return [ self.baseObj objectForKey:@"State" ];
+}
+
+-(void)setState:(NSString *)state
+{
+    [ self.baseObj setObject:state forKey:@"State" ];
+}
+
 @end

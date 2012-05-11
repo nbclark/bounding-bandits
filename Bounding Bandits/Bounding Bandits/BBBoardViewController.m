@@ -61,7 +61,7 @@
     self.isLoading = YES;
     
     {
-        NSString *urlAddress = [[NSBundle mainBundle] pathForResource:@"robots" ofType:@"html"];
+        NSString *urlAddress = [[NSBundle mainBundle] pathForResource:@"bb" ofType:@"html"];
         
         NSURL *url = [NSURL fileURLWithPath:urlAddress];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];

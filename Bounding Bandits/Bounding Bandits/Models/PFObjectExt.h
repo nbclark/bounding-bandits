@@ -10,10 +10,10 @@
 
 @interface PFObjectExt : NSObject
 
-+(NSMutableArray*)arrayWithArray:(NSArray*)objects className:(NSString*)className;
++(NSMutableArray*)arrayWithArray:(NSArray*)objects className:(NSString*)className loadSubObjects:(BOOL)loadSubObjects;
 +(id)objectWithClassName:(NSString*)className;
 +(id)objectWithObject:(PFObject*)obj;
--(id)initWithObject:(PFObject*)obj;
+-(id)initWithObject:(PFObject*)obj loadSubObjects:(BOOL)loadSubObjects;
 -(void)prepare;
 -(void)saveInBackground;
 -(void)save;

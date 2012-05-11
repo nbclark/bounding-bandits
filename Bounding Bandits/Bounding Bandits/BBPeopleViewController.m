@@ -18,18 +18,20 @@
 #import "Models.h"
 #import "Utils.h"
 #import <Parse/Parse.h>
-#import <Parse/PF_EGORefreshTableHeaderView.h>
+#import "DDPullToRefreshView.h"
 #import <UIKit/UIKit.h>
 
 #import "UIWebView+Stylizer.h"
 
-@interface BBPeopleViewController ()<PF_FBRequestDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface BBPeopleViewController ()<PF_EGORefreshTableHeaderDelegate,PF_FBRequestDelegate,UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) NSMutableArray* friends;
 @property (nonatomic, strong) NSMutableArray* sections;
 @property (nonatomic, strong) NSMutableArray* objects;
 @property (nonatomic, strong) IBOutlet UITableView* tableView;
+@property (nonatomic, strong) PF_EGORefreshTableHeaderView* refreshHeaderView;
 @property (nonatomic, readwrite) BOOL isLoading;
+@property (nonatomic, readwrite) BOOL forceRefresh;
 
 @end
 
@@ -41,6 +43,8 @@
 @synthesize objects;
 @synthesize tableView;
 @synthesize gameDelegate;
+@synthesize forceRefresh;
+@synthesize refreshHeaderView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,6 +63,11 @@
     
     NSURL *url = [NSURL fileURLWithPath:urlAddress];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    
+    self.refreshHeaderView = [[ DDPullToRefreshView alloc ] init ];
+    self.refreshHeaderView.delegate = self;
+    
+    self.tableView.tableHeaderView = self.refreshHeaderView;
     
     //[ self.webView loadRequest:requestObj ];
     //[ self.webView stylize:YES ];
@@ -107,78 +116,6 @@
 {
     [ self.gameDelegate startGame:GAME_TYPE_LOCAL ];
 }
-
-/*
-# pragma Web View Delegate
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    if ([ request.URL.scheme isEqualToString:@"bb" ])
-    {
-        if ([request.URL.host isEqualToString:@"person"])
-        {
-            NSUInteger index = [[ request.URL.absoluteString stringByReplacingOccurrencesOfString:@"bb://person/" withString:@""] integerValue ];
-            
-            FacebookFriend* friend = [ self.friends objectAtIndex:index ];
-            
-            if (friend.user)
-            {
-                CollabGame* currentGame = [ CollabGame object ];
-                currentGame.completed = NO;
-                currentGame.creator = [ PFUser currentUser ];
-                currentGame.activeUser = [ PFUser currentUser ];
-                currentGame.users = [ NSMutableArray arrayWithObjects:[ PFUser currentUser ], friend.user, nil ];
-                currentGame.rounds = [ NSMutableArray array ];
-
-                [ self.gameDelegate selectGame:currentGame isNew:YES ];
-            }
-        }
-        else if ([request.URL.host isEqualToString:@"local"])
-        {
-            [ self.gameDelegate startGame:GAME_TYPE_LOCAL ];
-        }
-        else if ([request.URL.host isEqualToString:@"blitz"])
-        {
-            [ self.gameDelegate startGame:GAME_TYPE_BLITZ ];
-        }
-        
-        return NO;
-    }
-    
-    return YES;
-}
-
--(void)webViewDidStartLoad:(UIWebView *)webView
-{
-    //
-}
-
--(void)webViewDidFinishLoad:(UIWebView *)webView
-{ 
-    if ([ BBAppDelegate sharedDelegate ].isOnline)
-    {
-        NSDate* lastSyncFriends = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_LastSyncFBFriends ];
-        
-        if (YES || nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1) // 1 day
-        {
-            [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me/friends" andDelegate:self ];
-        }
-        else
-        {
-            [ self processFBFriends ];
-        }
-    }
-    else
-    {
-        [ webView showLoading:NO ];
-    }
-}
-
--(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-    //
-}
-*/
 
 #pragma mark UITableViewDataSource
 
@@ -374,6 +311,7 @@
 
 -(void)loadFriends
 {
+    [ self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView ];
     [ self.tableView reloadData ];
 }
 
@@ -417,6 +355,8 @@
         NSString* name = [ item objectForKey:@"name" ];
         NSString* userId = [ item objectForKey:@"id" ];
         
+        NSLog(@"%@", name);
+        
         FacebookFriend* friend = [[ FacebookFriend alloc ] init ];
         friend.name = name;
         friend.userId = userId;
@@ -457,7 +397,7 @@
     }
     
     PFQuery* userQuery = [PFQuery queryWithClassName:@"_User"];
-    userQuery.maxCacheAge = 60 * 60 * 24 * 1; // 1 day
+    userQuery.maxCacheAge = (self.forceRefresh) ? 0 : 60 * 60 * 24 * 1; // 1 day
     userQuery.cachePolicy = kPFCachePolicyCacheElseNetwork;
     
     [ userQuery whereKey:@"facebookId" containedIn:ids ];
@@ -484,6 +424,35 @@
          [ self.friends sortUsingSelector:@selector(sortByLoyalty:) ];
          [ self performSelectorOnMainThread:@selector(loadFriends) withObject:nil waitUntilDone:NO ];
      }];
+}
+
+
+#pragma mark Pull To Refresh Delegate
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(PF_EGORefreshTableHeaderView*)view
+{
+    if (!self.isLoading)
+    {
+        self.forceRefresh = YES;
+        [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me/friends" andDelegate:self ];
+    }
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(PF_EGORefreshTableHeaderView*)view
+{
+    return self.isLoading;
+}
+
+# pragma mark scroll view delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 @end

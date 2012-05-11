@@ -146,11 +146,6 @@
 -(NSMutableArray*)users
 {
     return [ self.baseObj objectForKey:@"Users" ];
-    NSMutableArray* r = [ self.baseObj objectForKey:@"Users" ];
-    NSError* err;
-    [ PFObject fetchAllIfNeeded:r error:&err ];
-    
-    return r;
 }
 
 -(void)setUsers:(NSMutableArray *)users
@@ -161,11 +156,6 @@
 -(NSMutableArray*)rounds
 {
     return [ self.baseObj objectForKey:@"Rounds" ];
-    NSMutableArray* r = [ self.baseObj objectForKey:@"Rounds" ];
-    NSError* err;
-    [ PFObject fetchAllIfNeeded:r error:&err ];
-    
-    return r;
 }
 
 -(void)setRounds:(NSMutableArray *)rounds

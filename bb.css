@@ -3,6 +3,19 @@
     -webkit-user-select: none;
 }
 
+body
+{
+    background-color: rgb(58,60,65);
+}
+
+#canvasContainer
+{
+    margin: 15px;
+    overflow: hidden;
+    border-radius: 10px;
+    float: left;
+}
+
 .moveLogItem
 {
     display:  table-row;
@@ -32,12 +45,31 @@
 
 .modeContainer
 {
-    display: none;float: right; position:absolute; right: 5px; top: 5px; bottom: 5px; width: 242px; background-color: #888; border:1px solid black; border-radius: 5px; padding: 4px; background-color: #ddd;
+    color: rgb(172,189,255);
+    display: none;float: right; position:absolute; right: 5px; top: 5px; bottom: 5px; width: 242px; background-color: rgb(58,60,65); border-radius: 5px; padding: 4px;
 }
 
 .modeContainer > table
 {
     width: 100%;
+    color: white;
+}
+
+.modeContainer > table td
+{
+    overflow-y: scroll;
+}
+
+button
+{
+    background-color:rgb(44,46,50);
+    border: 1px solid rgb(88,92,100);
+    color: white;
+}
+
+button:active
+{
+    background-color: rgb(88,92,100);
 }
 
 .playerButtons
@@ -113,7 +145,8 @@
 
 .moveLog
 {
-    visibility: hidden;height: 100%; overflow-y: scroll;
+    visibility: hiddden;
+    height: 100%; overflow-y: scroll;
 }
 
 .modeContainer > table

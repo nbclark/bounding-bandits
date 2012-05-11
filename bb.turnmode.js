@@ -34,6 +34,7 @@
             this.timer = ce(ce(ce(tbody, 'tr'), 'td'), 'div', null, 'timer');
             this.timerCanvas = ce(this.timer, 'canvas', null, 'timerCanvas');
             this.timerCanvas.height = this.timerCanvas.width = 1000;
+            this.timer.style.display = 'none';
             
             this.wrapTouchEvent(this.timerCanvas, 'toggleGame');
 
@@ -43,7 +44,6 @@
             this.activeCache = ce(logCell, 'div', null, 'activeCache');
             this.getStartedButton = ce(logCell, 'button', null, 'getStarted', 'Let\'s Go!');
             this.moveLogContainer = ce(logCell, 'div', null, 'moveLog');
-            
             
             var p1Data = ce(ce(ce(tbody, 'tr', null, null), 'td', null, null), 'div', null, 'player1Data', null);
             var p1Title = ce(p1Data, 'div', null, null, 'Player 1: ');
@@ -63,12 +63,12 @@
             
             this.getStartedButton.style.display = 'none';
             this.activeCache.style.display = '';
-            this.moveLogContainer.style.visibility = 'hidden';
+            this.moveLogContainer.style.visibility = '';
             
             this.player1Cache.innerHTML = '';
             this.activeCache.innerHTML = '';
             
-            p1Data.style.display = 'none';
+            //p1Data.style.display = 'none';
             
             if (gameData)
             {
