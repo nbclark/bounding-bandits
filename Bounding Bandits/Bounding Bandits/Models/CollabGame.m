@@ -19,7 +19,7 @@
 -(void)prepare
 {
     [ PFObject fetchAllIfNeeded:self.users ];
-    [ PFObject fetchAllIfNeeded:self.rounds ];
+    //[ PFObject fetchAllIfNeeded:self.rounds ];
 }
 
 -(PFUser*)otherUser
@@ -155,12 +155,22 @@
 
 -(NSMutableArray*)rounds
 {
-    return [ self.baseObj objectForKey:@"Rounds" ];
+    return [ self.baseObj objectForKey:@"Turns" ];
 }
 
 -(void)setRounds:(NSMutableArray *)rounds
 {
-    [ self.baseObj setObject:rounds forKey:@"Rounds" ];
+    [ self.baseObj setObject:rounds forKey:@"Turns" ];
+}
+
+-(NSMutableArray*)legacyRounds
+{
+    return [ self.baseObj objectForKey:@"Rounds" ];
+}
+
+-(void)setLegacyRounds:(NSMutableArray *)legacyRounds
+{
+    [ self.baseObj setObject:legacyRounds forKey:@"Rounds" ];
 }
 
 -(NSUInteger)tokenCount

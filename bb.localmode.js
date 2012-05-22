@@ -26,8 +26,11 @@
             
             
             this.container = document.getElementById('localModeContainer');
+            this.container.innerHTML = '';
             this.container.style.display = 'block';
-            
+            this.container.innerHTML = this.template;
+
+            /*
             var tbody = ce(ce(this.container, 'table', null, ''), 'tbody', null, '');
             
             var p2Data = ce(ce(ce(tbody, 'tr', null, null), 'td', null, null), 'div', null, 'player2Data', null);
@@ -37,10 +40,7 @@
             this.player2DownButton = ce(p2Buttons, 'button', null, 'player2Down', 'Down');
             this.player2Bid = ce(p2Buttons, 'div', null, 'player2Bid', '--');
             this.player2SetButton = ce(p2Buttons, 'button', null, 'player2Set', 'Set');
-            this.player2Cache = ce(p2Data, 'div', null, 'player2Cache', '');            
-            this.timer = ce(ce(ce(tbody, 'tr'), 'td'), 'div', null, 'timer');
-            this.timerCanvas = ce(this.timer, 'canvas', null, 'timerCanvas');
-            this.timerCanvas.height = this.timerCanvas.width = 1000;
+            this.player2Cache = ce(p2Data, 'div', null, 'player2Cache', '');
             
             var logCell = ce(ce(tbody, 'tr'), 'td');
             logCell.height = '100%';
@@ -58,9 +58,28 @@
             this.player1Bid = ce(p1Buttons, 'div', null, 'player1Bid', '--');
             this.player1SetButton = ce(p1Buttons, 'button', null, 'player1Set', 'Set');
             this.player1Cache = ce(p1Data, 'div', null, 'player1Cache', '');
+            */
 
-            
-            this.timerCanvasCtx = this.timerCanvas.getContext("2d");
+            this.moveLogContainer = $(this.container).find('.moveLog')[0];
+            this.moveCountContainer = $(this.container).find('.moveCount')[0];
+            this.activeCache = $(this.container).find('.activeCache')[0];
+            this.timeCountCont = $(this.container).find('.timeCount')[0];
+            var clearMoves = $(this.container).find('.clearMoves')[0];
+
+            this.player1UpButton = $(this.container).find('.player1Up')[0];
+            this.player1DownButton = $(this.container).find('.player1Down')[0];
+            this.player1Bid = $(this.container).find('.player1Bid')[0];
+            this.player1SetButton = $(this.container).find('.player1Set')[0];
+            this.player1Cache = $(this.container).find('.player1Cache')[0];
+
+            this.player2UpButton = $(this.container).find('.player2Up')[0];
+            this.player2DownButton = $(this.container).find('.player2Down')[0];
+            this.player2Bid = $(this.container).find('.player2Bid')[0];
+            this.player2SetButton = $(this.container).find('.player2Set')[0];
+            this.player2Cache = $(this.container).find('.player2Cache')[0];
+
+            this.getStartedButton = $(this.container).find('.getStarted')[0];
+
             
             this.wrapTouchEvent(this.player1UpButton, 'player1Up');
             this.wrapTouchEvent(this.player1DownButton, 'player1Down');
@@ -72,7 +91,8 @@
             
             this.getStartedButton.style.display = 'none';
             this.activeCache.style.display = '';
-            this.moveLogContainer.style.visibility = 'hidden';
+            this.activeCache.className = 'activeCache full';
+            this.moveLogContainer.style.display = 'none';
             
             this.activeBidder = null;
             this.activeBid = 21;
@@ -99,8 +119,9 @@
             
             var that = this;
             this.showMessage('Click to get started', function() { that.hideMessage(); that.startGame(); });
-            
-            console.log(JSON.stringify(this.encodeBoard()));
+
+            this.seconds = 60;
+            this.maxTime = 60;
             
             return this.encodeBoard();
         },
@@ -121,20 +142,7 @@
             
             return boardData;
         },
-        
-        createToken : function(id, color)
-        {
-            var token = document.createElement('div');
-            token.id = id;
-            token.style['background-color'] = color;
-            token.style.height = '30px';
-            token.style.width = '30px';
-            token.style.margin = '2px';
-            token.style.display = 'inline-block';
-            
-            return token;
-        },
-        
+
         logClick : function(e)
         {            
             try
@@ -195,27 +203,17 @@
         
         onUserMove : function(move)
         {
-            /*
-                <div class="moveLogItem">
-                    <div class="index">1.</div>
-                    <div class="description">Moved Left</div>
-                </div>
-            */
             var moveLogItem = document.createElement('div');
             moveLogItem.className = 'moveLogItem';
             moveLogItem.onclick = this.wrapCallback('logClick');
-            
-            var moveLogItemIndex = document.createElement('div');
-            moveLogItemIndex.className = 'index';
-            moveLogItemIndex.innerHTML = this.moveLog.length + '.';
-            moveLogItemIndex.style.backgroundColor = move.color;
-            
-            var moveLogItemDesc = document.createElement('div');
-            moveLogItemDesc.className = 'description';
-            moveLogItemDesc.innerHTML = 'Moved ' + move.direction;
-            
-            moveLogItem.appendChild(moveLogItemIndex);
-            moveLogItem.appendChild(moveLogItemDesc);
+
+            moveLogItem.innerHTML = this.moveLogTemplate;
+
+            $(moveLogItem).find('.index')[0].innerHTML = this.moveLog.length + '.';
+            var dir = $(moveLogItem).find('.direction')[0];
+
+            dir.firstChild.style.backgroundColor = move.color;
+            dir.firstChild.className = move.direction;
             
             if (this.moveLogContainer.childNodes.length)
             {
@@ -249,26 +247,11 @@
             }
         },
         
-        drawTime : function(seconds)
-        {
-            if (seconds == 60) seconds = 59.999;
-            
-            this.timerCanvasCtx.fillStyle ='#000';
-            this.timerCanvasCtx.clearRect(0,0,1000,1000);
-            
-            this.timerCanvasCtx.beginPath();
-            this.timerCanvasCtx.moveTo(500,500);
-            this.timerCanvasCtx.arc(500, 500, 500, 0, Math.PI*2*(1 - seconds / 60.0), true);
-            
-            this.timerCanvasCtx.closePath();
-            this.timerCanvasCtx.fill();
-        },
-        
         endRound : function()
         {
-            this.activeCache.style.display = '';
+            this.activeCache.className = 'activeCache full';
             this.getStartedButton.style.display = 'none';
-            this.moveLogContainer.style.visibility = 'hidden';
+            this.moveLogContainer.style.display = 'none';
             
             clearInterval(this.confirmInterval);
             var target = this.captureTile.target;
@@ -322,7 +305,6 @@
             
             this.confirmInterval = setInterval(function()
             {
-                //that.timer.innerHTML = time;
                 var remaining = time - Math.floor((new Date().getTime() - start) / 100) / 10;
                 that.drawTime(remaining);
                 
@@ -344,7 +326,6 @@
         startGame : function()
         {
             this.letsGo = false;
-            this.timer.style.display = '';
             
             var that = this;
             var wait = 6;
@@ -401,7 +382,6 @@
                     {
                         var remaining = time - Math.floor((new Date().getTime() - start) / 100) / 10;
                         that.drawTime(remaining);
-                        //that.timer.innerHTML = elapsed;
                         
                         if (remaining <= 0 || that.letsGo)
                         {
@@ -409,13 +389,12 @@
                             
                             if (that.activeBidder)
                             {
-                                //that.timer.innerHTML = '--';
                                 that.flashMessage('Player ' + (that.activeBidder) + ' get ready...', 1500, function()
                                 {
                                     that.activeCache.style.display = 'none';
                                     that.getStartedButton.style.display = 'none';
                                     
-                                    that.moveLogContainer.style.visibility = 'visible';
+                                    that.moveLogContainer.style.display = 'block';
                                     that.moveLogContainer.style['-webkit-transform'] = '';
                                         
                                     if (that.activeBidder == 2)
@@ -438,8 +417,6 @@
                                 {
                                     that.startRound();
                                 });
-                                
-                                that.timer.style.display = 'none';
                             }
                         }
                         
@@ -476,6 +453,7 @@
                 this.activeBidder = 1;
                 this.activeBid = bid;
                 this.getStartedButton.style.display = '';
+                this.activeCache.className = 'activeCache';
                 
                 this.player2Bid.innerHTML = '-';
             }
@@ -490,7 +468,6 @@
                 this.player2Bid.innerHTML = bid;
             }
         },
-        
         
         player2Down : function()
         {
@@ -514,6 +491,7 @@
                 
                 this.player1Bid.innerHTML = '-';
                 this.getStartedButton.style.display = '';
+                this.activeCache.className = 'activeCache';
             }
         },
         
@@ -536,7 +514,86 @@
                 console.log('render');  
                 that.render();
             }, 1);
-        }
+        },
+
+        moveLogTemplate: ' \
+                        <div class="index">1</div> \
+                        <div class="direction"><div class="left yellow"></div></div> \
+                        <div class="undo"><div></div></div>',
+
+        template: '\
+        <table> \
+            <tbody> \
+            <tr> \
+                <td class="playerData player2Data"> \
+                    <div class="userInfo user2Info"> \
+                        <div class="playerCache player2Cache"> \
+                            <div id="14"> \
+                                <div style="background-color: rgb(216, 136, 56); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block;"></div> \
+                            </div> \
+                        </div> \
+                        <div align="center" colspan="2" class="moveCount" style="font-size:20px"> \
+                            <div class="playerButtons"> \
+                                <button class="player2Up">Up</button><button class="player2Down">Down</button> \
+                                <div class="player2Bid" style="width:55px"> \
+                                20 \
+                                </div> \
+                                <button class="player2Set">Set</button> \
+                            </div> \
+                        </div> \
+                        <div class="timeInfo"> \
+                            <div class="timeCount">00:10</div> \
+                            <div class="clearMoves"><a href="">CLEAR</a></div> \
+                        </div> \
+                        <div colspan="2" class="profile"> \
+                            <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
+                            Nicholas \
+                            </div> \
+                        </div> \
+                    </td> \
+                </tr> \
+                <tr> \
+                    <td height="100%" valign="middle" class="localInfo"> \
+                        <div style="overflow-x: hidden; padding:5px"> \
+                            <button class="getStarted" style="display: block;">Let\'s Go!</button> \
+                            <div class="activeCache full"> \
+                            </div> \
+                        </div> \
+                        <div class="moveLog" style="display:none; border-radius: 5px;">\
+                        </div> \
+                    </td> \
+                </tr> \
+                <tr> \
+                    <td class="playerData player1Data"> \
+                        <div class="userInfo"> \
+                            <div class="playerCache player1Cache"> \
+                                <div id="16"> \
+                                    <div style="background-color: rgb(176, 101, 185); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block;"></div> \
+                                </div> \
+                            </div> \
+                            <div align="center" colspan="2" class="moveCount" style="font-size:20px"> \
+                                <div class="playerButtons"> \
+                                    <button class="player1Up">Up</button><button class="player1Down">Down</button> \
+                                \
+                                    <div class="player1Bid" style="width:55px"> \
+                                    20 \
+                                    </div> \
+                                    <button class="player1Set">Set</button> \
+                                </div> \
+                            </div> \
+                            <div class="timeInfo"> \
+                                <div class="timeCount">00:10</div> \
+                                <div class="clearMoves"><a href="">CLEAR</a></div> \
+                            </div> \
+                            <div colspan="2" class="profile"> \
+                                <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
+                                Nicholas \
+                                </div> \
+                            </div> \
+                        </td> \
+                    </tr> \
+                </tbody> \
+            </table>'
     });
     
     window['localModeGameboard'] = localModeGameboard;

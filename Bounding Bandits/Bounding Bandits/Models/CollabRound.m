@@ -8,11 +8,31 @@
 
 #import "CollabRound.h"
 
+@interface CollabRound()
+
+
+@end
+
 @implementation CollabRound
+
+@synthesize baseObj;
+
++(id)objectWithObject:(NSMutableDictionary*)obj
+{    
+    return [[ CollabRound alloc ] initWithObject:obj ];
+}
 
 +(id)object
 {
-    return [ PFObjectExt objectWithClassName:@"CollabRound" ];
+    return [[ CollabRound alloc ] initWithObject:[ NSMutableDictionary dictionary ]];
+}
+
+-(id)initWithObject:(NSMutableDictionary*)obj
+{    
+    self = [ super init ];
+    self.baseObj = obj;
+    
+    return self;
 }
 
 -(NSString*)userId

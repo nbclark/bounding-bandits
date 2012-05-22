@@ -14,7 +14,9 @@
 @property (nonatomic, readwrite) BOOL isLoading;
 @property (nonatomic, strong) id<BBGameDelegate> gameDelegate;
 
+-(NSUInteger)activeGames;
 -(void)gameCreated:(CollabGame*)game;
 -(void)gameTurnEnded:(CollabGame*)game;
+-(void)showResults:(CollabGame*)game fromRect:(CGRect)aFrame onClose:(BoringBlock)onClose;
 
 @end

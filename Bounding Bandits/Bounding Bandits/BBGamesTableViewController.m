@@ -31,6 +31,7 @@
 @property (nonatomic, strong) NSMutableArray* completedGames;
 @property (nonatomic, strong) PF_EGORefreshTableHeaderView* refreshHeaderView;
 @property (nonatomic, strong) UIPopoverController* popover;
+@property (nonatomic, strong) BoringBlock closePopoverBlock;
 
 @end
 
@@ -43,6 +44,7 @@
 @synthesize refreshHeaderView;
 @synthesize isLoading;
 @synthesize popover;
+@synthesize closePopoverBlock;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -82,6 +84,11 @@
 {
     [ super viewWillAppear:animated ];
     [ self loadData ];
+}
+
+-(NSUInteger)activeGames
+{
+    return [ self.myTurnGames count ] + [ self.theirTurnGames count ];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -169,9 +176,8 @@
     }
     
     NSMutableArray* games = [ PFObjectExt arrayWithArray:objects className:@"CollabGame" loadSubObjects:NO ];
-    NSMutableDictionary* roundObjects = [ NSMutableDictionary dictionary ];
+    
     NSMutableDictionary* userObjects = [ NSMutableDictionary dictionary ];
-    NSMutableArray* roundLists = [ NSMutableArray array ];
     NSMutableArray* userLists = [ NSMutableArray array ];
     
     for (CollabGame* game in games)
@@ -183,38 +189,8 @@
                 [ userObjects setObject:user forKey:user.objectId ];
             }
         }
-        for (PFObject* round in game.rounds)
-        {
-            if (![ roundObjects objectForKey:round.objectId ])
-            {
-                [ roundObjects setObject:round forKey:round.objectId ];
-            }
-        }
         
         [ userLists addObject:game.users ];
-        [ roundLists addObject:game.rounds ];
-    }
-    
-    // I don't like having to do this, but fetchAllIfNeeded is really slow to call on each object...More optimizations to come...
-    if ([ roundObjects count ])
-    {
-        PFQuery* query = [ PFQuery queryWithClassName:@"CollabRound" ];
-        [ query whereKey:@"objectId" containedIn:[ roundObjects allKeys ]];
-        for (PFObject* obj in [ query findObjects ])
-        {
-            for (NSMutableArray* array in roundLists)
-            {
-                for (uint i = 0; i < [ array count ]; ++i)
-                {
-                    PFObject* roundObj = [ array objectAtIndex:i ];
-                    
-                    if ([ roundObj.objectId isEqualToString:obj.objectId ])
-                    {
-                        [ array replaceObjectAtIndex:i withObject:obj ];
-                    }
-                }
-            }
-        }
     }
     
     if ([ userObjects count ])
@@ -239,12 +215,40 @@
         }
     }
     
+    /*
+    for (CollabGame* game in games)
+    {
+        game.rounds = [ NSMutableArray array ];
+        int index = 0;
+        for (PFObject* roundObj in game.legacyRounds)
+        {
+            CollabRound* round = [ CollabRound objectWithObject:roundObj ];
+            
+            NSDictionary* dictionary = [ NSDictionary dictionaryWithObjectsAndKeys:
+                                        [ NSNumber numberWithInteger:index ], @"Index",
+                                        round.userId, @"UserId",
+                                        [ NSNumber numberWithBool:round.completed ], @"Completed",
+                                        [ NSNumber numberWithBool:round.success ], @"Success",
+                                        [ NSNumber numberWithFloat:round.duration ], @"Duration",
+                                        [ NSNumber numberWithFloat:round.elapsed ], @"Elapsed",
+                                        [ NSNumber numberWithInteger:round.moves ], @"Moves",
+                                        round.moveLog, @"MoveLog",
+                                        round.state, @"State",
+                                        nil ];
+            
+            [ game.rounds addObject:dictionary ];
+            index++;
+        }
+        
+        [ game save ];
+    }*/
+    
     [ self.completedGames removeAllObjects ];
     [ self.myTurnGames removeAllObjects ];
     [ self.theirTurnGames removeAllObjects ];
     
     for (CollabGame* game in games)
-    {                
+    {
         if (game.completed)
         {
             [ self.completedGames addObject:game ];
@@ -281,6 +285,7 @@
     
     return nil;
 }
+
 - (void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [ _tableView deselectRowAtIndexPath:indexPath animated:YES ];
@@ -297,24 +302,37 @@
         
         CollabGame* game = [[ self dataForSection:indexPath.section ] objectAtIndex:indexPath.row ];
         
-        BBResultsViewController* controller = [[ BBResultsViewController alloc ] initWithNibName:@"BBResultsViewController" bundle:nil ];
-        controller.game = game;
-        
-        self.popover = [[ UIPopoverController alloc ] initWithContentViewController:controller ];
-        self.popover.popoverContentSize = CGSizeMake(520, 600);
-        self.popover.delegate = self;
-        
-        CGRect aFrame = [ self.tableView convertRect:[self.tableView rectForRowAtIndexPath:indexPath]  toView:self.view.superview ];
+        CGRect aFrame = [ self.tableView convertRect:[self.tableView rectForRowAtIndexPath:indexPath] toView:self.view.superview ];
         aFrame = CGRectMake(aFrame.origin.x, aFrame.origin.y, 50, 50);
         
-        [ self.view.superview showFade:YES ];
-        [ self.popover presentPopoverFromRect:aFrame inView:self.view.superview permittedArrowDirections:UIPopoverArrowDirectionLeft|UIPopoverArrowDirectionDown|UIPopoverArrowDirectionUp animated:YES ];
+        [ self showResults:game fromRect:aFrame onClose:nil ];
     }
+}
+
+-(void)showResults:(CollabGame*)game fromRect:(CGRect)aFrame onClose:(BoringBlock)onClose
+{
+    self.closePopoverBlock = onClose;
+    
+    BBResultsViewController* controller = [[ BBResultsViewController alloc ] initWithNibName:@"BBResultsViewController" bundle:nil ];
+    controller.game = game;
+    
+    self.popover = [[ UIPopoverController alloc ] initWithContentViewController:controller ];
+    self.popover.popoverContentSize = CGSizeMake(520, 520+120+70);
+    self.popover.delegate = self;
+    
+    [ self.view.superview showFade:NO ];
+    [ self.popover presentPopoverFromRect:aFrame inView:self.view.superview permittedArrowDirections:UIPopoverArrowDirectionLeft|UIPopoverArrowDirectionDown|UIPopoverArrowDirectionUp animated:YES ];
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
 {
     [ self.view.superview showFade:NO ];
+    
+    if (self.closePopoverBlock)
+    {
+        self.closePopoverBlock();
+        self.closePopoverBlock = nil;
+    }
     
     return YES;
 }

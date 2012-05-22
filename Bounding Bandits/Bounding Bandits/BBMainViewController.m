@@ -13,6 +13,9 @@
 #import "BBSettingsViewController.h"
 #import "AnimationDelegate.h"
 #import "JSONKit.h"
+#import "DDAlertManager.h"
+
+#import "InventoryKit.h"
 
 #define ANIM_MULTIPLIER 1
 
@@ -168,6 +171,37 @@
 
 -(void)selectGame:(CollabGame*)game isNew:(BOOL)isNew
 {
+    if (isNew)
+    {
+        if (self.gamesController.activeGames >= 5)
+        {
+            NSString* proProduct = @"com.moonlightingmimes.proversion";
+            
+            if (![ InventoryKit productActivated:proProduct ])
+            {
+                [ DDAlertManager alertWithTitle:@"Game Limit Reached" message:@"You have reached the limit of active games (5) for the free version. Would you like to upgrade?" closeBlock:^(int buttonIndex) {
+                    
+                    if (buttonIndex > 0)
+                    {
+                        IKBasicBlock tStart = ^{ 
+                            // notify user of pending transaction using dispatch_async to schedule operations on the main thread
+                        };
+                        IKStringBlock tSuccess = ^(NSString* productKey) {
+                            // notify user of successful purchase using dispatch_async to schedule operations on the main thread
+                            [ InventoryKit activateProduct:proProduct ];
+                        };
+                        IKErrorBlock tFailure = ^(int code, NSString* description) {
+                            // notify user of failed purchase using dispatch_async to schedule operations on the main thread
+                        };
+                        [InventoryKit purchaseProduct:proProduct startBlock:tStart successBlock:tSuccess failureBlock:tFailure];
+                    }
+                } cancelButtonTitle:@"No, Thanks" otherButtonTitles:@"Upgrade", nil ];
+                
+                return;
+            }
+        }
+    }
+    
     self.boardController.view.hidden = NO;
     self.currentGame = game;
     self.gameType = GAME_TYPE_TURN;
@@ -191,29 +225,41 @@
         gameData = state;
     }
     
-    [ self hideMenu ];
-    
     if (createRound)
     {
-        NSString* json = [ self.boardController loadGameWithGameType:GAME_TYPE_TURN gameState:gameData generateState:generateState isActive:isActive elapsed:0 ];
+        // We should show the previous round's progress
+        BoringBlock gameBlock = ^{
+            NSString* json = [ self.boardController loadGameWithGameType:GAME_TYPE_TURN gameState:gameData generateState:generateState isActive:isActive elapsed:0 ];
+            
+            self.currentRound = [ CollabRound object ];
+            self.currentRound.userId = [ PFUser currentUser ].objectId;
+            self.currentRound.completed = NO;
+            self.currentRound.duration = 0;
+            self.currentRound.elapsed = 0;
+            self.currentRound.moves = 0;
+            self.currentRound.moveLog = @"[]";
+            self.currentRound.state = json;
+            
+            [ rounds addObject:self.currentRound.baseObj ];
+            
+            self.currentGame.state = json;
+            self.currentGame.rounds = rounds;
+            self.currentGame.tokenCount = 0;
+            
+            [ self.currentGame.baseObj save ];
+            
+            [ self hideMenu ];
+        };
         
-        self.currentRound = [ CollabRound object ];
-        self.currentRound.userId = [ PFUser currentUser ].objectId;
-        self.currentRound.completed = NO;
-        self.currentRound.duration = 0;
-        self.currentRound.elapsed = 0;
-        self.currentRound.moves = 0;
-        self.currentRound.moveLog = @"[]";
-        self.currentRound.state = json;
-        
-        [ rounds addObject:self.currentRound.baseObj ];
-        
-        self.currentGame.state = json;
-        self.currentGame.rounds = rounds;
-        self.currentGame.tokenCount = 0;
-        
-        [ self.currentGame.baseObj save ];
-        [ self.currentRound.baseObj save ];
+        if (!isNew && [ rounds count ])
+        {
+            // Show the progress here
+            [ self.gamesController showResults:game fromRect:self.view.bounds onClose:gameBlock ];
+        }
+        else
+        {
+            gameBlock();
+        }
     }
     else
     {
@@ -221,7 +267,7 @@
         
         NSString* json = [ self.boardController loadGameWithGameType:GAME_TYPE_TURN gameState:gameData generateState:NO isActive:isActive elapsed:self.currentRound.elapsed ];
         
-        NSLog(@"%@", json);
+        [ self hideMenu ];
     }
     
     if (isNew)
@@ -293,8 +339,7 @@
                 sleep(0);
             } ];
         }];
-        
-        [ self.currentRound saveInBackground ];
+
         [ self.currentGame saveInBackground ];
     }
     else if (self.gameType == GAME_TYPE_BLITZ)

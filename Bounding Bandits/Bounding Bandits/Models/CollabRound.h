@@ -8,8 +8,9 @@
 
 #import "PFObjectExt.h"
 
-@interface CollabRound : PFObjectExt
+@interface CollabRound : NSObject
 
++(id)objectWithObject:(NSMutableDictionary*)obj;
 +(id)object;
 
 @property (nonatomic, readwrite) BOOL completed;
@@ -20,5 +21,6 @@
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* moveLog;
 @property (nonatomic, strong) NSString* state;
+@property (nonatomic, strong) NSMutableDictionary* baseObj;
 
 @end

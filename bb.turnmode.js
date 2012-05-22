@@ -28,7 +28,21 @@
             this.elapsedTime = 0;
             this.container = document.getElementById('turnModeContainer');
             this.container.style.display = 'block';
-            
+
+            this.container.innerHTML = this.template;
+
+            this.moveLogContainer = $(this.container).find('.moveLog')[0];
+            this.moveCountContainer = $(this.container).find('.moveCount')[0];
+            this.activeCache = $(this.container).find('.activeCache')[0];
+            this.timeCountCont = $(this.container).find('.timeCount')[0];
+            var clearMoves = $(this.container).find('.clearMoves')[0];
+            this.wrapTouchEvent(clearMoves, 'clearMoves');
+
+            this.activeCache.style.display = '';
+            this.moveLogContainer.parentNode.style.display = 'none';
+
+            this.activeCache.innerHTML = '';
+            /*
             var tbody = ce(ce(this.container, 'table', null, ''), 'tbody', null, '');
                   
             this.timer = ce(ce(ce(tbody, 'tr'), 'td'), 'div', null, 'timer');
@@ -67,7 +81,7 @@
             
             this.player1Cache.innerHTML = '';
             this.activeCache.innerHTML = '';
-            
+            */
             //p1Data.style.display = 'none';
             
             if (gameData)
@@ -109,6 +123,62 @@
             
             return this.encodeBoard();
         },
+
+        replay: function(moves)
+        {
+            if (this.isReplay)
+            {
+                this.clearMoves();
+            }
+
+            this.container.style.display = 'none';
+
+            this.isReplay = true;
+            this.clearMoves();
+            this.startGame();
+            clearInterval(this.startInterval);
+            this.drawTime(this.maxTime-0.01);
+
+            //var moves = round.MoveLog;
+            this.isActive = false;
+            this.hideMessage();
+            var index = 0;
+            var that = this;
+
+            // this.moveMover = function (mover, from, to, duration, callback)
+
+            var interval = setInterval(function()
+            {
+                if (index >= moves.length)
+                {
+                    that.render();
+                    clearInterval(interval);
+
+                    setTimeout(function() { that.moveLog = that.replayMoveLog; that.replay(moves); }, 2500);
+
+                    return;
+                }
+
+                var move = moves[index];
+
+                var mover = that.movers[move.p];
+                var dir = move.d + 37;
+
+                console.log(move.p + ': ' + (dir - 37));
+
+                that.activeTile = that.tiles[mover.tileIndex];
+                that.activeTile.isActive = true;
+                that.showPossible();
+                that.render();
+
+                // End game needs to move the log
+                that.isActive = true;
+                that.keyDown({ keyCode: dir });
+                that.isActive = false;
+
+                index++;
+            }, 750);
+        },
         
         uninit : function()
         {
@@ -126,6 +196,16 @@
             var boardData = arguments.callee.$.encodeBoard.call(this);
             
             return boardData;
+        },
+
+        clearMoves : function(e)
+        {
+            if (this.moveLogContainer && this.moveLogContainer.childNodes.length)
+            {
+                this.logClick({ currentTarget : this.moveLogContainer.childNodes[this.moveLogContainer.childNodes.length - 1]});
+            }
+
+            return false;
         },
         
         logClick : function(e)
@@ -147,6 +227,8 @@
                 }
 
                 this.goToMove(index);
+
+                this.moveCountContainer.innerHTML = this.moveLogContainer.childNodes.length;
 
                 this.showPossible();
                 this.render();
@@ -172,7 +254,16 @@
             var moveLogItem = document.createElement('div');
             moveLogItem.className = 'moveLogItem';
             moveLogItem.onclick = this.wrapCallback('logClick');
-            
+
+            moveLogItem.innerHTML = this.moveLogTemplate;
+
+            $(moveLogItem).find('.index')[0].innerHTML = this.moveLog.length + '.';
+            var dir = $(moveLogItem).find('.direction')[0];
+
+            dir.firstChild.style.backgroundColor = move.color;
+            dir.firstChild.className = move.direction;
+
+            /*
             var moveLogItemIndex = document.createElement('div');
             moveLogItemIndex.className = 'index';
             moveLogItemIndex.innerHTML = this.moveLog.length + '.';
@@ -184,7 +275,7 @@
             
             moveLogItem.appendChild(moveLogItemIndex);
             moveLogItem.appendChild(moveLogItemDesc);
-            
+            */
             if (this.moveLogContainer.childNodes.length)
             {
                 this.moveLogContainer.insertBefore(moveLogItem, this.moveLogContainer.childNodes[0]);
@@ -193,6 +284,9 @@
             {
                 this.moveLogContainer.appendChild(moveLogItem);
             }
+
+            this.moveCountContainer.innerHTML = this.moveLogContainer.childNodes.length;
+            this.moveLogContainer.parentNode.style.display = 'block';
         },
         
         startRound : function()
@@ -200,23 +294,14 @@
             var that = this;
         },
         
-        drawTime : function(seconds)
-        {
-            if (seconds == this.maxTime) seconds = 59.999;
-            
-            this.timerCanvasCtx.fillStyle ='#000';
-            this.timerCanvasCtx.clearRect(0,0,1000,1000);
-            
-            this.timerCanvasCtx.beginPath();
-            this.timerCanvasCtx.moveTo(500,500);
-            this.timerCanvasCtx.arc(500, 500, 500, 0, Math.PI*2*(1 - seconds / this.maxTime), true);
-            
-            this.timerCanvasCtx.closePath();
-            this.timerCanvasCtx.fill();
-        },
-        
         endRound : function(success)
         {
+            if (this.isReplay)
+            {
+                this.replayMoveLog = this.moveLog;
+                return;
+            }
+
             var elapsed = new Date().getTime() - this.startTime;
             
             this.endResult =
@@ -228,9 +313,7 @@
             };
 
             this.elapsedTime = 0;
-            this.activeCache.style.display = '';
-            this.getStartedButton.style.display = 'none';
-            this.moveLogContainer.style.visibility = 'hidden';
+            this.moveLogContainer.innerHTML = '';
             
             clearInterval(this.startInterval);
             var target = this.captureTile.target;
@@ -299,7 +382,7 @@
         startGame : function()
         {
             this.letsGo = false;
-            this.timer.style.display = '';
+            //this.timer.style.display = '';
             this.moveLog = Array();
             this.moveLogContainer.innerHTML = '';
             this.moveLogContainer.style.visibility = 'visible';
@@ -352,8 +435,64 @@
             };
             
             this.startInterval = setInterval(this.gameWrapper, 250);
-        }
-    });
+        },
+
+        drawTime : function(seconds)
+        {
+            arguments.callee.$.drawTime.call(this, seconds);
+
+            if (this.timeCountCont && seconds)
+            {
+                var time = Math.round(seconds);
+                var min = Math.floor(time / 60);
+                var seconds = Math.floor(time % 60);
+
+                if (min < 10)
+                {
+                    min = '0' + min;
+                }
+                if (seconds < 10)
+                {
+                    seconds = '0' + seconds;
+                }
+
+                this.timeCountCont.innerHTML = min + ':' + seconds;
+            }
+        },
+
+        moveLogTemplate: ' \
+                        <div class="index">1</div> \
+                        <div class="direction"><div class="left yellow"></div></div> \
+                        <div class="undo"><div></div></div>',
+
+        template : ' \
+        <div style="position:relative;height:100%"> \
+            <div style="display:none; vertical-align: bottom; position:absolute; top:0; right:0; left: 0; border: 1px solid blue;"> \
+                <div class="activeCache"> \
+                </div> \
+            </div> \
+            <div style=" position:absolute; bottom:219px; z-index:10; left:20px; right:20px; border: 1px solid black; border-radius: 5px 5px 0 0; overflow: hidden; padding:0px; max-height: 400px"> \
+                <div class="moveLog" style="border-radius: 5px 5px 0 0;"></div> \
+            </div> \
+            <table cellpadding="0" cellspacing="0" class="userInfo"> \
+                <tr> \
+                    <td align="center" colspan="2" class="moveCount"> \
+                    0 \
+                    </td> \
+                </tr> \
+                <tr class="timeInfo"> \
+                    <td class="timeCount"></td> \
+                    <td class="clearMoves"><a href="">CLEAR</a></td> \
+                </tr> \
+                <tr> \
+                    <td colspan="2" class="profile"> \
+                        <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
+                        Nicholas \
+                    </td> \
+                </tr> \
+            </table>    \
+        </div>'
+});
     
     window['turnModeGameboard'] = turnModeGameboard;
 })();

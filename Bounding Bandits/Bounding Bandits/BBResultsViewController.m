@@ -54,8 +54,9 @@
 {
     [ super viewWillAppear:animated ];
     
-    self.tableView.frame = CGRectMake(0, 120, self.view.frame.size.width, self.view.frame.size.height-120);
     BBResultsHeaderView* header = [ BBResultsHeaderView headerWithGame:self.game ];
+    
+    self.tableView.frame = CGRectMake(0, header.bounds.size.height, self.view.frame.size.width, self.view.frame.size.height-header.bounds.size.height);
     header.frame = CGRectMake(0, 0, self.view.bounds.size.width, header.bounds.size.height );
     header.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
@@ -88,14 +89,16 @@
     
     int index = indexPath.row * 2;
     
-    [ cell setValue:[ CollabRound objectWithObject:[ self.game.rounds objectAtIndex:index ]] round2:[ CollabRound objectWithObject:([ self.game.rounds count ] > index + 1) ? [ self.game.rounds objectAtIndex:index + 1 ] : nil ]];
+    [ cell setValue:indexPath.row round1:[ CollabRound objectWithObject:[ self.game.rounds objectAtIndex:index ]] round2:[ CollabRound objectWithObject:([ self.game.rounds count ] > index + 1) ? [ self.game.rounds objectAtIndex:index + 1 ] : nil ]];
     
     return cell;
 }
 
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 120;
+    NSIndexPath* selRow = [ tableView indexPathForSelectedRow ];
+
+    return (selRow && selRow.row == indexPath.row) ? (70 + self.view.bounds.size.width) : 70;
 }
 
 /*
@@ -139,8 +142,38 @@
 
 #pragma mark - Table view delegate
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    BBResultsCell* cell = (BBResultsCell*)[ tableView cellForRowAtIndexPath:indexPath ];
+    cell.replayVisible = NO;
+    
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    BBResultsCell* cell = (BBResultsCell*)[ tableView cellForRowAtIndexPath:indexPath ];
+    
+    [tableView beginUpdates];
+    
+    cell.replayVisible = !cell.replayVisible;
+    
+    if (!cell.replayVisible)
+    {
+        [ tableView deselectRowAtIndexPath:indexPath animated:NO ];
+    }
+    
+    [tableView endUpdates];
+    
+    if (!cell.replayVisible)
+    {
+        [ tableView deselectRowAtIndexPath:indexPath animated:NO ];
+    }
+    else
+    {
+        [ tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES ];
+    }
+    
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];

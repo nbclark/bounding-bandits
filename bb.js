@@ -219,8 +219,8 @@
         }
         else
         {
-            this.dir = (from.col > to.col) ? 2 : 0;
-            this.direction = (from.col > to.col) ? 'Right' : 'Left';
+            this.dir = (from.col > to.col) ? 0 : 2;
+            this.direction = (from.col > to.col) ? 'Left' : 'Right';
         }
     }
 
@@ -325,13 +325,12 @@
     		
     		if (pass == 0)
     		{
-        		var padding = 0.5;
+        		var padding = 0;//0.5;
         		var hPadding = padding / 2;
         		
-        		context.ctx.fillStyle = ((this.row % 2) != (this.col % 2)) ? '#999' : '#aaa';
+        		context.ctx.fillStyle = ((this.row % 2) != (this.col % 2)) ? 'rgb(222,227,233)' : '#fff';
         		context.ctx.fillRect(hPadding + left, hPadding + top, context.tileSize - padding, context.tileSize - padding);
-        		
-        		
+
         		var highlight = this.highlight;
         		
         		if (this.isActive)
@@ -353,22 +352,25 @@
         		var hwallSize = wallSize/2;
         		
         		// 1 is left, 2 is top, 4 is right, 8 is bottom
-        		if (this.wallMask & 1)
-        		{
-        			context.ctx.fillRect(left - hwallSize, top, wallSize, context.tileSize);
-        		}
-        		if (this.wallMask & 2)
-        		{
-        			context.ctx.fillRect(left, top - hwallSize, context.tileSize, wallSize);
-        		}
-        		if (this.wallMask & 4)
-        		{
-        			context.ctx.fillRect(hwallSize + left+context.tileSize-wallSize, top, wallSize, context.tileSize);
-        		}
-        		if (this.wallMask & 8)
-        		{
-        			context.ctx.fillRect(left, hwallSize + top + context.tileSize - wallSize, context.tileSize, wallSize);
-        		}
+                if (this.wallMask != 15)
+                {
+                    if (this.wallMask & 1)
+                    {
+                        context.ctx.fillRect(left - hwallSize, top, wallSize, context.tileSize);
+                    }
+                    if (this.wallMask & 2)
+                    {
+                        context.ctx.fillRect(left, top - hwallSize, context.tileSize, wallSize);
+                    }
+                    if (this.wallMask & 4)
+                    {
+                        context.ctx.fillRect(hwallSize + left+context.tileSize-wallSize, top, wallSize, context.tileSize);
+                    }
+                    if (this.wallMask & 8)
+                    {
+                        context.ctx.fillRect(left, hwallSize + top + context.tileSize - wallSize, context.tileSize, wallSize);
+                    }
+                }
         		
         		if (this.target)
         		{
@@ -535,6 +537,8 @@
 	                }
 	            }
 	        }
+
+            this.drawTime();
         }
         
         this.downPos = null;
@@ -543,20 +547,16 @@
         
         this.createToken = function(id, color)
         {
+            var tokenCont = document.createElement('div');;
+            tokenCont.id = id;
+
             var token = document.createElement('div');
-            token.id = id;
             token.style['background-color'] = color;
-            token.style.height = '30px';
-            token.style.width = '30px';
-            token.style.margin = '2px';
-            token.style.lineHeight = '30px';
-            token.style.color = '#fff';
-            token.style.textAlign = 'center';
-            token.style.textShadow = '0px 0px 3px #000';
-            token.style.display = 'inline-block';
-            token.innerHTML = id;
+            // token.innerHTML = id;
+
+            tokenCont.appendChild(token);
             
-            return token;
+            return tokenCont;
         }
         
         this.getTileByPosition = function (x, y)
@@ -578,6 +578,7 @@
         // moveIndex is the index of the move to revert to - 0 is the starting state
         this.goToMove = function(moveIndex)
         {
+            debugger;
             clearInterval(this.moveInterval);
 
             if (moveIndex >= 0 && moveIndex < this.moveLog.length)
@@ -615,7 +616,6 @@
             }
 
             this.moveLog.push(move);
-            
             this.onUserMove(move);
             
             var that = this;
@@ -968,9 +968,23 @@
         }
         
         this.keyDown = function (e) {
-        
+
             if (!this.isActive) return;
-            
+
+            /*
+              left, up, right, down
+             if (from.col == to.col)
+             {
+             this.dir = (from.row > to.row) ? 1 : 3;
+             this.direction = (from.row > to.row) ? 'Up' : 'Down';
+             }
+             else
+             {
+             this.dir = (from.col > to.col) ? 2 : 0;
+             this.direction = (from.col > to.col) ? 'Left' : 'Right';
+             }
+
+             */
         	if (e.keyCode >= 37 && e.keyCode <= 40)
         	{
 	        	if (this.activeTile)
@@ -1106,6 +1120,28 @@
         this.moveLog = Array();
     };
 
+    gameboard.prototype.drawTime = function(seconds)
+    {
+        seconds = (seconds == undefined) ? this.seconds : seconds;
+        this.seconds = seconds;
+        if (seconds == this.maxTime) seconds = 59.999;
+
+        var left = this.context.boardLeft + this.context.tileSize * 7;
+        var top = this.context.boardTop + this.context.tileSize * 7;
+
+        this.context.ctx.fillStyle = '#3A3C41';
+        this.context.ctx.fillRect(left, top, this.context.tileSize * 2, this.context.tileSize * 2);
+
+        this.context.ctx.fillStyle ='rgb(222,227,233)';
+
+        this.context.ctx.beginPath();
+        this.context.ctx.moveTo(left+this.context.tileSize,top+this.context.tileSize);
+        this.context.ctx.arc(left+this.context.tileSize,top+this.context.tileSize, this.context.tileSize * 0.8, 0, Math.PI*2*(1 - seconds / this.maxTime), true);
+
+        this.context.ctx.closePath();
+        this.context.ctx.fill();
+    };
+
     gameboard.prototype.resize = function (e)
     {
         if (document.body.offsetHeight > document.body.offsetWidth)
@@ -1114,7 +1150,7 @@
         }
 
         // padding = 15
-        var padding = 15;
+        var padding = 10;
 
         var size = Math.min(container.offsetWidth - padding*2, container.offsetHeight - padding*2);
 
@@ -1313,6 +1349,9 @@
         else {
             //return;
         }
+
+        this.seconds = 90;
+        this.maxTime = 90;
         
         var btCopy = Array();
         for (var i = 0; i < boardTiles.length; ++i)

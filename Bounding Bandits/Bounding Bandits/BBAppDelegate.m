@@ -11,6 +11,7 @@
 #import "BBLoginViewController.h"
 #import "BBMainViewController.h"
 #import "Utils.h"
+#import "InventoryKit.h"
 #import <Parse/Parse.h>
 
 @implementation BBAppDelegate
@@ -31,6 +32,9 @@ static BBAppDelegate* _sharedDelegate;
 {
     _sharedDelegate = self;
     
+    [InventoryKit registerWithPaymentQueue];
+    
+    [PFFacebookUtils initializeWithApplicationId:@"345467858832397"];
     [ [UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone ];
     
     [ application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound ];

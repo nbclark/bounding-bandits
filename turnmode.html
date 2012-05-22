@@ -5,73 +5,157 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="bb.css" />
     <style type="text/css">
-        .userInfo
+        #turnModeContainer .userInfo
         {
             position: absolute; bottom: 0; height: 220px;  right:0; left: 0; width:100%; color: #fff; border: 1px solid #222; border-radius: 5px; font-size:20px; font-weight: 400;
-            box-shadow: 0px 0px 10px #888;
+            box-shadow: 0px 0px 5px #222;
         }
-        .userInfo td
+        #turnModeContainer .userInfo td
         {
             padding: 5px;
         }
-        .userInfo .moveCount
+        #turnModeContainer .userInfo .moveCount
         {
             padding:5px; font-size: 80px; font-weight: lighter;
         }
-        .userInfo .timeInfo
+        #turnModeContainer .userInfo .timeInfo
         {
             border-bottom: 2px solid black;
         }
-        .userInfo .clearMoves
+        #turnModeContainer .userInfo .clearMoves
         {
             text-align: right;
         }
-        .userInfo .clearMoves a
+        #turnModeContainer .userInfo .clearMoves a
         {
-            color: blue;
+            color: teal;
+            text-decoration: none;
+            font-weight: bold;
         }
-        .userInfo .profile
+        #turnModeContainer .userInfo .profile
         {
-            border-top: 2px solid black; padding:5px;
+            border-top: 1px solid black; padding:5px;
+            box-shadow: 0px 0px 5px #222;
         }
-        .userInfo .profile img
+        #turnModeContainer .userInfo .profile img
         {
             border-radius: 5px;
         }
 
-        .moveLog
+        #turnModeContainer .moveLog
         {
-            max-height: 200px;
+            max-height: 400px;
+            background-color: #fff;
         }
 
-        .moveLog div
+        #turnModeContainer .moveLog div
         {
-            vertical-align: bottom;
+            vertical-align: middle;
         }
 
-        .moveLogItem
+        #turnModeContainer .moveLogItem
         {
             width: 100%;
             display: block;
+            padding: 6px 0;
         }
 
-        .moveLogItem div
+        #turnModeContainer .moveLogItem:nth-child(n+2)
+        {
+            border-top: 1px solid rgb(222,227,233);
+        }
+
+        #turnModeContainer .moveLogItem div
         {
             float:left;
             text-align: center;
+            height:50px;
+            line-height: 50px;
         }
 
-        .moveLogItem .index
+        #turnModeContainer .moveLogItem .index
         {
             width:25%;
+            color: rgb(222,227,233);
+            font-size: 30px;
+            font-weight: 100;
         }
-        .moveLogItem .direction
+        #turnModeContainer .moveLogItem .direction
         {
             width:50%;
+            position:relative;
         }
-        .moveLogItem .undo
+
+        #turnModeContainer .moveLogItem .direction > div
+        {
+            background-size: 36px 36px;
+            background-repeat: no-repeat;
+            background-position: center;
+            position:absolute;
+            left: 50%;
+            margin-left:-25px;
+            width: 50px;
+            border-radius: 25px;
+        }
+
+        #turnModeContainer .moveLogItem .up
+        {
+            background-image:url(arrow-up.png);
+        }
+        #turnModeContainer .moveLogItem .down
+        {
+            background-image:url(arrow-down.png);
+        }
+        #turnModeContainer .moveLogItem .left
+        {
+            background-image:url(arrow-left.png);
+        }
+        #turnModeContainer .moveLogItem .right
+        {
+            background-image:url(arrow-right.png);
+        }
+        #turnModeContainer .moveLogItem .undo
         {
             width:25%;
+            text-align: right;
+            position: relative;
+        }
+
+        #turnModeContainer .moveLogItem .red
+        {
+            background-color: rgb(255,0,0);
+        }
+
+        #turnModeContainer .moveLogItem .blue
+        {
+            background-color: rgb(0,0,255);
+        }
+
+        #turnModeContainer .moveLogItem .yellow
+        {
+            background-color: rgb(255,255,0);
+        }
+
+        #turnModeContainer .moveLogItem .green
+        {
+            background-color: rgb(0,255,0);
+        }
+
+        #turnModeContainer .moveLogItem .undo > div
+        {
+            position: absolute;
+            left:50%;
+            top:50%;
+            margin-left:-15px;
+            margin-top:-15px;
+            width:30px;
+            height:30px;
+            border-radius: 15px;
+            background-color: rgb(222,227,233);
+            background-image:url(x.png);
+            background-size: 20px 20px;
+            background-repeat: no-repeat;
+            background-position: center;
         }
     </style>
 </head>
@@ -79,46 +163,56 @@
 
 <div id="turnModeContainer" class="modeContainer" style="display: block; ">
     <div style="position:relative;height:100%">
-            <div style="vertical-align: bottom; position:absolute; top:0; right:0; left: 0; border: 1px solid blue;">
+            <div style="display:none; vertical-align: bottom; position:absolute; top:0; right:0; left: 0; border: 1px solid blue;">
                 <div class="activeCache">
                     <div id="0" style="background-color: rgb(176, 101, 185); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block; ">0</div>
                     <div id="1" style="background-color: rgb(50, 164, 57); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block; ">1</div>
                     <div id="2" style="background-color: rgb(216, 136, 56); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block; ">2</div>
                 </div>
             </div>
-            <div style=" position:absolute; bottom:219px; z-index:10; left:20px; right:20px; border: 1px solid orange; border-radius: 5px 5px 0 0; overflow: hidden; padding:5px; max-height: 200px">
-                <div class="moveLog">
+            <div style=" position:absolute; bottom:219px; z-index:10; left:20px; right:20px; border: 1px solid black; border-radius: 5px 5px 0 0; overflow: hidden; padding:0px; max-height: 400px">
+                <div class="moveLog" style="border-radius: 5px 5px 0 0;">
                     <div class="moveLogItem">
                         <div class="index">1</div>
-                        <div class="direction">U</div>
-                        <div class="undo">x</div>
+                        <div class="direction"><div class="down blue"></div></div>
+                        <div class="undo"><div></div></div>
                     </div>
                     <div class="moveLogItem">
                         <div class="index">1</div>
-                        <div class="direction">U</div>
-                        <div class="undo">x</div>
+                        <div class="direction"><div class="left yellow"></div></div>
+                        <div class="undo"><div></div></div>
                     </div>
                     <div class="moveLogItem">
                         <div class="index">1</div>
-                        <div class="direction">U</div>
-                        <div class="undo">x</div>
+                        <div class="direction"><div class="right green"></div></div>
+                        <div class="undo"><div></div></div>
                     </div>
                     <div class="moveLogItem">
                         <div class="index">1</div>
-                        <div class="direction">U</div>
-                        <div class="undo">x</div>
+                        <div class="direction"><div class="up red"></div></div>
+                        <div class="undo"><div></div></div>
                     </div>
                     <div class="moveLogItem">
                         <div class="index">1</div>
-                        <div class="direction">U</div>
-                        <div class="undo">x</div>
+                        <div class="direction"><div class="down blue"></div></div>
+                        <div class="undo"><div></div></div>
+                    </div>
+                    <div class="moveLogItem">
+                        <div class="index">1</div>
+                        <div class="direction"><div class="left yellow"></div></div>
+                        <div class="undo"><div></div></div>
+                    </div>
+                    <div class="moveLogItem">
+                        <div class="index">1</div>
+                        <div class="direction"><div class="right green"></div></div>
+                        <div class="undo"><div></div></div>
                     </div>
                 </div>
             </div>
             <table cellpadding="0" cellspacing="0" class="userInfo">
                 <tr>
                     <td align="center" colspan="2" class="moveCount">
-                    4/12
+                    4
                     </td>
                 </tr>
                 <tr class="timeInfo">
@@ -131,7 +225,8 @@
                         Nicholas
                     </td>
                 </tr>
-            </div>
+            </table>
+        </div>
     </div>
 </div>
 

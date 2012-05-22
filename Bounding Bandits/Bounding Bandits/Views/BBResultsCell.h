@@ -9,19 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "Models.h"
 
-@interface BBResultsCell : UITableViewCell
+@interface BBResultsCell : UITableViewCell<UIWebViewDelegate>
 
-@property (nonatomic, strong) IBOutlet UILabel* moves1;
-@property (nonatomic, strong) IBOutlet UILabel* moves2;
+@property (nonatomic, strong) IBOutlet UIButton* moves1;
+@property (nonatomic, strong) IBOutlet UIButton* moves2;
 
-@property (nonatomic, strong) IBOutlet UILabel* time1;
-@property (nonatomic, strong) IBOutlet UILabel* time2;
+@property (nonatomic, strong) IBOutlet UILabel* roundLabel;
+@property (nonatomic, strong) IBOutlet UIWebView* replayView;
 
 @property (nonatomic, strong) CollabRound* round1;
 @property (nonatomic, strong) CollabRound* round2;
 
+@property (nonatomic) BOOL replayVisible;
+@property (nonatomic) BOOL user1Active;
+
 +(id)cell;
 
--(void)setValue:(CollabRound*)round1 round2:(CollabRound*)round2;
+-(void)setValue:(NSUInteger)roundNumber round1:(CollabRound*)_round1 round2:(CollabRound*)_round2;
 
 @end

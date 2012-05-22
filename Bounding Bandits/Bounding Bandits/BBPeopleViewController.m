@@ -142,6 +142,7 @@
     
     if (friend.user)
     {
+        // Check here for # of active games...
         CollabGame* currentGame = [ CollabGame object ];
         currentGame.completed = NO;
         currentGame.creator = [ PFUser currentUser ];

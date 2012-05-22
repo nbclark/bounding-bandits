@@ -17,6 +17,7 @@
 @property (nonatomic, strong) PFUser* creator;
 @property (nonatomic, strong) NSMutableArray* users;
 @property (nonatomic, strong) NSMutableArray* rounds;
+@property (nonatomic, strong) NSMutableArray* legacyRounds;
 @property (nonatomic, readwrite) NSUInteger tokenCount;
 @property (nonatomic, readwrite) BOOL completed;
 

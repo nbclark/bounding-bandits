@@ -98,7 +98,8 @@
 {
     float elapsedTime = [[ self.webView stringByEvaluatingJavaScriptFromString:@"pauseGame();" ] floatValue ];
     self.currentRound.elapsed = elapsedTime;
-    [ self.currentRound save ];
+    
+    [ self.currentGame save ];
 }
 
 -(void)willBecomeActive
@@ -728,8 +729,7 @@
                     self.currentRound.duration = [[ results objectForKey:@"Duration" ] floatValue ];
                     self.currentRound.moves = [[ results objectForKey:@"Moves" ] integerValue ];
                     self.currentRound.moveLog = [[ results objectForKey:@"MoveLog" ] JSONString ];
-                    
-                    [ self.currentRound saveInBackground ];
+
                     [ self.currentGame saveInBackground ];
                     
                     [ self.tableView reloadData ];
@@ -890,14 +890,13 @@
         self.currentRound.moves = 0;
         self.currentRound.moveLog = @"[]";
         
-        [ rounds addObject:self.currentRound.baseObj ];
+        [ rounds addObject:self.currentRound ];
         
         self.currentGame.state = json;
         self.currentGame.rounds = rounds;
         self.currentGame.tokenCount = 0;
 
         [ self.currentGame.baseObj save ];
-        [ self.currentRound.baseObj save ];
     }
     else
     {
