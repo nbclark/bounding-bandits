@@ -2,36 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8d5f1d9d-2ab3-4a0c-844f-2fcd7fa860e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Classes/DDAlertManager.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Classes/DDAlertManager.m" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bb.replaymode.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/localmode.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/project.pbxproj" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/project.xcworkspace/xcuserdata/nclark.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/project.xcworkspace/xcuserdata/nclark.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/xcuserdata/nclark.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/xcuserdata/nclark.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/xcuserdata/nclark.xcuserdatad/xcschemes/xcschememanagement.plist" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits.xcodeproj/xcuserdata/nclark.xcuserdatad/xcschemes/xcschememanagement.plist" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBAppDelegate.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBAppDelegate.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBGamesTableViewController.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBGamesTableViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBMainViewController.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBMainViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBPeopleViewController.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBPeopleViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBResultsViewController.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBResultsViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBResultsViewController.xib" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBResultsViewController.xib" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBViewController.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/BBViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabGame.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabGame.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabRound.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabRound.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.m" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.xib" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.xib" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsHeaderView.xib" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsHeaderView.xib" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabGame.h" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabGame.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabRound.h" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Models/CollabRound.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.h" afterPath="$PROJECT_DIR$/Bounding Bandits/Bounding Bandits/Views/BBResultsCell.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bb.css" afterPath="$PROJECT_DIR$/bb.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bb.html" afterPath="$PROJECT_DIR$/bb.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bb.js" afterPath="$PROJECT_DIR$/bb.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bb.localmode.js" afterPath="$PROJECT_DIR$/bb.localmode.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bb.turnmode.js" afterPath="$PROJECT_DIR$/bb.turnmode.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/turnmode.html" afterPath="$PROJECT_DIR$/turnmode.html" />
     </list>
     <ignored path="ricochet.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -385,7 +357,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="72" y="22" width="1608" height="1028" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3296582" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
