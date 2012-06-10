@@ -15,3 +15,10 @@ typedef void (^BoringBlock)() ;
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+
+
+static inline CGPoint CGRectGetCenter( CGRect r )
+{
+	return (CGPoint){ CGRectGetMidX( r ), CGRectGetMidY( r ) } ;
+}

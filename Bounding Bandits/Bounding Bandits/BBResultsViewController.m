@@ -9,14 +9,20 @@
 #import "BBResultsViewController.h"
 #import "BBResultsHeaderView.h"
 #import "BBResultsCell.h"
+#import "UIResponder+ActionPerforming.h"
 
 @interface BBResultsViewController ()
+
+@property (nonatomic, strong) UIButton* getStartedButton;
 
 @end
 
 @implementation BBResultsViewController
 
 @synthesize game;
+@synthesize getStartedButton;
+@synthesize delegate;
+@synthesize showStart;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -25,6 +31,14 @@
         // Custom initialization
     }
     return self;
+}
+
+-(void)dismiss
+{
+    if (self.delegate)
+    {
+        [ self.delegate dismissPopover ];
+    }
 }
 
 - (void)viewDidLoad
@@ -36,13 +50,38 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.getStartedButton = [ UIButton buttonWithType:UIButtonTypeCustom ];
+    self.getStartedButton.titleLabel.font = [ UIFont boldSystemFontOfSize:24 ];
+    
+    [ self.getStartedButton setTitle:@"Start the Round!" forState:UIControlStateNormal ];
+    [ self.getStartedButton setBackgroundImage:[ UIImage imageNamed:@"img/btn-newgame.png" ] forState:UIControlStateNormal ];
+    
+    BBResultsHeaderView* header = [ BBResultsHeaderView headerWithGame:self.game ];
+    
+    float height = self.showStart ? 66 : 0;
+    
+    self.tableView.frame = CGRectMake(0, header.bounds.size.height, self.view.frame.size.width, self.view.frame.size.height-header.bounds.size.height);
+    header.frame = CGRectMake(0, height, self.view.bounds.size.width, header.bounds.size.height );
+    header.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    UIView* headerCont = [[ UIView alloc ] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, header.bounds.size.height + height)];
+    
+    [ headerCont addSubview:self.getStartedButton ];
+    [ headerCont addSubview:header ];
+    
+    self.tableView.tableHeaderView = headerCont;
+    self.getStartedButton.frame = CGRectMake(0, 0, headerCont.bounds.size.width, 66);
+    self.getStartedButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [ self.getStartedButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside ];
+    
+    self.getStartedButton.hidden = !self.showStart;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.getStartedButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -53,14 +92,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [ super viewWillAppear:animated ];
-    
-    BBResultsHeaderView* header = [ BBResultsHeaderView headerWithGame:self.game ];
-    
-    self.tableView.frame = CGRectMake(0, header.bounds.size.height, self.view.frame.size.width, self.view.frame.size.height-header.bounds.size.height);
-    header.frame = CGRectMake(0, 0, self.view.bounds.size.width, header.bounds.size.height );
-    header.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    [ self.view.superview addSubview:header ];
 }
 
 #pragma mark - Table view data source

@@ -190,11 +190,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/Models/CollabGame.m"
-         timestampString = "358142087.595198"
+         timestampString = "360132763.025807"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "102"
-         endingLineNumber = "102"
+         startingLineNumber = "105"
+         endingLineNumber = "105"
          landmarkName = "-scoresForUsers"
          landmarkType = "5">
       </FileBreakpoint>
@@ -515,11 +515,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/Models/CollabGame.m"
-         timestampString = "358142087.595198"
+         timestampString = "360132763.025807"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "103"
-         endingLineNumber = "103"
+         startingLineNumber = "106"
+         endingLineNumber = "106"
          landmarkName = "-scoresForUsers"
          landmarkType = "5">
       </FileBreakpoint>
@@ -528,11 +528,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
+         timestampString = "360982680.934492"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "95"
-         endingLineNumber = "95"
+         startingLineNumber = "119"
+         endingLineNumber = "119"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -541,11 +541,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
+         timestampString = "361036241.275823"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "140"
-         endingLineNumber = "140"
+         startingLineNumber = "179"
+         endingLineNumber = "179"
+         landmarkName = "@implementation BBAppDelegate"
+         landmarkType = "3">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBAppDelegate.m"
+         timestampString = "361036241.275823"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "181"
+         endingLineNumber = "181"
          landmarkName = "-application:didRegisterForRemoteNotificationsWithDeviceToken:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -554,24 +567,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
+         timestampString = "360982680.934492"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "142"
-         endingLineNumber = "142"
-         landmarkName = "-application:didRegisterForRemoteNotificationsWithDeviceToken:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "97"
-         endingLineNumber = "97"
+         startingLineNumber = "121"
+         endingLineNumber = "121"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -645,11 +645,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/Models/CollabGame.m"
-         timestampString = "358142087.595198"
+         timestampString = "360132763.025807"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "106"
-         endingLineNumber = "106"
+         startingLineNumber = "109"
+         endingLineNumber = "109"
          landmarkName = "-scoresForUsers"
          landmarkType = "5">
       </FileBreakpoint>
@@ -800,25 +800,12 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Bounding Bandits/BBPeopleViewController.m"
-         timestampString = "358145113.977638"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "64"
-         endingLineNumber = "64"
-         landmarkName = "-viewDidLoad"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
+         timestampString = "360982680.934492"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "41"
-         endingLineNumber = "41"
+         startingLineNumber = "51"
+         endingLineNumber = "51"
          landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -827,12 +814,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBAppDelegate.m"
-         timestampString = "359266974.960646"
+         timestampString = "361036241.275823"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "146"
-         endingLineNumber = "146"
-         landmarkName = "-application:didFailToRegisterForRemoteNotificationsWithError:"
+         startingLineNumber = "185"
+         endingLineNumber = "185"
+         landmarkName = "-application:didRegisterForRemoteNotificationsWithDeviceToken:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -840,11 +827,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "293"
-         endingLineNumber = "293"
+         startingLineNumber = "309"
+         endingLineNumber = "309"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -853,11 +840,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "290"
-         endingLineNumber = "290"
+         startingLineNumber = "306"
+         endingLineNumber = "306"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -866,11 +853,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "291"
-         endingLineNumber = "291"
+         startingLineNumber = "307"
+         endingLineNumber = "307"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -879,11 +866,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "138"
-         endingLineNumber = "138"
+         startingLineNumber = "148"
+         endingLineNumber = "148"
          landmarkName = "-loadGames:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -892,11 +879,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354664.377166"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "85"
-         endingLineNumber = "85"
+         startingLineNumber = "96"
+         endingLineNumber = "96"
          landmarkName = "-viewWillAppear:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -905,11 +892,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354664.377166"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "78"
-         endingLineNumber = "78"
+         startingLineNumber = "89"
+         endingLineNumber = "89"
          landmarkName = "-viewDidUnload"
          landmarkType = "5">
       </FileBreakpoint>
@@ -931,11 +918,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029837.667595"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "64"
-         endingLineNumber = "64"
+         startingLineNumber = "66"
+         endingLineNumber = "66"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -944,11 +931,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029901.602337"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "103"
-         endingLineNumber = "103"
+         startingLineNumber = "106"
+         endingLineNumber = "106"
          landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -957,11 +944,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029901.602337"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "143"
-         endingLineNumber = "143"
+         startingLineNumber = "146"
+         endingLineNumber = "146"
          landmarkName = "-webViewDidFinishLoad:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -970,11 +957,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029901.602337"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "160"
-         endingLineNumber = "160"
+         startingLineNumber = "163"
+         endingLineNumber = "163"
          landmarkName = "-loadGameWithGameType:gameState:generateState:isActive:elapsed:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -983,11 +970,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029837.667595"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "95"
-         endingLineNumber = "95"
+         startingLineNumber = "97"
+         endingLineNumber = "97"
          landmarkName = "-showMessage:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -996,11 +983,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBBoardViewController.m"
-         timestampString = "356940701.919826"
+         timestampString = "361029837.667595"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "90"
-         endingLineNumber = "90"
+         startingLineNumber = "92"
+         endingLineNumber = "92"
          landmarkName = "-messageViewClick"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1035,11 +1022,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "109"
-         endingLineNumber = "109"
+         startingLineNumber = "119"
+         endingLineNumber = "119"
          landmarkName = "-gameTurnEnded:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1048,11 +1035,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "110"
-         endingLineNumber = "110"
+         startingLineNumber = "120"
+         endingLineNumber = "120"
          landmarkName = "-gameTurnEnded:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1074,11 +1061,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353568.913543"
+         timestampString = "360133163.490688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "39"
-         endingLineNumber = "39"
+         startingLineNumber = "78"
+         endingLineNumber = "78"
          landmarkName = "-viewDidLoad"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1087,11 +1074,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353568.913543"
+         timestampString = "360133163.490688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "40"
-         endingLineNumber = "40"
+         startingLineNumber = "79"
+         endingLineNumber = "79"
          landmarkName = "@implementation BBResultsViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -1100,11 +1087,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353646.222977"
+         timestampString = "360133163.490688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "85"
-         endingLineNumber = "85"
+         startingLineNumber = "116"
+         endingLineNumber = "116"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1113,11 +1100,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353646.222977"
+         timestampString = "360133163.490688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "78"
-         endingLineNumber = "78"
+         startingLineNumber = "109"
+         endingLineNumber = "109"
          landmarkName = "-tableView:numberOfRowsInSection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1126,25 +1113,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353646.222977"
+         timestampString = "360133163.490688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "87"
-         endingLineNumber = "87"
+         startingLineNumber = "118"
+         endingLineNumber = "118"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Bounding Bandits/BBResultsViewController.m"
-         timestampString = "359353646.222977"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "63"
-         endingLineNumber = "63"
-         landmarkName = "-viewWillAppear:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1425,11 +1399,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/ViewContollers/BBSettingsViewController.m"
-         timestampString = "357974226.447185"
+         timestampString = "361038303.869575"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "71"
-         endingLineNumber = "71"
+         startingLineNumber = "179"
+         endingLineNumber = "179"
          landmarkName = "-createGameClicked:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1438,11 +1412,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBPeopleViewController.m"
-         timestampString = "359266974.960646"
+         timestampString = "361038703.151832"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "305"
-         endingLineNumber = "305"
+         startingLineNumber = "408"
+         endingLineNumber = "408"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1451,11 +1425,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBPeopleViewController.m"
-         timestampString = "359266974.960646"
+         timestampString = "361038703.151832"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "272"
-         endingLineNumber = "272"
+         startingLineNumber = "374"
+         endingLineNumber = "374"
          landmarkName = "-tableView:cellForRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1464,11 +1438,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/ViewContollers/BBSettingsViewController.m"
-         timestampString = "357974936.022416"
+         timestampString = "361038303.869575"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "98"
-         endingLineNumber = "98"
+         startingLineNumber = "206"
+         endingLineNumber = "206"
          landmarkName = "-startGame:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1477,12 +1451,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBPeopleViewController.m"
-         timestampString = "359266974.960646"
+         timestampString = "361038703.151832"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "404"
-         endingLineNumber = "404"
-         landmarkName = "-processFBFriends"
+         startingLineNumber = "545"
+         endingLineNumber = "545"
+         landmarkName = "-processFriends"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1490,12 +1464,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBMainViewController.m"
-         timestampString = "359354664.377166"
+         timestampString = "359784195.367636"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "300"
-         endingLineNumber = "300"
-         landmarkName = "-selectGame:isNew:"
+         startingLineNumber = "304"
+         endingLineNumber = "304"
+         landmarkName = "-endGame:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1503,11 +1477,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "116"
-         endingLineNumber = "116"
+         startingLineNumber = "126"
+         endingLineNumber = "126"
          landmarkName = "-gameTurnEnded:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1555,11 +1529,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Bounding Bandits/BBGamesTableViewController.m"
-         timestampString = "359354821.569206"
+         timestampString = "361037772.012688"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "243"
-         endingLineNumber = "243"
+         startingLineNumber = "253"
+         endingLineNumber = "253"
          landmarkName = "-processLoadedGames:fromCache:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1574,6 +1548,435 @@
          startingLineNumber = "49"
          endingLineNumber = "49"
          landmarkName = "-completed"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBGamesTableViewController.m"
+         timestampString = "361037772.012688"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "283"
+         endingLineNumber = "283"
+         landmarkName = "-dismissPopover"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBAppDelegate.m"
+         timestampString = "361036241.275823"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "176"
+         endingLineNumber = "176"
+         landmarkName = "-userDidLogIn"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBLoginViewController2.m"
+         timestampString = "360977127.217273"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "79"
+         endingLineNumber = "79"
+         landmarkName = "-request:didLoad:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBMainViewController.m"
+         timestampString = "360131889.961855"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "360"
+         endingLineNumber = "360"
+         landmarkName = "-signalLoadComplete:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBGamesTableViewController.m"
+         timestampString = "361037772.012688"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "136"
+         endingLineNumber = "136"
+         landmarkName = "-finishedLoading"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBSettingsViewController.m"
+         timestampString = "361038303.869575"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "243"
+         endingLineNumber = "243"
+         landmarkName = "-signalLoadComplete:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBSettingsViewController.m"
+         timestampString = "361038303.869575"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "172"
+         endingLineNumber = "172"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "67"
+         endingLineNumber = "67"
+         landmarkName = "-viewDidLoad"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "68"
+         endingLineNumber = "68"
+         landmarkName = "-viewDidLoad"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "38"
+         endingLineNumber = "38"
+         landmarkName = "-signUpTapped:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBNavigationController.m"
+         timestampString = "360980717.015668"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "79"
+         endingLineNumber = "79"
+         landmarkName = "-keyboardDidShow:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "100"
+         endingLineNumber = "100"
+         landmarkName = "-logInViewController:didLogInUser:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "88"
+         endingLineNumber = "88"
+         landmarkName = "-logInViewController:didLogInUser:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/Categories/UIImageView+DD.m"
+         timestampString = "360983986.093651"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "34"
+         endingLineNumber = "34"
+         landmarkName = "+LoadImageWithUrl:imageControl:defaultImage:onComplete:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/Categories/UIImageView+DD.m"
+         timestampString = "360983995.672402"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "31"
+         endingLineNumber = "31"
+         landmarkName = "+LoadImageWithUrl:imageControl:defaultImage:onComplete:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBSignUpViewController.m"
+         timestampString = "360986939.015708"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "84"
+         endingLineNumber = "84"
+         landmarkName = "-signUpViewController:didSignUpUser:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBMainViewController.m"
+         timestampString = "360986448.464173"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "168"
+         endingLineNumber = "168"
+         landmarkName = "-startGame:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBSettingsViewController.m"
+         timestampString = "361038303.869575"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "137"
+         endingLineNumber = "137"
+         landmarkName = "-twitterToggled:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/ViewContollers/BBLoginViewController.m"
+         timestampString = "360993819.471425"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "117"
+         endingLineNumber = "117"
+         landmarkName = "-logInViewController:didLogInUser:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038703.151832"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "108"
+         endingLineNumber = "108"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038703.151832"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "113"
+         endingLineNumber = "113"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038703.151832"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "122"
+         endingLineNumber = "122"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038703.151832"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "450"
+         endingLineNumber = "450"
+         landmarkName = "-processFriends"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038703.151832"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "130"
+         endingLineNumber = "130"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBBoardViewController.m"
+         timestampString = "361029832.538244"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "99"
+         endingLineNumber = "99"
+         landmarkName = "-showMessage:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/MessageView.m"
+         timestampString = "361035561.93137"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "77"
+         endingLineNumber = "77"
+         landmarkName = "-messageFrame"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBAppDelegate.m"
+         timestampString = "361036241.275823"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
+         landmarkName = "-applyTheme"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBGamesTableViewController.m"
+         timestampString = "361037796.854407"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "81"
+         endingLineNumber = "81"
+         landmarkName = "-viewDidLoad"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038711.818378"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "149"
+         endingLineNumber = "149"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038717.453142"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
+         landmarkName = "-loadData"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038775.186965"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "547"
+         endingLineNumber = "547"
+         landmarkName = "-processFriends"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038777.751565"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "549"
+         endingLineNumber = "549"
+         landmarkName = "-processFriends"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Bounding Bandits/BBPeopleViewController.m"
+         timestampString = "361038801.750812"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "85"
+         endingLineNumber = "85"
+         landmarkName = "-loadData"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

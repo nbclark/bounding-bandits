@@ -28,7 +28,9 @@
 @property (nonatomic, strong) NSMutableArray* friends;
 @property (nonatomic, strong) NSMutableArray* sections;
 @property (nonatomic, strong) NSMutableArray* objects;
-@property (nonatomic, strong) IBOutlet UITableView* tableView;
+@property (nonatomic, assign) IBOutlet UITableView* tableView;
+@property (nonatomic, assign) IBOutlet UIButton* randomButton;
+@property (nonatomic, assign) IBOutlet UIButton* localModeButton;
 @property (nonatomic, strong) PF_EGORefreshTableHeaderView* refreshHeaderView;
 @property (nonatomic, readwrite) BOOL isLoading;
 @property (nonatomic, readwrite) BOOL forceRefresh;
@@ -45,6 +47,8 @@
 @synthesize gameDelegate;
 @synthesize forceRefresh;
 @synthesize refreshHeaderView;
+@synthesize randomButton;
+@synthesize localModeButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,34 +59,86 @@
     return self;
 }
 
+-(void)userDidLogIn
+{
+    [ self loadData ];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    NSString *urlAddress = [[NSBundle mainBundle] pathForResource:@"people" ofType:@"html"];
-    
-    NSURL *url = [NSURL fileURLWithPath:urlAddress];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    
     self.refreshHeaderView = [[ DDPullToRefreshView alloc ] init ];
     self.refreshHeaderView.delegate = self;
-    
     self.tableView.tableHeaderView = self.refreshHeaderView;
     
-    //[ self.webView loadRequest:requestObj ];
-    //[ self.webView stylize:YES ];
+    self.sections = [ NSMutableArray arrayWithCapacity:26 ];
+    self.objects = [ NSMutableArray arrayWithCapacity:26 ];
+    self.tableView.backgroundColor = [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
+    [[ NSNotificationCenter defaultCenter ] addObserver:self selector:@selector(userDidLogIn) name:@"kUserDidLogIn" object:nil ];
+}
+
+-(void)loadData
+{
+    BOOL willLoad = NO;
     
     if ([ BBAppDelegate sharedDelegate ].isOnline)
     {
         NSDate* lastSyncFriends = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_LastSyncFBFriends ];
         
-        if (YES || nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1) // 1 day
+        if ([ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]] && (nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1)) // 1 day
         {
+            willLoad = YES;
             [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me/friends" andDelegate:self ];
         }
         else
         {
-            [ self processFBFriends ];
+            [ self processFriends ];
+        }
+        
+        lastSyncFriends = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_LastSyncTWFriends ];
+        
+        if ([ PFTwitterUtils isLinkedWithUser:[ PFUser currentUser ]] && (YES || nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1)) // 1 day
+        {
+            NSMutableURLRequest* request = [ NSMutableURLRequest requestWithURL:[ NSURL URLWithString:@"https://api.twitter.com/1/friends/ids.json" ]];
+            [[ PFTwitterUtils twitter ] signRequest:request ];
+            
+            willLoad = YES;
+            
+            [ NSURLConnection sendAsynchronousRequest:request queue:[ NSOperationQueue currentQueue ] completionHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                
+                NSString* json = [[ NSString alloc ] initWithData:data encoding:NSUTF8StringEncoding ];
+                NSArray* ids = [[ json objectFromJSONString ] objectForKey:@"ids" ];
+                
+                NSString* idString = [ ids componentsJoinedByString:@"," ];
+                
+                NSMutableURLRequest* dataRequest = [ NSMutableURLRequest requestWithURL:[ NSURL URLWithString:[ NSString stringWithFormat:@"https://api.twitter.com/1/users/lookup.json?user_id=%@&include_entities=true", idString ]]];
+                
+                [ NSURLConnection sendAsynchronousRequest:dataRequest queue:[ NSOperationQueue currentQueue ] completionHandler:^(NSURLResponse * response, NSData * data, NSError * err) {
+                    
+                    NSString* json2 = [[ NSString alloc ] initWithData:data encoding:NSUTF8StringEncoding ];
+                    NSArray* users = [ json2 objectFromJSONString ];
+                    
+                    NSMutableArray* userData = [ NSMutableArray arrayWithCapacity:[ users count ]];
+                    
+                    for (NSDictionary* dict in users)
+                    {
+                        NSDictionary* dictCopy = [ NSDictionary dictionaryWithObjectsAndKeys:[ dict objectForKey:@"name" ], @"name", [ NSString stringWithFormat:@"%d", [ dict objectForKey:@"id" ] ], @"id", [ dict objectForKey:@"profilePicture" ], @"image", nil ];
+                        
+                        [ userData addObject:dictCopy ];
+                    }
+                    
+                    [[ BBAppDelegate sharedDelegate ] saveSetting:userData forKey:kBB_TWFriends ];
+                    [[ BBAppDelegate sharedDelegate ] saveSetting:[ NSDate date ] forKey:kBB_LastSyncTWFriends ];
+                    
+                    [ self processFriends ];
+                    
+                }];
+            }];
+        }
+        else
+        {
+            [ self processFriends ];
         }
     }
     else
@@ -90,9 +146,10 @@
         [ self.view showLoading:NO ];
     }
     
-    self.sections = [ NSMutableArray arrayWithCapacity:26 ];
-    self.objects = [ NSMutableArray arrayWithCapacity:26 ];
-    self.tableView.backgroundColor = [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
+    if (!willLoad)
+    {
+        [ self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView ];
+    }
 }
 
 - (void)viewDidUnload
@@ -117,6 +174,38 @@
     [ self.gameDelegate startGame:GAME_TYPE_LOCAL ];
 }
 
+-(IBAction)randomGameClicked:(id)sender
+{
+    PFQuery* query = [ PFUser query ];
+    [ query whereKey:@"objectId" notEqualTo:[ PFUser currentUser ].objectId ];
+    NSUInteger count = [ query countObjects ];
+    
+    NSUInteger index = MIN(((double)rand() / RAND_MAX) * count, count - 1);
+    
+    [ query setSkip:index ];
+    [ query setLimit:1 ];
+    
+    NSArray* users = [ query findObjects ];
+    
+    if ([ users count ])
+    {
+        CollabGame* currentGame = [ CollabGame object ];
+        currentGame.completed = NO;
+        currentGame.creator = [ PFUser currentUser ];
+        currentGame.activeUser = [ PFUser currentUser ];
+        currentGame.users = [ NSMutableArray arrayWithObjects:[ PFUser currentUser ], [ users objectAtIndex:0 ], nil ];
+        currentGame.rounds = [ NSMutableArray array ];
+        
+        [ self.gameDelegate selectGame:currentGame isNew:YES ];
+    }
+    else
+    {
+        UIAlertView* v = [[ UIAlertView alloc ] initWithTitle:@"No Matches Found" message:@"No matching players were found" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil ];
+        
+        [ v show ];
+    }
+}
+
 #pragma mark UITableViewDataSource
 
 - (NSArray*)dataForSection:(NSInteger)section
@@ -134,9 +223,22 @@
     return nil;
 }
 
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // TODO send invite here
+    // [ self toggleInvite:[[ self.tableView indexPathsForSelectedRows ] count ] ];
+}
+
 - (void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [ _tableView deselectRowAtIndexPath:indexPath animated:YES ];
+    if (indexPath.section == 0)
+    {
+        [ _tableView deselectRowAtIndexPath:indexPath animated:YES ];
+    }
+    else
+    {
+        return;
+    }
 
     FacebookFriend* friend = [((NSMutableArray*)[ self.objects objectAtIndex:indexPath.section ]) objectAtIndex:indexPath.row ];
     
@@ -295,12 +397,13 @@
     cell.accessoryView.frame = CGRectMake(0, 0, 50, 50);
     cell.accessoryView.clipsToBounds = YES;
     cell.accessoryView.contentMode = UIViewContentModeScaleAspectFill;
+    // cell.selectionStyle = UITableViewCellSelectionStyleGray;
     
     cell.textLabel.text = friend.name;
     
      ((UIImageView*)cell.accessoryView).image = nil;
     
-    [ ((UIImageView*)cell.accessoryView) loadImageWithURL:[ NSURL URLWithString:[ NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", friend.userId ]] onComplete:^
+    [ ((UIImageView*)cell.accessoryView) loadImageWithURL:[ NSURL URLWithString:friend.pictureUrl ] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:^
      {
          //[ self performSelectorOnMainThread:@selector(refreshRow:) withObject:indexPath waitUntilDone:NO ];
      }];
@@ -339,19 +442,20 @@
     [[ BBAppDelegate sharedDelegate ] saveSetting:data forKey:kBB_FBFriends ];
     [[ BBAppDelegate sharedDelegate ] saveSetting:[ NSDate date ] forKey:kBB_LastSyncFBFriends ];
     
-    [ self processFBFriends ];
+    [ self processFriends ];
 }
 
--(void)processFBFriends
+-(void)processFriends
 {
-    NSMutableDictionary* data = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_FBFriends ];
+    NSArray* fbData = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_FBFriends ];
+    NSArray* twData = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_TWFriends ];
     
     self.friends = [ NSMutableArray array ];
     NSMutableArray* ids = [ NSMutableArray array ];
     
     NSMutableDictionary* dict = [ NSMutableDictionary dictionaryWithCapacity:26 ];
     
-    for (NSDictionary* item in data)
+    for (NSDictionary* item in fbData)
     {
         NSString* name = [ item objectForKey:@"name" ];
         NSString* userId = [ item objectForKey:@"id" ];
@@ -361,6 +465,43 @@
         FacebookFriend* friend = [[ FacebookFriend alloc ] init ];
         friend.name = name;
         friend.userId = userId;
+        friend.pictureUrl = [ NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", friend.userId ];
+        
+        NSRange range = [ name rangeOfString:@" " ];
+        NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
+        
+        if (range.length)
+        {
+            lastChar = [[[ name substringFromIndex:range.location + 1 ] substringToIndex:1 ] uppercaseString ];
+        }
+        
+        NSMutableArray* group = [ dict objectForKey:lastChar ];
+        
+        if (!group)
+        {
+            group = [ NSMutableArray array ];
+            
+            [ dict setValue:group forKey:lastChar ];
+        }
+        
+        [ group addObject:friend ];
+        
+        [self.friends addObject:friend ];
+        [ ids addObject:userId ];
+    }
+    
+    for (NSDictionary* item in twData)
+    {
+        NSString* name = [ item objectForKey:@"name" ];
+        NSString* userId = [ item objectForKey:@"id" ];
+        NSString* pictureUrl = [ item objectForKey:@"profilePicture" ];
+        
+        NSLog(@"%@", name);
+        
+        FacebookFriend* friend = [[ FacebookFriend alloc ] init ];
+        friend.name = name;
+        friend.userId = userId;
+        friend.pictureUrl = pictureUrl;
         
         NSRange range = [ name rangeOfString:@" " ];
         NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
@@ -435,7 +576,7 @@
     if (!self.isLoading)
     {
         self.forceRefresh = YES;
-        [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me/friends" andDelegate:self ];
+        [ self loadData ];
     }
 }
 

@@ -12,6 +12,7 @@
 
 @synthesize name;
 @synthesize userId;
+@synthesize pictureUrl;
 @synthesize user;
 
 -(id)initWithId:(NSString*)_userId name:(NSString*)_name

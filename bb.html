@@ -152,10 +152,10 @@
         if (!('ontouchstart' in window))
         {
             //return loadGame(3, true, '', false, 0.000000);
-            // return loadGame(0);
+            return loadGame(0);
             // {"Success":true,"Duration":252,"Moves":6,"MoveLog":[{"d":3,"p":1},{"d":3,"p":3},{"d":0,"p":3},{"d":1,"p":3},{"d":2,"p":2},{"d":1,"p":3}]}
             var state = loadGame(2, false, {"boardPieces":[1,2,0,3],"movers":[{"groupId":1,"position":4},{"groupId":0,"position":35},{"groupId":2,"position":179},{"groupId":3,"position":224}],"targets":[{"id":0,"color":"rgb(176,101,185)","groupId":0},{"id":1,"color":"rgb(50,164,57)","groupId":1},{"id":2,"color":"rgb(216,136,56)","groupId":2},{"id":3,"color":"rgb(0,172,189)","groupId":3},{"id":4,"color":"rgb(176,101,185)","groupId":0},{"id":5,"color":"rgb(50,164,57)","groupId":1},{"id":6,"color":"rgb(216,136,56)","groupId":2},{"id":8,"color":"rgb(176,101,185)","groupId":0},{"id":9,"color":"rgb(50,164,57)","groupId":1},{"id":10,"color":"rgb(216,136,56)","groupId":2},{"id":11,"color":"rgb(0,172,189)","groupId":3},{"id":12,"color":"rgb(176,101,185)","groupId":0},{"id":13,"color":"rgb(50,164,57)","groupId":1},{"id":14,"color":"rgb(216,136,56)","groupId":2},{"id":15,"color":"rgb(0,172,189)","groupId":3},{"id":16,"color":"rgb(176,101,185)","groupId":0}],"activeTarget":{"id":7,"color":"rgb(0,172,189)","groupId":3}});
-            board.replay([{"d":3,"p":1},{"d":3,"p":3},{"d":2,"p":3},{"d":2,"p":2},{"d":1,"p":3}]);
+            //board.replay([{"d":3,"p":1},{"d":3,"p":3},{"d":2,"p":3},{"d":2,"p":2},{"d":1,"p":3}]);
 
             return state;
         }
@@ -176,11 +176,11 @@
     </script>
   </head>
 
-  <body onload="load()" style="margin:0; overflow: hidden; font-family: helvetica">
+  <body onload="load()" style="margin:0; overflow: hidden; font-family: GearedSlab">
       <div id='container' style="width:100%; height:100%; overflow:hidden; position: relative;">
           <div id="flashMessageBack" style="display: none;position:fixed; z-index: 98; opacity: 0.8; left:0; top:0; right:0; bottom:0; background-color: #000;">
           </div>
-          <div id="flashMessage" style="display: none;margin-left: -400px; margin-top:  -50px; position:fixed; top: 50%; left: 50%; width: 800px; height: 100px; background-color: white; z-index: 99; line-height: 100px; font-size: 60px; text-align: center; border: 4px solid #888; border-radius: 3px;">
+          <div id="flashMessage" style="display: none;margin-left: -400px; margin-top:  -50px; position:fixed; top: 50%; left: 50%; width: 800px; height: 100px; background-color: white; z-index: 99; line-height: 120px; font-size: 60px; text-align: center; border: 4px solid #888; border-radius: 3px;">
               sample message
           </div>
           

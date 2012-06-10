@@ -12,7 +12,8 @@ typedef enum
 {
     GAME_TYPE_LOCAL = 1,
     GAME_TYPE_BLITZ = 2,
-    GAME_TYPE_TURN = 3
+    GAME_TYPE_TURN = 3,
+    GAME_TYPE_RANDOM = 4
 } GAME_TYPE;
 
 @protocol BBGameDelegate <NSObject>

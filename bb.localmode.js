@@ -71,15 +71,16 @@
             this.player1Bid = $(this.container).find('.player1Bid')[0];
             this.player1SetButton = $(this.container).find('.player1Set')[0];
             this.player1Cache = $(this.container).find('.player1Cache')[0];
+            this.player1Name = $(this.container).find('.player1Name')[0];
 
             this.player2UpButton = $(this.container).find('.player2Up')[0];
             this.player2DownButton = $(this.container).find('.player2Down')[0];
             this.player2Bid = $(this.container).find('.player2Bid')[0];
             this.player2SetButton = $(this.container).find('.player2Set')[0];
             this.player2Cache = $(this.container).find('.player2Cache')[0];
+            this.player2Name = $(this.container).find('.player2Name')[0];
 
             this.getStartedButton = $(this.container).find('.getStarted')[0];
-
             
             this.wrapTouchEvent(this.player1UpButton, 'player1Up');
             this.wrapTouchEvent(this.player1DownButton, 'player1Down');
@@ -100,6 +101,9 @@
             this.player1Cache.innerHTML = '';
             this.player2Cache.innerHTML = '';
             this.activeCache.innerHTML = '';
+            
+            this.player1Name.innerHTML = 'Player #1';
+            this.player2Name.innerHTML = 'Player #2';
             
             if (gameData)
             {
@@ -332,8 +336,12 @@
             
             this.player1Bid.innerHTML = 20;
             this.player2Bid.innerHTML = 20;
+            $(this.player1SetButton.parentNode).addClass('active');
+            $(this.player2SetButton.parentNode).addClass('active');
             this.activeBid = 21;
             this.activeBidder = null;
+            this.moveLogContainer.parentNode.style['vertical-align'] = 'middle';
+            this.activeCache.style.display = '';
             
             this.drawTime(60);
             
@@ -351,6 +359,8 @@
                     
                     var index = Math.floor(Math.random()*that.targets.length);
                     var t = that.targets[index];
+                    var animatedToken;
+                    
                     that.targets.splice(index, 1);
                     
                     for (var i = 0; i < that.activeCache.childNodes.length;++i)
@@ -359,7 +369,30 @@
                         
                         if (node.id == t.id)
                         {
-                            that.activeCache.removeChild(node);
+                            var moveContainer = document.createElement('div');
+                            moveContainer.className = 'movingCache full';
+                            moveContainer.style.position = 'absolute';
+                            moveContainer.style.top = '50px';
+                            moveContainer.style.left = '50px';
+                            
+                            var token = that.createToken('animatedToken', node.firstChild.style.backgroundColor);
+                            
+                            moveContainer.appendChild(token);
+                            
+                            document.body.appendChild(moveContainer);
+                            var mc = _('.modeContainer');
+                            var pos = mc.position();
+                            
+                            pos.y += mc.clientHeight / 2;
+                            pos.x;
+                            
+                            moveContainer.style.left = pos.x + 'px';
+                            moveContainer.style.top = pos.y + 'px';
+                            
+                            node.style.visibility = 'hidden';
+                            
+                            animatedToken = moveContainer;
+                            
                             break;
                         }
                     }
@@ -376,51 +409,71 @@
                         }
                     }
                     
-                    that.render();
-                    
-                    that.startInterval = setInterval(function()
-                    {
-                        var remaining = time - Math.floor((new Date().getTime() - start) / 100) / 10;
-                        that.drawTime(remaining);
-                        
-                        if (remaining <= 0 || that.letsGo)
-                        {
-                            clearInterval(that.startInterval);
+                    var w = animatedToken.firstChild.clientWidth;
+                    var h = animatedToken.firstChild.clientHeight;
                             
-                            if (that.activeBidder)
-                            {
-                                that.flashMessage('Player ' + (that.activeBidder) + ' get ready...', 1500, function()
-                                {
-                                    that.activeCache.style.display = 'none';
-                                    that.getStartedButton.style.display = 'none';
-                                    
-                                    that.moveLogContainer.style.display = 'block';
-                                    that.moveLogContainer.style['-webkit-transform'] = '';
-                                        
-                                    if (that.activeBidder == 2)
-                                    {
-                                        that.moveLogContainer.style['-webkit-transform'] = 'rotate(-180deg)';
-                                    }
-                                    
-                                    that.startConfirm();
-                                });
-                            }
-                            else
-                            {
-                                that.targets.push(that.captureTile.target);
-                                that.activeCache.appendChild(that.createToken(that.captureTile.target.id, that.captureTile.target.color));
-                                that.captureTile.target = null;
-                                that.render();
-                                
-                                // OK no one got this...show a message and move on
-                                that.flashMessage('Moving on...', 1500, function()
-                                {
-                                    that.startRound();
-                                });
-                            }
-                        }
+                    var startX = that.context.boardLeft + that.context.tileSize * that.captureTile.col - (w - that.context.tileSize) / 2;
+                    var startY = that.context.boardTop + that.context.tileSize * that.captureTile.row - (h - that.context.tileSize) / 2;
+    
+                    $("#animatedToken").animate({
+                      marginLeft:-pos.x + startX + 10,
+                      marginTop:-pos.y + startY + 10
+                    }, 1000, 'ease-out', function()
+                    {
+                        animatedToken.parentNode.removeChild(animatedToken);
                         
-                    }, 250);
+                        that.render();
+                        
+                        that.startInterval = setInterval(function()
+                        {
+                            var remaining = time - Math.floor((new Date().getTime() - start) / 100) / 10;
+                            that.drawTime(remaining);
+                            
+                            if (remaining <= 0 || that.letsGo)
+                            {
+                                clearInterval(that.startInterval);
+                                
+                                if (that.activeBidder)
+                                {
+                                    that.flashMessage('Player ' + (that.activeBidder) + ' get ready...', 1500, function()
+                                    {
+                                        that.activeCache.style.display = 'none';
+                                        that.getStartedButton.style.display = 'none';
+                                        
+                                        that.moveLogContainer.style.display = 'block';
+                                        that.moveLogContainer.style['-webkit-transform'] = '';
+                                            
+                                        if (that.activeBidder == 2)
+                                        {
+                                            that.moveLogContainer.style['-webkit-transform'] = 'rotate(-180deg)';
+                                            that.moveLogContainer.parentNode.style['vertical-align'] = 'top';
+                                        }
+                                        else
+                                        {
+                                            that.moveLogContainer.style['-webkit-transform'] = 'rotate(0deg)';
+                                            that.moveLogContainer.parentNode.style['vertical-align'] = 'bottom';
+                                        }
+                                        
+                                        that.startConfirm();
+                                    });
+                                }
+                                else
+                                {
+                                    that.targets.push(that.captureTile.target);
+                                    that.activeCache.appendChild(that.createToken(that.captureTile.target.id, that.captureTile.target.color));
+                                    that.captureTile.target = null;
+                                    that.render();
+                                    
+                                    // OK no one got this...show a message and move on
+                                    that.flashMessage('Moving on...', 1500, function()
+                                    {
+                                        that.startRound();
+                                    });
+                                }
+                            }
+                            
+                        }, 250);
+                    });
                 }
             }, 250);
         },
@@ -432,6 +485,7 @@
             if (bid < this.activeBid)
             {
                 this.player1Bid.innerHTML = bid;
+                $(this.player1SetButton.parentNode).addClass('active');
             }
         },
         
@@ -443,6 +497,7 @@
             bid = Math.min(bid, this.activeBid - 1);
             
             this.player1Bid.innerHTML = bid;
+            $(this.player1SetButton.parentNode).addClass('active');
         },
         
         player1Set : function()
@@ -456,6 +511,9 @@
                 this.activeCache.className = 'activeCache';
                 
                 this.player2Bid.innerHTML = '-';
+                
+                $(this.player1SetButton.parentNode).removeClass('active');
+                $(this.player2SetButton.parentNode).removeClass('active');
             }
         },
         
@@ -466,6 +524,8 @@
             if (bid < this.activeBid)
             {
                 this.player2Bid.innerHTML = bid;
+                
+                $(this.player2SetButton.parentNode).addClass('active');
             }
         },
         
@@ -478,6 +538,8 @@
             bid = Math.min(bid, this.activeBid - 1);
             
             this.player2Bid.innerHTML = bid;
+                
+            $(this.player2SetButton.parentNode).addClass('active');
         },
         
         player2Set : function()
@@ -492,6 +554,9 @@
                 this.player1Bid.innerHTML = '-';
                 this.getStartedButton.style.display = '';
                 this.activeCache.className = 'activeCache';
+                
+                $(this.player1SetButton.parentNode).removeClass('active');
+                $(this.player2SetButton.parentNode).removeClass('active');
             }
         },
         
@@ -526,28 +591,33 @@
             <tbody> \
             <tr> \
                 <td class="playerData player2Data"> \
-                    <div class="userInfo user2Info"> \
-                        <div class="playerCache player2Cache"> \
-                            <div id="14"> \
-                                <div style="background-color: rgb(216, 136, 56); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block;"></div> \
-                            </div> \
-                        </div> \
-                        <div align="center" colspan="2" class="moveCount" style="font-size:20px"> \
-                            <div class="playerButtons"> \
-                                <button class="player2Up">Up</button><button class="player2Down">Down</button> \
-                                <div class="player2Bid" style="width:55px"> \
-                                20 \
-                                </div> \
-                                <button class="player2Set">Set</button> \
-                            </div> \
-                        </div> \
-                        <div class="timeInfo"> \
-                            <div class="timeCount">00:10</div> \
-                            <div class="clearMoves"><a href="">CLEAR</a></div> \
-                        </div> \
-                        <div colspan="2" class="profile"> \
-                            <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
-                            Nicholas \
+                        <table class="userInfo user2Info" cellpadding="0" cellspacing="0"> \
+                            <tr class="profile"> \
+                            <td> \
+                                <div style="background-image:url(img/noface.png)"></div> \
+                            </td> \
+                            <td colspan="2" class="player2Name"> \
+                                Nicholas \
+                            </td> \
+                            </tr> \
+                            <tr class="moveCount playerButtons"> \
+                                    <td class="bidButtons"> \
+                                        <button class="player2Up"><img src="img/up.png" /></button> \
+                                        <button class="player2Down"><img src="img/down.png" /></button> \
+                                    </td> \
+                                \
+                                    <td class="bidText"> \
+                                        <div class="player2Bid">20</div> \
+                                        <div class="bidMoves">moves</div> \
+                                    </td> \
+                                    <td class="setButtons"> \
+                                        <button class="player2Set"><img src="img/check.png" /></button> \
+                                    </td> \
+                            </tr> \
+                            </table> \
+                        <div colspan="3" class="playerCache player2Cache"> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block;"></div> \
                             </div> \
                         </div> \
                     </td> \
@@ -555,7 +625,7 @@
                 <tr> \
                     <td height="100%" valign="middle" class="localInfo"> \
                         <div style="overflow-x: hidden; padding:5px"> \
-                            <button class="getStarted" style="display: block;">Let\'s Go!</button> \
+                            <button class="getStarted" style="display: block;">Start Game</button> \
                             <div class="activeCache full"> \
                             </div> \
                         </div> \
@@ -565,31 +635,66 @@
                 </tr> \
                 <tr> \
                     <td class="playerData player1Data"> \
-                        <div class="userInfo"> \
-                            <div class="playerCache player1Cache"> \
-                                <div id="16"> \
-                                    <div style="background-color: rgb(176, 101, 185); height: 30px; width: 30px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; line-height: 30px; color: rgb(255, 255, 255); text-align: center; text-shadow: rgb(0, 0, 0) 0px 0px 3px; display: inline-block;"></div> \
-                                </div> \
+                        <div colspan="3" class="playerCache player1Cache"> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
                             </div> \
-                            <div align="center" colspan="2" class="moveCount" style="font-size:20px"> \
-                                <div class="playerButtons"> \
-                                    <button class="player1Up">Up</button><button class="player1Down">Down</button> \
-                                \
-                                    <div class="player1Bid" style="width:55px"> \
-                                    20 \
-                                    </div> \
-                                    <button class="player1Set">Set</button> \
-                                </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
                             </div> \
-                            <div class="timeInfo"> \
-                                <div class="timeCount">00:10</div> \
-                                <div class="clearMoves"><a href="">CLEAR</a></div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
                             </div> \
-                            <div colspan="2" class="profile"> \
-                                <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                            <div id="16"> \
+                                <div style="background-color: rgb(176, 101, 185); "></div> \
+                            </div> \
+                        </div> \
+                        <table class="userInfo" cellpadding="0" cellspacing="0"> \
+                            <tr class="profile"> \
+                            <td> \
+                                <div style="background-image:url(img/noface.png)"></div> \
+                            </td> \
+                            </td> \
+                            <td colspan="2" class="player1Name"> \
                                 Nicholas \
-                                </div> \
-                            </div> \
+                            </td> \
+                            </tr> \
+                            <tr class="moveCount playerButtons"> \
+                                    <td class="bidButtons"> \
+                                        <button class="player1Up"><img src="img/up.png" /></button> \
+                                        <button class="player1Down"><img src="img/down.png" /></button> \
+                                    </td> \
+                                \
+                                    <td class="bidText"> \
+                                        <div class="player1Bid">20</div> \
+                                        <div class="bidMoves">moves</div> \
+                                    </td> \
+                                    <td class="setButtons"> \
+                                        <button class="player1Set"><img src="img/check.png" /></button> \
+                                    </td> \
+                            </tr> \
+                            </table> \
                         </td> \
                     </tr> \
                 </tbody> \

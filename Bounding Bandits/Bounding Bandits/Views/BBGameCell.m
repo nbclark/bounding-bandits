@@ -169,7 +169,7 @@
     }
     
     PFUser* otherUser = [ game otherUser ];
-    [ self.profileImage loadImageWithURL:[ NSURL URLWithString:[ otherUser objectForKey:@"profilePicture" ]] onComplete:nil ];
+    [ self.profileImage loadImageWithURL:[ NSURL URLWithString:[ otherUser objectForKey:@"profilePicture" ]] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:nil ];
     self.profileLabel.text = [ otherUser objectForKey:@"name" ];
     
     self.yourScoreLabel.text = @"1";

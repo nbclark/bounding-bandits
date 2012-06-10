@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "BBLoginViewController.h"
+#import "BBLoginViewController2.h"
 #import <Parse/Parse.h>
 
-@implementation BBLoginViewController
+@implementation BBLoginViewController2
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

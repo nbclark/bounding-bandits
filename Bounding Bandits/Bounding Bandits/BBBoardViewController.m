@@ -50,12 +50,14 @@
     self.messageView.showMessageFrame = NO;
     
     self.messageView.hidden = YES;
-    self.messageView.layer.opacity = 0.9f;
-    self.messageView.label.font = [UIFont boldSystemFontOfSize:30];
+    self.messageView.layer.opacity = 1;
+    self.messageView.label.font = [ UIFont systemFontOfSize:18 ];
     
-    self.messageView.label.shadowColor = [ UIColor lightGrayColor ];
-    self.messageView.label.shadowOffset = CGSizeMake(1, 1);
+    //self.messageView.label.shadowColor = [ UIColor lightGrayColor ];
+    //self.messageView.label.shadowOffset = CGSizeMake(1, 1);
     [ self.messageView addTarget:self action:@selector(messageViewClick) forControlEvents:UIControlEventTouchUpInside ];    
+    
+    [ self.messageView sizeToFit ];
     
     [ self.webView addSubview:self.messageView ];
     self.isLoading = YES;
@@ -70,7 +72,7 @@
     }
     
     [ self.webView stylize:NO ];
-    self.messageView.backgroundColor = [UIColor whiteColor];    
+    self.messageView.backgroundColor = [ UIColor colorWithWhite:0 alpha:0.8 ];    
 }
 
 - (void)viewDidUnload
@@ -96,6 +98,7 @@
     self.messageView.label.text = message;
     [self.messageView sizeToFit];
     self.messageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    //self.messageView.center = CGPointMake(self.webView.bounds.size.width / 2, self.webView.bounds.size.height / 2);
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType

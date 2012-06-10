@@ -38,20 +38,41 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIImageView" id="560267474">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{768, 1004}</string>
+						<int key="NSvFlags">266</int>
+						<string key="NSFrame">{{58, 0}, {425, 75}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="1063070763"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">img/logo-login.png</string>
+						</object>
+					</object>
+					<object class="IBUIImageView" id="1063070763">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">266</int>
+						<string key="NSFrame">{{0, 86}, {542, 414}}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="816646868"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">img/bg-login.png</string>
+						</object>
 					</object>
 					<object class="IBUIButton" id="816646868">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">258</int>
-						<string key="NSFrame">{{48, 40}, {667, 65}}</string>
+						<string key="NSFrame">{{51, 125}, {441, 65}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:241</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -59,7 +80,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Login with Facebook</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="893478123">
+						<object class="NSColor" key="IBUIHighlightedTitleColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
@@ -82,12 +103,19 @@
 						</object>
 					</object>
 				</array>
-				<string key="NSFrameSize">{768, 1004}</string>
+				<string key="NSFrameSize">{542, 500}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="816646868"/>
-				<reference key="IBUIBackgroundColor" ref="893478123"/>
+				<reference key="NSNextKeyView" ref="560267474"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+				<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
+					<int key="IBUIInterfaceOrientation">3</int>
+					<int key="interfaceOrientation">3</int>
+				</object>
+				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics">
+					<string key="IBUISimulatedSizeMetricsClass">IBUISimulatedFreeformSizeMetricsSentinel</string>
+					<string key="IBUIDisplayName">Freeform</string>
+				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 			</object>
 		</array>
@@ -134,8 +162,9 @@
 						<int key="objectID">2</int>
 						<reference key="object" ref="766721923"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="816646868"/>
 							<reference ref="560267474"/>
+							<reference ref="816646868"/>
+							<reference ref="1063070763"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -149,6 +178,11 @@
 						<reference key="object" ref="560267474"/>
 						<reference key="parent" ref="766721923"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">7</int>
+						<reference key="object" ref="1063070763"/>
+						<reference key="parent" ref="766721923"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -159,21 +193,30 @@
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">6</int>
+			<int key="maxID">7</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">BBLoginViewController</string>
-					<string key="superclassName">UIViewController</string>
+					<string key="superclassName">PFLogInViewController</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/BBLoginViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">PFLogInViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PFLogInViewController.h</string>
 					</object>
 				</object>
 			</array>
@@ -186,6 +229,10 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="img/bg-login.png">{16, 16}</string>
+			<string key="img/logo-login.png">{16, 16}</string>
+		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>
 </archive>

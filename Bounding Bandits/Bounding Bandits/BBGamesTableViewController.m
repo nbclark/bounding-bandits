@@ -55,6 +55,11 @@
     return self;
 }
 
+-(void)userDidLogIn
+{
+    [ self loadData ];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -70,7 +75,13 @@
     self.isLoading = YES;
     
     // 2C2E32
-    self.tableView.backgroundColor = [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
+    self.tableView.backgroundColor = [ UIColor colorWithRed:24/256.0 green:24/256.0 blue:24/256.0 alpha:1 ];
+    //self.tableView.backgroundColor = [ UIColor clearColor ];
+    UIImage* img = [ UIImage imageNamed:@"img/bg-app.jpg" ];
+    //self.tableView.backgroundView = [[ UIImageView alloc ] initWithImage:img];
+    //self.tableView.backgroundView.frame = self.tableView.bounds;
+    
+    [[ NSNotificationCenter defaultCenter ] addObserver:self selector:@selector(userDidLogIn) name:@"kUserDidLogIn" object:nil ];
 }
 
 - (void)viewDidUnload
@@ -83,7 +94,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [ super viewWillAppear:animated ];
-    [ self loadData ];
 }
 
 -(NSUInteger)activeGames
@@ -269,6 +279,12 @@
     [ self performSelectorOnMainThread:@selector(finishedLoading) withObject:nil waitUntilDone:NO ];
 }
 
+-(void)dismissPopover
+{
+    [ self popoverControllerShouldDismissPopover:self.popover ];
+    [ self.popover dismissPopoverAnimated:YES ];
+}
+
 #pragma mark - Table view data source
 
 - (NSArray*)dataForSection:(NSInteger)section
@@ -315,13 +331,20 @@
     
     BBResultsViewController* controller = [[ BBResultsViewController alloc ] initWithNibName:@"BBResultsViewController" bundle:nil ];
     controller.game = game;
+    controller.delegate = self;
+    controller.showStart = nil != onClose;
+    
+    if (aFrame.size.width == 0)
+    {
+        aFrame = CGRectMake(self.view.bounds.size.width / 2 - 25, 0, 50, 50);
+    }
     
     self.popover = [[ UIPopoverController alloc ] initWithContentViewController:controller ];
     self.popover.popoverContentSize = CGSizeMake(520, 520+120+70);
     self.popover.delegate = self;
     
     [ self.view.superview showFade:NO ];
-    [ self.popover presentPopoverFromRect:aFrame inView:self.view.superview permittedArrowDirections:UIPopoverArrowDirectionLeft|UIPopoverArrowDirectionDown|UIPopoverArrowDirectionUp animated:YES ];
+    [ self.popover presentPopoverFromRect:aFrame inView:self.view.superview permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES ];
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController
@@ -427,7 +450,7 @@
     PFUser* otherUser = [ obj otherUser ];
     
     cell.textLabel.text = [ otherUser objectForKey:@"name" ];
-    [(UIImageView*)cell.accessoryView loadImageWithURL:[ NSURL URLWithString:[ otherUser objectForKey:@"profilePicture" ]] onComplete:^
+    [(UIImageView*)cell.accessoryView loadImageWithURL:[ NSURL URLWithString:[ otherUser objectForKey:@"profilePicture" ]]defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:^
      {
          [ self performSelectorOnMainThread:@selector(refreshRow:) withObject:indexPath waitUntilDone:NO ];
      }];

@@ -55,7 +55,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">Default-landscape.png</string>
+							<string key="NSResourceName">img/Default-landscape.png</string>
 						</object>
 					</object>
 					<object class="IBUIWebView" id="567243525">
@@ -89,6 +89,7 @@
 						<string key="NSFrame">{{720, 462}, {50, 100}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -505,8 +506,8 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">Default-landscape.png</string>
-			<string key="NS.object.0">{1024, 748}</string>
+			<string key="NS.key.0">img/Default-landscape.png</string>
+			<string key="NS.object.0">{16, 16}</string>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>

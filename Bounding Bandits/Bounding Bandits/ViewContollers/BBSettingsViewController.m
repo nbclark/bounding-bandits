@@ -12,7 +12,9 @@
 #import <Parse/Parse.h>
 #import "AnimationDelegate.h"
 
-@interface BBSettingsViewController ()
+typedef void (^VoidBlock)() ;
+
+@interface BBSettingsViewController ()<UIActionSheetDelegate>
 
 @property (nonatomic, strong) IBOutlet UISwitch* facebookSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch* twitterSwitch;
@@ -22,6 +24,8 @@
 @property (nonatomic, strong) IBOutlet UILabel* profileLabel;
 @property (nonatomic, strong) IBOutlet UIImageView* profileImage;
 @property (nonatomic, strong) BBPeopleViewController* peopleViewController;
+@property (nonatomic, strong) VoidBlock destroyBlock;
+@property (nonatomic, strong) VoidBlock cancelBlock;
 
 @end
 
@@ -36,6 +40,8 @@
 @synthesize profileLabel;
 @synthesize gameDelegate;
 @synthesize peopleViewController;
+@synthesize destroyBlock;
+@synthesize cancelBlock;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,6 +52,11 @@
     return self;
 }
 
+-(void)userDidLogIn
+{
+    [ self loadData ];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -54,14 +65,111 @@
     
     self.peopleViewController.view.hidden = YES;
     [ self.view addSubview:self.peopleViewController.view ];
+    // 198, 31, 85
     self.view.backgroundColor = [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
     
+    UIColor* redColor = [ UIColor colorWithRed:216/256.0 green:30/256.0 blue:64/256.0 alpha:1 ];
+    
+    [ self.facebookSwitch setOnTintColor:redColor];
+    [ self.twitterSwitch setOnTintColor:redColor];
+    [ self.yourTurnNotSwitch setOnTintColor:redColor];
+    
     self.peopleViewController.gameDelegate = self;
+    [[ NSNotificationCenter defaultCenter ] addObserver:self selector:@selector(userDidLogIn) name:@"kUserDidLogIn" object:nil ];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [ self.profileImage loadImageWithURL:[ NSURL URLWithString:[[ PFUser currentUser ] objectForKey:@"profilePicture" ]] onComplete:nil ];
+    [ super viewWillAppear:animated ];
+    
+    [ self.facebookSwitch setOn:[ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]]];
+    [ self.twitterSwitch setOn:[ PFTwitterUtils isLinkedWithUser:[ PFUser currentUser ]]];
+    
+    [ self.yourTurnNotSwitch setOn:[[[ PFUser currentUser ] objectForKey:@"receiveNotifications" ] boolValue ]];
+}
+
+-(IBAction)facebookToggled:(id)sender
+{
+    if (self.facebookSwitch.on)
+    {
+        if (![ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]])
+        {
+            [ PFFacebookUtils linkUser:[ PFUser currentUser ] permissions:[ NSArray arrayWithObjects:@"email,user_birthday", nil ] block:^(BOOL succeeded, NSError *error)
+            {
+                [[ PFUser currentUser ] saveInBackground ];
+            }];
+        }
+    }
+    else {
+        self.destroyBlock = ^{
+            [ PFFacebookUtils unlinkUser:[ PFUser currentUser ] ];
+        };
+        self.cancelBlock = ^{
+            self.facebookSwitch.on = YES;
+        };
+        
+        UIActionSheet* as = [[ UIActionSheet alloc ] initWithTitle:@"Disconnect from Facebook?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Disconnect" otherButtonTitles:@"Cancel", nil ];
+        
+        [ as showInView:self.view ];
+    }
+}
+
+-(IBAction)twitterToggled:(id)sender
+{
+    if (self.twitterSwitch.on)
+    {
+        if (![ PFTwitterUtils isLinkedWithUser:[ PFUser currentUser ]])
+        {
+            [ PFTwitterUtils linkUser:[ PFUser currentUser ] block:^(BOOL succeeded, NSError *error)
+            {
+                [[ PFUser currentUser ] saveInBackground ];
+            } ];
+        }
+    }
+    else {
+        self.destroyBlock = ^{
+            [ PFTwitterUtils unlinkUser:[ PFUser currentUser ] ];
+        };
+        self.cancelBlock = ^{
+            self.twitterSwitch.on = YES;
+        };
+        
+        UIActionSheet* as = [[ UIActionSheet alloc ] initWithTitle:@"Disconnect from Twitter?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Disconnect" otherButtonTitles:@"Cancel", nil ];
+        
+        [ as showInView:self.view ];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ( [ actionSheet destructiveButtonIndex ] == buttonIndex )
+    {
+        self.destroyBlock();
+    }
+    else
+    {
+        self.cancelBlock();
+    }
+}
+
+-(IBAction)notificationsToggled:(id)sender
+{
+    [[ PFUser currentUser ] setObject:[ NSNumber numberWithBool:self.yourTurnNotSwitch.on] forKey:@"receiveNotifications" ];
+    [[ PFUser currentUser ] saveInBackground ];
+    
+    if (self.yourTurnNotSwitch.on)
+    {
+        [ PFPush subscribeToChannelInBackground:[ PFUser currentUser ].objectId ];
+    }
+    else
+    {
+        [ PFPush unsubscribeFromChannelInBackground:[ PFUser currentUser ].objectId ];
+    }
+}
+
+-(void)loadData
+{
+    [ self.profileImage loadImageWithURL:[ NSURL URLWithString:[[ PFUser currentUser ] objectForKey:@"profilePicture" ]] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:nil ];
     
     self.profileLabel.text = [[ PFUser currentUser ] objectForKey:@"name" ];
 }

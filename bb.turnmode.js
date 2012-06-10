@@ -471,10 +471,10 @@
                 <div class="activeCache"> \
                 </div> \
             </div> \
-            <div style=" position:absolute; bottom:219px; z-index:10; left:20px; right:20px; border: 1px solid black; border-radius: 5px 5px 0 0; overflow: hidden; padding:0px; max-height: 400px"> \
+            <div style=" position:absolute; bottom:233px; z-index:10; left:20px; right:20px; border: 1px solid black; border-radius: 5px 5px 0 0; overflow: hidden; padding:0px; max-height: 400px"> \
                 <div class="moveLog" style="border-radius: 5px 5px 0 0;"></div> \
             </div> \
-            <table cellpadding="0" cellspacing="0" class="userInfo"> \
+            <table cellpadding="0" cellspacing="0" class="userInfo" style="position:absolute; bottom:0"> \
                 <tr> \
                     <td align="center" colspan="2" class="moveCount"> \
                     0 \
@@ -486,7 +486,7 @@
                 </tr> \
                 <tr> \
                     <td colspan="2" class="profile"> \
-                        <img src="noface.png" style="height:50px; width:50px" align="absmiddle"> \
+                        <img src="img/noface.png" style="height:50px; width:50px" align="absmiddle"> \
                         Nicholas \
                     </td> \
                 </tr> \

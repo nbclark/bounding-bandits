@@ -10,8 +10,13 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>icon.png</string>
-		<string>icon@2x.png</string>
+		<string>Icon-72.png</string>
+		<string>Icon-72@2x.png</string>
+		<string>Default-Landscape~ipad.png</string>
+		<string>Default-Landscape@2x~ipad.png</string>
+		<string>Icon-72@2x.png</string>
+		<string>Default-Landscape~ipad.png</string>
+		<string>Default-Landscape@2x~ipad.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -19,13 +24,20 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>icon.png</string>
-				<string>icon@2x.png</string>
+				<string>Icon-72.png</string>
+				<string>Icon-72@2x.png</string>
+				<string>Default-Landscape~ipad.png</string>
+				<string>Default-Landscape@2x~ipad.png</string>
+				<string>Icon-72@2x.png</string>
+				<string>Default-Landscape~ipad.png</string>
+				<string>Default-Landscape@2x~ipad.png</string>
 			</array>
+			<key>UIPrerenderedIcon</key>
+			<true/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.moonlightingmimes.bbtest</string>
+	<string>com.moonlightingmimes.boundingbandits</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -51,6 +63,8 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -61,6 +75,14 @@
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GearedSlab-Light.ttf</string>
+		<string>GearedSlab-Bold.ttf</string>
+		<string>GearedSlab-Extrabold.ttf</string>
+		<string>GearedSlab.ttf</string>
+		<string>Airplane.ttf</string>
 	</array>
 </dict>
 </plist>

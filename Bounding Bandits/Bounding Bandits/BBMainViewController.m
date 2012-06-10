@@ -175,7 +175,7 @@
     {
         if (self.gamesController.activeGames >= 5)
         {
-            NSString* proProduct = @"com.moonlightingmimes.proversion";
+            NSString* proProduct = @"MMMultiMode";
             
             if (![ InventoryKit productActivated:proProduct ])
             {
@@ -251,10 +251,10 @@
             [ self hideMenu ];
         };
         
-        if (!isNew && [ rounds count ])
+        if ((!isNew && [ rounds count ]))
         {
             // Show the progress here
-            [ self.gamesController showResults:game fromRect:self.view.bounds onClose:gameBlock ];
+            [ self.gamesController showResults:game fromRect:CGRectZero onClose:gameBlock ];
         }
         else
         {
@@ -266,6 +266,8 @@
         self.currentRound = [ CollabRound objectWithObject:[ self.currentGame.rounds objectAtIndex:[ self.currentGame.rounds count ] - 1 ]];
         
         NSString* json = [ self.boardController loadGameWithGameType:GAME_TYPE_TURN gameState:gameData generateState:NO isActive:isActive elapsed:self.currentRound.elapsed ];
+        
+        NSLog(@"%@", json);
         
         [ self hideMenu ];
     }
@@ -339,6 +341,9 @@
                 sleep(0);
             } ];
         }];
+        
+        // Show the round score here...
+        [ self.gamesController showResults:self.currentGame fromRect:self.view.bounds onClose:nil ];
 
         [ self.currentGame saveInBackground ];
     }

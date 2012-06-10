@@ -29,8 +29,21 @@
         }
             
     ];
-    
-    var colors = [ 'rgb(176,101,185)', 'rgb(50,164,57)', 'rgb(216,136,56)', 'rgb(0,172,189)' ];
+ 
+     var colors = [ 'rgb(176,101,185)', 'rgb(50,164,57)', 'rgb(216,136,56)', 'rgb(0,172,189)' ];
+     var pieceImages = [ 'img/piece-purple.png', 'img/piece-green.png', 'img/piece-orange.png', 'img/piece-blue.png' ];
+ //var pieceImagesHD = [ 'piece-purple@2x.png', 'piece-green@2x.png', 'piece-orange@2x.png', 'piece-blue@2x.png' ];
+ var pieceImagesHD = {};
+ 
+ for (var i = 0; i < colors.length; ++i)
+ {
+    pieceImagesHD[colors[i]] = new Image();
+ }
+ 
+ pieceImagesHD[colors[0]].src = 'img/piece-purple@2x.png';
+ pieceImagesHD[colors[1]].src = 'img/piece-green@2x.png';
+ pieceImagesHD[colors[2]].src = 'img/piece-orange@2x.png';
+ pieceImagesHD[colors[3]].src = 'img/piece-blue@2x.png';
     
     Array.prototype.select = function(lambda)
     {
@@ -292,16 +305,20 @@
         this.renderDot = function (context, color)
         {
             context.ctx.globalAlpha = 1.0;
-
             context.ctx.fillStyle = color;
 
             var size = context.tileSize;
             var radius = size / 4.0;
+ 
+            var left = context.boardLeft + context.tileSize * this.col ;
+            var top = context.boardTop + context.tileSize * this.row ;
 
             context.ctx.beginPath();
             context.ctx.arc(context.boardLeft + context.tileSize * this.col + size / 2, context.boardTop + context.tileSize * this.row + size / 2, radius, 0, 2 * Math.PI, false);
             context.ctx.closePath();
             context.ctx.fill();
+
+            context.ctx.drawImage(pieceImagesHD[color], left + size / 4, top + size / 4, size / 2, size / 2);
 
             //context.ctx.fillRect(context.boardLeft + context.tileSize * this.col, context.boardTop + context.tileSize * this.row, context.tileSize, context.tileSize);
 
@@ -345,42 +362,56 @@
     		}
     		else if (pass == 1)
     		{
-        		context.ctx.globalAlpha = 1;
-        		context.ctx.fillStyle = '#333';
+		    context.ctx.globalAlpha = 1;
+		    context.ctx.fillStyle = '#333';
+		    
+		    var wallSize = 6;
+		    var hwallSize = wallSize / 2;
+		    
+		    // 1 is left, 2 is top, 4 is right, 8 is bottom
+		    if (this.wallMask != 15)
+		    {
+			var offsetA, offsetB;
+			
+			if (this.wallMask & 1)
+			{
+			    offsetA = (wallMask & 2) ? hwallSize : 0;
+			    offsetB = (wallMask & 8) ? hwallSize : 0;
+			    
+			    context.ctx.fillRect(left - hwallSize, top - offsetA, wallSize, context.tileSize + (offsetA+offsetB));
+			}
+			if (this.wallMask & 2)
+			{
+			    offsetA = (wallMask & 1) ? hwallSize : 0;
+			    offsetB = (wallMask & 4) ? hwallSize : 0;
+			    
+			    context.ctx.fillRect(left - offsetA, top - hwallSize, context.tileSize + (offsetA+offsetB), wallSize);
+			}
+			if (this.wallMask & 4)
+			{
+			    offsetA = (wallMask & 2) ? hwallSize : 0;
+			    offsetB = (wallMask & 8) ? hwallSize : 0;
+			    
+			    context.ctx.fillRect(hwallSize + left+context.tileSize-wallSize, top - offsetA, wallSize, context.tileSize +  + (offsetA+offsetB));
+			}
+			if (this.wallMask & 8)
+			{
+			    offsetA = (wallMask & 1) ? hwallSize : 0;
+			    offsetB = (wallMask & 4) ? hwallSize : 0;
+			    
+			    context.ctx.fillRect(left - offsetA, hwallSize + top + context.tileSize - wallSize, context.tileSize +  + (offsetA+offsetB), wallSize);
+			}
+		    }
         		
-        		var wallSize = 8;
-        		var hwallSize = wallSize/2;
-        		
-        		// 1 is left, 2 is top, 4 is right, 8 is bottom
-                if (this.wallMask != 15)
-                {
-                    if (this.wallMask & 1)
-                    {
-                        context.ctx.fillRect(left - hwallSize, top, wallSize, context.tileSize);
-                    }
-                    if (this.wallMask & 2)
-                    {
-                        context.ctx.fillRect(left, top - hwallSize, context.tileSize, wallSize);
-                    }
-                    if (this.wallMask & 4)
-                    {
-                        context.ctx.fillRect(hwallSize + left+context.tileSize-wallSize, top, wallSize, context.tileSize);
-                    }
-                    if (this.wallMask & 8)
-                    {
-                        context.ctx.fillRect(left, hwallSize + top + context.tileSize - wallSize, context.tileSize, wallSize);
-                    }
-                }
-        		
-        		if (this.target)
-        		{
-        			this.target.render(context, left, top, context.tileSize);
-        		}
-        		
-        		if (this.piece)
-        		{
-        			this.piece.render(context, left, top, context.tileSize);
-        		}
+		    if (this.target)
+		    {
+			this.target.render(context, left, top, context.tileSize);
+		    }
+		    
+		    if (this.piece)
+		    {
+			this.piece.render(context, left, top, context.tileSize);
+		    }
     		}
     	}
     };
@@ -393,18 +424,24 @@
     }
     
     function mover(groupId) {
-    	this.color = colors[groupId];
+        this.color = colors[groupId];
+        this.image = pieceImagesHD[this.color];
     	this.groupId = groupId;
         this.tileIndex = -1;
     	
     	this.render = function (context, x, y, size) {
-    	    var radius = (size / 2.0) - (size / 10.0);
+    	    var radius = (size / 2.0) - (size / 14.0);
     	    
     		context.ctx.beginPath();
     		context.ctx.arc(x + size / 2, y + size / 2, radius, 0, 2 * Math.PI, false);
     		context.ctx.closePath();
     		context.ctx.fillStyle = this.color;
     		context.ctx.fill();
+		
+		var newSize = radius*2;
+		var pad = (size - newSize) / 2;
+ 
+            context.ctx.drawImage(this.image, x+pad, y+pad, newSize, newSize);
     	};
     	
     	this.clone = function ( )
@@ -549,9 +586,11 @@
         {
             var tokenCont = document.createElement('div');;
             tokenCont.id = id;
-
             var token = document.createElement('div');
-            token.style['background-color'] = color;
+ token.style['background-color'] = color;
+ //token.style['background-image'] = 'url(' + pieceImagesHD[color] + ')';
+ token.style['background-size'] = '100%';
+ token.style['background-height'] = '100%';
             // token.innerHTML = id;
 
             tokenCont.appendChild(token);

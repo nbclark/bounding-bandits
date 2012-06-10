@@ -12,11 +12,6 @@
 
 @implementation UIView (Loading)
 
-static CGPoint CGRectGetCenter( CGRect r )
-{
-	return (CGPoint){ CGRectGetMidX( r ), CGRectGetMidY( r ) } ;
-}
-
 -(MessageView*)loadingView
 {
     MessageView* loadingView = [self.layer valueForKey:@"loadingView"];

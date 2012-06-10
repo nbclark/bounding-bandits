@@ -6,7 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
+#import <Parse/PFLoginView.h>
 
 @interface BBLoginViewController : PFLogInViewController
 

@@ -3,9 +3,22 @@
     -webkit-user-select: none;
 }
 
+@font-face
+{
+    font-family: GearedSlab-Bold;
+    src: url(GearedSlab-Bold.ttf)
+}
+
+@font-face
+{
+    font-family: GearedSlab;
+    src: url(Airplane.ttf)
+}
+
 body
 {
     background-color: rgb(58,60,65);
+    background-image: url('img/bg-app.jpg');
 }
 
 #canvasContainer
@@ -47,9 +60,16 @@ body
 {
     color: rgb(172,189,255);
     display: none;float: right; position:absolute; right: 5px; top: 5px; bottom: 5px; width: 247px;
-    background-color: rgb(58,60,65);
-    border-radius: 5px; padding: 4px;
+    /*background-color: rgb(58,60,65);*/
+    border-radius: 5px;
+    /*padding: 4px;*/
     margin: 5px 0;
+}
+
+#localModeContainer
+{
+    background-color: inherit;
+    width: 245px;
 }
 
 .modeContainer > table
@@ -74,23 +94,194 @@ button
 
 button:active
 {
-    background-color: rgb(88,92,100);
+    /*background-color: rgb(88,92,100);*/
 }
 
 .playerButtons
 {
     width: 100%; position: relative;
+    height: 160px;
 }
 
-.player1Data, .player2Data, .userInfo
+.playerData > table td
 {
-    height: 205px;
+    padding: 0;
 }
 
-.user2Info
+.player1Data, .player2Data
+{
+    max-height: 275px;
+    min-height: 225px;
+    vertical-align: bottom;
+    position: relative;
+}
+
+.userInfo
+{
+    height: 225px;
+    border-spacing: 0;
+    opacity: 0.85;
+}
+
+.playerButtons button
+{
+    display:block;
+    width: 100%;
+    border-radius:0;
+    border:0;
+    background-color: inherit;
+    margin:0;
+}
+
+.playerButtons button:active
+{
+    /*background-color:rgb(0,172,189);*/
+}
+
+.bidText
+{
+    text-align: center;
+    background-image: url('img/cell-border-hor.png');
+    background-size: 2px;
+    background-position-x: left;
+    background-repeat: repeat-y;
+    position:relative;
+}
+
+.player1Bid, .player2Bid
+{
+    font-size:80px;
+    font-weight: 100;
+}
+
+.bidMoves
+{
+    font-size: 20px;
+    font-weight: bold;
+    /*font-variant: small-caps;*/
+    position: absolute;
+    bottom: 10px;
+    left:0;
+    right:0;
+    text-align: center;
+}
+
+.userInfo .profile > td
+{
+    padding: 10px 5px;
+    font-size: 24px;
+    font-weight:bold;
+    /*font-variant: small-caps;*/
+}
+
+.userInfo .profile > td:first-child
+{
+    width:50px;
+    padding: 0;
+    position: relative;
+}
+.userInfo .profile > td:first-child div
+{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:2px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.player1Up > img, .player2Up > img
+{
+    width:70%;
+}
+
+.player1Down > img, .player2Down > img
+{
+    width:70%;
+}
+
+.player1Set > img, .player2Set > img
+{
+    width:70%;
+}
+
+.playerButtons .bidButtons, .playerButtons .setButtons
+{
+    width: 55px;
+}
+
+.playerButtons .bidButtons button:active
+{
+    background-color:rgb(0,172,189);
+}
+
+.playerButtons .bidButtons button:first-child
+{
+    background-image: url('img/cell-border.png');
+    background-size: 1px;
+    background-position-y: bottom;
+    background-repeat: repeat-x;
+    top:0;
+    bottom:50%;
+}
+
+.playerButtons .setButtons
+{
+    background-image: url('img/cell-border-hor.png');
+    background-size: 2px;
+    background-position-x: left;
+    background-repeat: repeat-y;
+    position: relative;
+}
+
+.playerButtons .setButtons button:active
+{
+    background-color: transparent !important;
+}
+
+.playerButtons .setButtons.active button
+{
+    background-color:rgb(0,172,189);
+}
+
+.playerButtons .bidButtons
+{
+    position: relative;
+}
+
+.playerButtons .bidButtons button
+{
+    position:absolute;
+    top:50%;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+.playerButtons .setButtons button
+{
+    height: 100%;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:2px;
+    right:0;
+}
+
+.playerButtons > div
+{
+    background-image: url('img/cell-border-hor.png');
+    background-position-x: right;
+    background-repeat: repeat-y;
+    display:inline-block;
+}
+
+.user2Info, .player2Cache
 {
     -webkit-transform:rotate(-180deg);
-    position: absolute; top: 0; bottom: inherit !important; right:0; left: 0;
+    /*position: absolute; top: 0; bottom: inherit !important; right:0; left: 0;*/
 }
 
 #player1Set, #player2Set
@@ -105,10 +296,10 @@ button:active
     z-index: 10;
 }
 
-.playerButtons > *
+/*.playerButtons > *
 {
     display: inline-block; height: 55px; width: 55px;
-}
+}*/
 
 .playerButtons > div
 {
@@ -138,27 +329,54 @@ button:active
 {
     text-align:center;
     margin-top: -3px;
+    display:none;
 }
 
-.activeCache.full > div
+.activeCache.full
 {
-    height:32px;
+    display:block;
 }
 
-.activeCache.full > div > div
+.activeCache.full > div, .movingCache.full > div
+{
+    height:34px;
+    width: 34px;
+    margin: -4px -5px;
+}
+
+.activeCache.full > div > div, .movingCache.full > div > div
 {
     margin-top:0px !important;
+    border: 3px inset black;
+    box-sizing: border-box;
+    width: 34px;
+    height:34px;
+    border-radius: 17px;
+}
+
+.movingCache.full > div > div
+{
+    border-radius: 0;
 }
 
 .getStarted
 {
-    display: inline-block; margin-top: 10px; width:100%; height: 60px;
+    display: block;
+    border-radius:4px;
+    border:0px;
+    background-color:rgb(0,172,189);
+    font-size: 32px;
+    font-weight:bold;
+    /*font-variant: small-caps;*/
+    text-shadow: 2px 2px #333;
+    padding: 15px 30px;
 }
 
 .moveLog
 {
     visibility: hiddden;
-    height: 100%; overflow-y: scroll;
+    /*height: 100%;*/
+    overflow-y: scroll;
 }
 
 .modeContainer > table
@@ -166,11 +384,13 @@ button:active
     height:  100%;
     overflow: hidden;
     font-size: 20px;
+    border-spacing:0;
 }
 
 .modeContainer .userInfo
 {
-    position: absolute; bottom: 0; max-height: 220px;  right:0; left: 0; width:100%; color: #fff; border: 1px solid #222; border-radius: 5px; font-size:20px; font-weight: 400;
+    /*position: absolute; bottom: 0; max-height: 220px;  right:0; left: 0;*/
+    width:100%; color: #fff; border: 1px solid #222; border-radius: 5px; font-size:20px; font-weight: 400;
     box-shadow: 0px 0px 5px #222;
     background-image: -webkit-gradient(
         linear,
@@ -182,7 +402,7 @@ button:active
 
     text-shadow: 2px 2px #333;
 }
-.modeContainer .userInfo td
+.modeContainer .userInfo > tbody > tr > td
 {
     padding: 5px;
 }
@@ -192,7 +412,11 @@ button:active
 }
 .modeContainer .userInfo .timeInfo
 {
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
+    background-image: url('img/cell-border.png');
+    background-size: 1px;
+    background-position-y: bottom;
+    background-repeat: repeat-x;
 }
 .modeContainer .userInfo .timeInfo > div
 {
@@ -210,20 +434,24 @@ button:active
     text-decoration: none;
     font-weight: bold;
 }
-.modeContainer .userInfo .profile
+.modeContainer .userInfo .profile > td
 {
-    border-top: 1px solid black;
-    padding: 5px 10px;
+    background-image: url('img/cell-border.png');
+    background-size: 1px;
+    background-position-y: bottom;
+    background-repeat: repeat-x;
 }
-.modeContainer .userInfo .profile img
+.modeContainer .userInfo .profile > td:first-child > div
 {
-    border-radius: 5px;
+    border-radius: 5px 0 0 0;
 }
 
 #localModeContainer .moveLog
 {
-    background-color: rgba(255,255,255,0);
-    max-height: 600px;
+    max-height: 275px;
+    margin-bottom: -3px;
+    width:80%;
+    margin-left:10%;
 }
 
 .modeContainer .moveLog
@@ -285,20 +513,20 @@ button:active
 
 .modeContainer .moveLogItem .up
 {
-    background-image:url(arrow-up.png);
+    background-image:url(img/arrow-up.png);
 }
 
 .modeContainer .moveLogItem .down
 {
-    background-image:url(arrow-down.png);
+    background-image:url(img/arrow-down.png);
 }
 .modeContainer .moveLogItem .left
 {
-    background-image:url(arrow-left.png);
+    background-image:url(img/arrow-left.png);
 }
 .modeContainer .moveLogItem .right
 {
-    background-image:url(arrow-right.png);
+    background-image:url(img/arrow-right.png);
 }
 .modeContainer .moveLogItem .undo
 {
@@ -338,7 +566,7 @@ button:active
     height:30px;
     border-radius: 15px;
     background-color: rgb(222,227,233);
-    background-image:url(x.png);
+    background-image:url(img/x.png);
     background-size: 20px 20px;
     background-repeat: no-repeat;
     background-position: center;
@@ -347,14 +575,14 @@ button:active
 .modeContainer .playerCache
 {
     padding-bottom: -5px !important;
-    line-height: 18px;
+    line-height: 12px;
     margin-top:0px;
     padding: 0 5px;
     padding-left: 10px;
-    height: 40px;
+    max-height: 40px;
 }
 
-.playerCache > div, .activeCache > div
+.playerCache > div, .activeCache > div, .movingCache > div
 {
     overflow: hidden;
     width: 32px;
@@ -364,9 +592,15 @@ button:active
     display: inline-block;
 }
 
-.playerCache > div > div, .activeCache > div > div
+.playerCache > div
 {
-    margin-top:-15px !important;
+    padding: 0 0;
+    z-index:-1;
+}
+
+.playerCache > div > div, .activeCache > div > div, .movingCache > div > div
+{
+    margin-top:0 !important;
     height:30px;
     width:30px;
     border-radius:15px;
@@ -374,5 +608,11 @@ button:active
 
 .localInfo
 {
-    background-image:-webkit-gradient( linear, left top, right bottom, color-stop(0.58, #393B40), color-stop(0, #65686E) ); box-shadow: 0px 0px 5px #222;
+    /*background-image:-webkit-gradient( linear, left top, right bottom, color-stop(0.58, #393B40), color-stop(0, #65686E) );*/
+    /*box-shadow: 0px 0px 5px #222;*/
+}
+
+.localInfo > div
+{
+    -webkit-transform: rotate(-90deg);
 }

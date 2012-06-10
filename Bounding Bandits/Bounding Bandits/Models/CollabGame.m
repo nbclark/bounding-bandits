@@ -85,16 +85,19 @@
             {
                 CollabRound* round = [ CollabRound objectWithObject:[ rounds objectAtIndex:i+u ]];
                 
-                if ( round.moves < bestMoves )
+                if ( round.completed )
                 {
-                    bestMoves = round.moves;
-                    
-                    [ bestRounds removeAllObjects ];
-                    [ bestRounds addObject:round.userId ];
-                }
-                else if (round.moves == bestMoves)
-                {
-                    [ bestRounds addObject:round.userId ];
+                    if ( round.moves < bestMoves )
+                    {
+                        bestMoves = round.moves;
+                        
+                        [ bestRounds removeAllObjects ];
+                        [ bestRounds addObject:round.userId ];
+                    }
+                    else if (round.moves == bestMoves)
+                    {
+                        [ bestRounds addObject:round.userId ];
+                    }
                 }
             }
         }

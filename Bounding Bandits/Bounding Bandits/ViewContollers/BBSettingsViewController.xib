@@ -38,12 +38,30 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
+					<object class="IBUIImageView" id="381663922">
+						<reference key="NSNextResponder" ref="766721923"/>
+						<int key="NSvFlags">274</int>
+						<string key="NSFrameSize">{288, 768}</string>
+						<reference key="NSSuperview" ref="766721923"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="351714097"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIClipsSubviews">YES</bool>
+						<int key="IBUIContentMode">4</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">img/bg-app.jpg</string>
+						</object>
+					</object>
 					<object class="IBUIButton" id="967445870">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">266</int>
 						<string key="NSFrame">{{0, 702}, {288, 66}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -80,7 +98,7 @@
 						<string key="NSFrameSize">{288, 192}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="351714097"/>
+						<reference key="NSNextKeyView" ref="381663922"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">2</int>
@@ -230,10 +248,9 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<bool key="IBUIOn">YES</bool>
-						<object class="NSColor" key="IBUIOnTintColor" id="449396726">
+						<object class="NSColor" key="IBUIOnTintColor" id="518425122">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC42MjI0NDg5Nzk2IDAuMjgyMzQyNDI0OCAwLjUzNzQyMjM0MDkAA</bytes>
+							<bytes key="NSRGB">MC42MjI0NDg5Nzk2IDAuMDA3MDMyNjM0MTQ1IDAuMDEzNzg3MjcxNDEAA</bytes>
 						</object>
 					</object>
 					<object class="IBUILabel" id="564954183">
@@ -276,8 +293,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<bool key="IBUIOn">YES</bool>
-						<reference key="IBUIOnTintColor" ref="449396726"/>
+						<reference key="IBUIOnTintColor" ref="518425122"/>
 					</object>
 					<object class="IBUILabel" id="182619409">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -312,8 +328,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<bool key="IBUIOn">YES</bool>
-						<reference key="IBUIOnTintColor" ref="449396726"/>
+						<reference key="IBUIOnTintColor" ref="518425122"/>
 					</object>
 					<object class="IBUILabel" id="479104634">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -385,22 +400,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">twitterSwitch</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="325876853"/>
-					</object>
-					<int key="connectionID">27</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">yourTurnNotSwitch</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="689973198"/>
-					</object>
-					<int key="connectionID">29</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">createGameButton</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="967445870"/>
@@ -416,6 +415,22 @@
 					<int key="connectionID">25</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">twitterSwitch</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="689973198"/>
+					</object>
+					<int key="connectionID">34</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">yourTurnNotSwitch</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="325876853"/>
+					</object>
+					<int key="connectionID">35</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">createGameClicked:</string>
 						<reference key="source" ref="967445870"/>
@@ -423,6 +438,33 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">33</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">facebookToggled:</string>
+						<reference key="source" ref="199884205"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">36</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">twitterToggled:</string>
+						<reference key="source" ref="689973198"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">38</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">notificationsToggled:</string>
+						<reference key="source" ref="325876853"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">37</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -461,6 +503,7 @@
 							<reference ref="182619409"/>
 							<reference ref="479104634"/>
 							<reference ref="564954183"/>
+							<reference ref="381663922"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -537,6 +580,11 @@
 						<reference key="object" ref="193786478"/>
 						<reference key="parent" ref="351714097"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">40</int>
+						<reference key="object" ref="381663922"/>
+						<reference key="parent" ref="766721923"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -556,6 +604,7 @@
 				<string key="32.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="4.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<string key="40.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -565,7 +614,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">33</int>
+			<int key="maxID">40</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -627,6 +676,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="img/bg-app.jpg">{16, 16}</string>
 			<string key="img/btn-newgame.png">{16, 16}</string>
 			<string key="img/cell-border.png">{16, 16}</string>
 		</dictionary>

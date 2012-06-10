@@ -8,11 +8,19 @@
 
 #import "BBAppDelegate.h"
 #import "BBViewController.h"
+#import "BBSignUpViewController.h"
 #import "BBLoginViewController.h"
+#import "BBLoginViewController2.h"
 #import "BBMainViewController.h"
+#import "BBNavigationController.h"
 #import "Utils.h"
 #import "InventoryKit.h"
+#import "TestFlight.h"
 #import <Parse/Parse.h>
+
+@interface BBAppDelegate()<PFLogInViewControllerDelegate>
+
+@end
 
 @implementation BBAppDelegate
 
@@ -30,11 +38,11 @@ static BBAppDelegate* _sharedDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     _sharedDelegate = self;
     
     [InventoryKit registerWithPaymentQueue];
-    
-    [PFFacebookUtils initializeWithApplicationId:@"345467858832397"];
+
     [ [UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone ];
     
     [ application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound ];
@@ -79,8 +87,25 @@ static BBAppDelegate* _sharedDelegate;
         [[ NSUserDefaults standardUserDefaults ] synchronize ];
         
         BBLoginViewController* loginViewController = [[ BBLoginViewController alloc ] init ];
-        loginViewController.wantsFullScreenLayout = YES;
-        [ nav presentModalViewController:loginViewController animated:YES ];
+        loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        //loginViewController.wantsFullScreenLayout = YES;
+        /*
+        BBLoginViewController2* loginViewController = [[ BBLoginViewController2 alloc ] initWithNibName:@"BBLoginViewController2" bundle:[ NSBundle mainBundle ]];
+         
+         */
+        
+        BBNavigationController* nav = [[ BBNavigationController alloc ] initWithRootViewController:loginViewController ];
+        nav.navigationBarHidden = YES;
+        
+        [ self.viewController addChildViewController:nav ];
+        [ self.viewController.view addSubview:nav.view ];
+        
+        
+        nav.view.frame = CGRectMake(0,0,542,500);
+        
+        nav.view.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+        nav.view.center = self.viewController.view.center;
+        // [ nav presentModalViewController:loginViewController animated:YES ];
     }
     else
     {
@@ -93,7 +118,19 @@ static BBAppDelegate* _sharedDelegate;
     
     self.gamePieces = [ query findObjects ];
     
+    [ self applyTheme ];
+    
     return YES;
+}
+
+-(void)applyTheme
+{
+    NSString* fontName = @"Airplane";
+
+	//[[ UILabel appearance ] setFont:[ UIFont fontWithName:fontName size:16.0f ] ] ;
+	//[[ UILabel appearanceWhenContainedIn:[ UISearchBar class ], nil ] setFont:[ UIFont fontWithName:fontName size:14.0f ] ] ;	
+    
+	//[[ UIButton appearance ] setFont:[ UIFont fontWithName:fontName size:16.0f ] ] ;
 }
 
 -(void)saveSetting:(id)object forKey:(NSString*)key
@@ -130,7 +167,10 @@ static BBAppDelegate* _sharedDelegate;
 
 -(void)userDidLogIn
 {
-    [ PFPush subscribeToChannelInBackground:[ PFUser currentUser ].objectId ];
+    if ([[[ PFUser currentUser ] objectForKey:@"receiveNotifications" ] boolValue ])
+    {
+        [ PFPush subscribeToChannelInBackground:[ PFUser currentUser ].objectId ];
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Parse/PF_Facebook.h>
 
-@interface BBLoginViewController : UIViewController<PF_FBRequestDelegate>
+@interface BBLoginViewController2 : UIViewController<PF_FBRequestDelegate>
 
 @end

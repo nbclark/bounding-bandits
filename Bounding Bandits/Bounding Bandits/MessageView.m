@@ -12,6 +12,8 @@
 @implementation MessageView
 
 @synthesize label = _label, activityIndicator = _activityIndicator, messageFrame = _messageFrame ;
+@synthesize button = _button;
+
 @synthesize showMessageFrame;
 
 -(UILabel *)label
@@ -27,6 +29,33 @@
 	}
 	
 	return _label ;
+}
+
+-(void)tapped:(id)sender
+{
+    [ self sendActionsForControlEvents:UIControlEventTouchUpInside ];
+}
+
+-(UIButton *)button
+{
+	if ( !_button )
+	{
+		UIButton * button = [[ UIButton alloc ] initWithFrame:CGRectZero ] ;
+		button.backgroundColor = [ UIColor clearColor ] ;
+		button.opaque = NO ;
+        
+        UIImage* img = [ UIImage imageNamed:@"img/btn-taptoplay.png" ] ;
+        
+        button.frame = CGRectMake(0,0,img.size.width,img.size.height);
+        
+        [ button setImage:img forState:UIControlStateNormal ];
+        [ button setImage:[ UIImage imageNamed:@"img/btn-taptoplay-active.png" ] forState:UIControlStateHighlighted ];
+		[ button addTarget:self action:@selector(tapped:) forControlEvents:UIControlEventTouchUpInside ];
+		[ self addSubview:button ] ;
+		_button = button ;
+	}
+	
+	return _button ;
 }
 
 -(UIActivityIndicatorView *)activityIndicator
@@ -48,9 +77,23 @@
 	if ( !_messageFrame )
 	{
 		UIView * messageFrame = [[ UIView alloc ] initWithFrame:CGRectZero ] ;
-		messageFrame.backgroundColor = [ UIColor whiteColor ];
-        messageFrame.layer.borderWidth = 2;
-        messageFrame.layer.borderColor = [[ UIColor blackColor ] CGColor ];
+		messageFrame.backgroundColor = [ UIColor blackColor ];
+        
+        UIImage* img = [ UIImage imageNamed:@"img/bg-interstitial.png" ];
+        UIImageView* iv = [[ UIImageView alloc ] initWithImage:img];
+        iv.frame = messageFrame.bounds;
+        iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        iv.opaque = NO;
+        
+        self.imageView.hidden = NO;
+        self.imageView.image = img;
+        self.imageView.contentMode = UIViewContentModeCenter;
+        [ self.imageView sizeToFit ];
+        self.imageView.center = CGRectGetCenter(self.bounds);
+        
+        //[ messageFrame addSubview:iv ];
+        
+        self.frame = CGRectMake(0,0,img.size.width, img.size.height);
         
 		[ self insertSubview:messageFrame belowSubview:[ self.subviews objectAtIndex:0] ] ;
 		
@@ -94,8 +137,11 @@
     
 	self.activityIndicator.center = CGPointMake(bounds.size.width / 2 - labelW / 2, bounds.size.height / 2);
     
-	self.label.center = CGPointMake(bounds.size.width / 2 + activW, bounds.size.height / 2);
+	self.button.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2);
     self.messageFrame.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2);
+    self.imageView.center = CGRectGetCenter(self.bounds);
+    
+	self.label.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2 - self.imageView.image.size.height / 2 + self.label.bounds.size.height / 2 + 30 );
 }
 
 @end

@@ -11,6 +11,7 @@
 @interface MessageView : UIButton
 @property ( nonatomic, strong, readonly ) UIView * messageFrame ;
 @property ( nonatomic, strong, readonly ) UILabel * label ;
+@property ( nonatomic, strong, readonly ) UIButton * button ;
 @property ( nonatomic, strong, readonly ) UIActivityIndicatorView * activityIndicator ;
 @property ( nonatomic ) BOOL showMessageFrame ;
 @end

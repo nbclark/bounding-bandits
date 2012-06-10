@@ -29,3 +29,26 @@ _ = function(name)
 {
     return $(name).get(0);
 };
+
+Object.prototype.position = function()
+{
+    var node = this;
+    var x = 0;
+    var y = 0;
+    
+    while (node)
+    {
+        if (!isNaN(node.offsetLeft) && !isNaN(node.offsetLeft))
+        {
+            
+            x += node.offsetLeft ? node.offsetLeft : 0;
+            y += node.offsetTop ? node.offsetTop : 0;
+            
+            console.log(node.offsetLeft + ', ' + node.offsetTop);
+        }
+        
+        node = node.parentNode;
+    }
+    
+    return { x: x, y: y };
+}

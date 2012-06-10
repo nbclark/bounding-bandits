@@ -1,73 +1,106 @@
 //
 //  UIImageView+DD.m
-//  SellIT2
+//  Hive
 //
-//  Created by Niels Gabel on 2/8/12.
+//  Created by Hive on 2/8/12.
 //  Copyright (c) 2012 DoubleDutch Inc. All rights reserved.
 //
 
 #import "UIImageView+DD.h"
-#import "ASIHTTPRequest.h"
 #import "ASINetworkQueue+Conveniences.h"
 #import "ASIDownloadCache.h"
-
+#import "NSThread+BlockPerform.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface UIImageView (DD_Private)
-@property ( nonatomic, copy ) NSURL * imageURL ;
-@property ( nonatomic, strong ) ASIHTTPRequest * loadImageRequest ;
-@end
+@implementation DDImageManager
 
-@implementation UIImageView (DD)
-@dynamic imageURL ;
-
--(void)loadImageWithURL:(NSURL*)url onComplete:(void (^)())onComplete
++(UIImage*)NoFaceImage
 {
-	if ( url.absoluteString.length > 0 && (!self.image || ![ url isEqual:self.imageURL ] ))
+    static UIImage* noFaceImage = nil;
+    
+    if (!noFaceImage)
+    {
+        noFaceImage = [ UIImage imageNamed:@"img/noface.png" ];
+    }
+    
+    return noFaceImage;
+}
+
++(void)LoadImageWithUrl:(NSURL *)url imageControl:(id<DDImageControl>)imageControl defaultImage:(UIImage*)defaultImage onComplete:(void (^)())onComplete
+{
+	if ( url.absoluteString.length > 0 && (!imageControl.image || ![ url isEqual:imageControl.imageURL ] ))
 	{
-		[ self cancelLoadImageWithURL ] ;
-		self.image = nil ;
-		self.imageURL = url ;
-		
+		[ imageControl cancelLoadImageWithURL ] ;
+		imageControl.image = defaultImage;
+		imageControl.imageURL = url ;
+        
 		NSData * data = [[ ASIDownloadCache sharedCache ] cachedResponseDataForURL:url ] ;
 		if ( data.length > 0 )
 		{
-			self.image = [ UIImage imageWithData:data ] ;
+			imageControl.image = [ UIImage imageWithData:data ] ;
 		}
 		else 
 		{
 			ASIHTTPRequest * request = [ ASIHTTPRequest requestWithURL:url usingCache:[ ASIDownloadCache sharedCache ] andCachePolicy:ASICachePermanentlyCacheStoragePolicy ] ;
-            request.password = [ url absoluteString ];
-            
-			[ request setHTTPCompletionBlock:^(ASIHTTPRequest * request) {
-                
-                if ([[ self.imageURL absoluteString ] isEqualToString:request.password ])
-                {
-                    self.image = [ UIImage imageWithData:request.responseData ] ;
-                    self.loadImageRequest = nil ;
-                }
-                else {
-                    sleep(0);
-                }
-                
-                if (onComplete)
-                {
-                    onComplete();
-                }
-			}];
+			[ request setHTTPCompletionBlock:^(ASIHTTPRequest * request)
+             {
+                 if ([[ imageControl.imageURL absoluteString ] isEqualToString:[ request.url absoluteString ]])
+                 {
+                     UIImage* img = [ UIImage imageWithData:request.responseData ] ;
+                     
+                     if ([ img size ].height)
+                     {
+                         imageControl.image = img;
+                     }
+                     
+                     imageControl.loadImageRequest = nil ;
+                 }
+                 else {
+                     sleep(0);
+                 }
+                 //				if ( block ) { block( self.image, nil ) ; }
+                 if (onComplete)
+                 {
+                     onComplete();
+                 }
+             }];
 			[ request setFailedBlock:^(ASIHTTPRequest * request) {
 				//DebugLog(@"Failed to load image %@\n", request.url) ;
-				self.loadImageRequest = nil ;
+				imageControl.loadImageRequest = nil ;
 				BOOL cancelled = request.isCancelled || ( request.error.domain == NetworkRequestErrorDomain && request.error.code == ASIRequestCancelledErrorType ) ;
 				
 				if ( !cancelled )
 				{
-					// [ self performSelectorOnMainThread:@selector( loadImageWithURL: ) withObject:request.url waitUntilDone:NO ] ;
+                    [[ NSThread mainThread ] performBlock:^{
+                        [ self LoadImageWithUrl:url imageControl:imageControl defaultImage:defaultImage onComplete:onComplete ];
+                    } ];
 				}
+                
+                //				if ( block ) { block( nil, request.error ) ; }
 			}];
 			[[ ASINetworkQueue networkRequestQueue ] addOperation:request ] ;
 		}
 	}
+    else
+    {
+		imageControl.image = defaultImage;
+    }
+}
+
+@end
+
+@implementation UIImageView (NetworkLoading)
+@dynamic imageURL ;
+@dynamic image;
+
+//-(void)loadImageWithURL:(NSURL*)url 
+//{
+//	[ self loadImageWithURL:url completionBlock:nil ] ;
+//}
+
+-(void)loadImageWithURL:(NSURL*)url defaultImage:(UIImage*)defaultImage onComplete:(void (^)())onComplete
+{
+    [ DDImageManager LoadImageWithUrl:url imageControl:self defaultImage:defaultImage onComplete:onComplete ];
 }
 
 -(void)cancelLoadImageWithURL
@@ -80,9 +113,61 @@
     }
 }
 
+
+-(void)setImageURL:(NSURL *)imageURL
+{
+	[ self.layer setValue:imageURL forKey:@"DDImageURL" ] ;
+}
+
+-(NSURL *)imageURL
+{
+	return [ self.layer valueForKey:@"DDImageURL" ] ;
+}
+
+-(void)setLoadImageRequest:(ASIHTTPRequest *)loadImageRequest
+{
+	[self.layer setValue:loadImageRequest forKey:@"DDLoadImageRequest" ] ;
+}
+
+-(ASIHTTPRequest*)loadImageRequest
+{
+	return [ self.layer valueForKey:@"DDLoadImageRequest" ] ;
+}
+
 @end
 
-@implementation UIImageView (DD_Private)
+@implementation UIButton (NetworkLoading)
+@dynamic imageURL ;
+@dynamic image;
+
+-(UIImage*)image{
+    return [ self imageForState:UIControlStateNormal ];
+}
+
+-(void)setImage:(UIImage *)image
+{
+    [ self setImage:image forState:UIControlStateNormal ];
+}
+
+//-(void)loadImageWithURL:(NSURL*)url 
+//{
+//	[ self loadImageWithURL:url completionBlock:nil ] ;
+//}
+
+-(void)loadImageWithURL:(NSURL*)url defaultImage:(UIImage*)defaultImage onComplete:(void (^)())onComplete
+{
+    [ DDImageManager LoadImageWithUrl:url imageControl:self defaultImage:defaultImage onComplete:onComplete ];
+}
+
+-(void)cancelLoadImageWithURL
+{
+    if (self.loadImageRequest)
+    {
+        [ self.loadImageRequest cancel ] ;
+        self.loadImageRequest = nil ;
+        self.imageURL = nil;
+    }
+}
 
 -(void)setImageURL:(NSURL *)imageURL
 {
