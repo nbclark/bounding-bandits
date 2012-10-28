@@ -165,6 +165,7 @@
     [currentUser setObject:gender forKey:@"gender"];
     [currentUser setObject:birthday forKey:@"birthday"];
     [currentUser setObject:picture forKey:@"profilePicture"];
+    [currentUser setObject:[ userData objectForKey:@"id" ] forKey:@"facebookId"];
     [currentUser saveInBackground];
     
     [ self performSelectorOnMainThread:@selector(dismiss) withObject:nil waitUntilDone:NO ];

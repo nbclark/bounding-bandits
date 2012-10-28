@@ -13,4 +13,7 @@
 
 @property (nonatomic, strong) id<BBGameDelegate> gameDelegate;
 
+-(void)show;
+-(IBAction)randomGameClicked:(id)sender;
+
 @end

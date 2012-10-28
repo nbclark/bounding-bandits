@@ -14,6 +14,7 @@
 @synthesize userId;
 @synthesize pictureUrl;
 @synthesize user;
+@synthesize email;
 
 -(id)initWithId:(NSString*)_userId name:(NSString*)_name
 {

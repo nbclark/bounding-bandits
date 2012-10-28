@@ -11,7 +11,7 @@
 #import "BBResultsCell.h"
 #import "UIResponder+ActionPerforming.h"
 
-@interface BBResultsViewController ()
+@interface BBResultsViewController ()<BBShowReplayDelegate>
 
 @property (nonatomic, strong) UIButton* getStartedButton;
 
@@ -94,6 +94,46 @@
     [ super viewWillAppear:animated ];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [ super viewDidAppear:animated ];
+    
+    int row = ceil([ self.game.rounds count ] / 2.0) - 1;
+    NSIndexPath* indexPath = [ NSIndexPath indexPathForRow:row inSection:0 ];
+    
+    BBResultsCell* cell = (BBResultsCell*)[ self.tableView cellForRowAtIndexPath:indexPath ];
+    BOOL showReplay = !cell.replayVisible && cell.round1.completed && cell.round2.completed;
+    
+    if (showReplay)
+    {
+        cell.user1Active = ![ cell.round1.userId isEqualToString:[ PFUser currentUser ].objectId ];
+        
+        [ self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop ];
+        [ self showReplay:cell indexPath:indexPath];
+    }
+}
+
+-(void)selectCell:(BBResultsCell*)cell
+{
+    NSIndexPath* indexPath = [ self.tableView indexPathForCell:cell ];
+    BOOL showReplay = !cell.replayVisible && cell.round1.completed && cell.round2.completed;
+    
+    if (showReplay)
+    {
+        NSIndexPath* ip = [ self.tableView indexPathForSelectedRow ];
+        
+        if (ip)
+        {
+            [ self.tableView deselectRowAtIndexPath:ip animated:YES ];
+            BBResultsCell* deselectCell = (BBResultsCell*)[ self.tableView cellForRowAtIndexPath:ip ];
+            [ deselectCell setReplayVisible:NO ];
+        }
+        
+        [ self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop ];
+        [ self showReplay:cell indexPath:indexPath];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -116,6 +156,7 @@
     if (!cell)
     {
         cell = [ BBResultsCell cell ];
+        cell.delegate = self;
     }
     
     int index = indexPath.row * 2;
@@ -185,24 +226,31 @@
 {
     BBResultsCell* cell = (BBResultsCell*)[ tableView cellForRowAtIndexPath:indexPath ];
     
-    [tableView beginUpdates];
+    [ self showReplay:cell indexPath:indexPath ];
+}
+
+-(void)showReplay:(BBResultsCell*)cell indexPath:(NSIndexPath*)indexPath
+{
+    [self.tableView beginUpdates];
     
-    cell.replayVisible = !cell.replayVisible;
+    BOOL showReplay = !cell.replayVisible && cell.round1.completed && cell.round2.completed;
+    
+    cell.replayVisible = showReplay;
     
     if (!cell.replayVisible)
     {
-        [ tableView deselectRowAtIndexPath:indexPath animated:NO ];
+        [ self.tableView deselectRowAtIndexPath:indexPath animated:NO ];
     }
     
-    [tableView endUpdates];
+    [self.tableView endUpdates];
     
     if (!cell.replayVisible)
     {
-        [ tableView deselectRowAtIndexPath:indexPath animated:NO ];
+        [ self.tableView deselectRowAtIndexPath:indexPath animated:NO ];
     }
     else
     {
-        [ tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES ];
+        [ self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES ];
     }
     
     // Navigation logic may go here. Create and push another view controller.

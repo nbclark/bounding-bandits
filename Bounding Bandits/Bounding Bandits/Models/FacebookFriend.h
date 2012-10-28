@@ -13,6 +13,7 @@
 @property (nonatomic, copy) NSString* name;
 @property (nonatomic, copy) NSString* userId;
 @property (nonatomic, copy) NSString* pictureUrl;
+@property (nonatomic, copy) NSString* email;
 @property (nonatomic, strong) PFUser* user;
 
 -(id)initWithId:(NSString*)userId name:(NSString*)name;

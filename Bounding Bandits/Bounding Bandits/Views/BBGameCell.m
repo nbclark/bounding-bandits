@@ -88,6 +88,8 @@
         self.selectedBackgroundView.backgroundColor = [ UIColor colorWithWhite:0 alpha:1 ];
         
         self.backgroundView = [[ UIImageView alloc ] initWithImage:[ UIImage imageNamed:@"img/cell-gradient.png" ]];
+        self.backgroundView.alpha = 0.4;
+        
         self.separator = [[ UIImageView alloc ] initWithImage:[ UIImage imageNamed:@"img/cell-border.png" ]];
         
         [ self addSubview:self.separator ];
@@ -169,6 +171,8 @@
     }
     
     PFUser* otherUser = [ game otherUser ];
+    
+    //[self.profileImage setImageURL:nil ];
     [ self.profileImage loadImageWithURL:[ NSURL URLWithString:[ otherUser objectForKey:@"profilePicture" ]] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:nil ];
     self.profileLabel.text = [ otherUser objectForKey:@"name" ];
     

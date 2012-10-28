@@ -38,13 +38,18 @@
 		if ( data.length > 0 )
 		{
 			imageControl.image = [ UIImage imageWithData:data ] ;
+            
+            if (onComplete)
+            {
+                onComplete();
+            }
 		}
-		else 
+		else
 		{
 			ASIHTTPRequest * request = [ ASIHTTPRequest requestWithURL:url usingCache:[ ASIDownloadCache sharedCache ] andCachePolicy:ASICachePermanentlyCacheStoragePolicy ] ;
 			[ request setHTTPCompletionBlock:^(ASIHTTPRequest * request)
              {
-                 if ([[ imageControl.imageURL absoluteString ] isEqualToString:[ request.url absoluteString ]])
+                 if ([[ imageControl.imageURL absoluteString ] isEqualToString:[ request.originalURL absoluteString ]])
                  {
                      UIImage* img = [ UIImage imageWithData:request.responseData ] ;
                      
@@ -54,15 +59,16 @@
                      }
                      
                      imageControl.loadImageRequest = nil ;
+                     
+                     if (onComplete)
+                     {
+                         onComplete();
+                     }
                  }
                  else {
                      sleep(0);
                  }
                  //				if ( block ) { block( self.image, nil ) ; }
-                 if (onComplete)
-                 {
-                     onComplete();
-                 }
              }];
 			[ request setFailedBlock:^(ASIHTTPRequest * request) {
 				//DebugLog(@"Failed to load image %@\n", request.url) ;
@@ -81,7 +87,7 @@
 			[[ ASINetworkQueue networkRequestQueue ] addOperation:request ] ;
 		}
 	}
-    else
+    else if (!url)
     {
 		imageControl.image = defaultImage;
     }

@@ -482,7 +482,7 @@
                 </tr> \
                 <tr class="timeInfo"> \
                     <td class="timeCount"></td> \
-                    <td class="clearMoves"><a href="">CLEAR</a></td> \
+                    <td class="clearMoves"><a href="">clear</a></td> \
                 </tr> \
                 <tr> \
                     <td colspan="2" class="profile"> \

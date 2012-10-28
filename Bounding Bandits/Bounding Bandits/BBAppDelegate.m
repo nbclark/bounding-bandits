@@ -14,7 +14,6 @@
 #import "BBMainViewController.h"
 #import "BBNavigationController.h"
 #import "Utils.h"
-#import "InventoryKit.h"
 #import "TestFlight.h"
 #import <Parse/Parse.h>
 
@@ -28,6 +27,8 @@
 @synthesize viewController = _viewController;
 @synthesize gamePieces = _gamePieces;
 @synthesize isOnline;
+@synthesize isUpgraded;
+@synthesize isInGame;
 
 static BBAppDelegate* _sharedDelegate;
 
@@ -39,9 +40,15 @@ static BBAppDelegate* _sharedDelegate;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-    _sharedDelegate = self;
+    self.isUpgraded = NO;
     
-    [InventoryKit registerWithPaymentQueue];
+    // Use the product identifier from iTunes to register a handler.
+    [PFPurchase addObserverForProduct:@"MMMultiMode" block:^(SKPaymentTransaction *transaction) {
+        // Write business logic that should run once this product is purchased.
+        self.isUpgraded = YES;
+    }];
+    
+    _sharedDelegate = self;
 
     [ [UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone ];
     
@@ -171,6 +178,11 @@ static BBAppDelegate* _sharedDelegate;
     {
         [ PFPush subscribeToChannelInBackground:[ PFUser currentUser ].objectId ];
     }
+}
+
+-(void)quitGame
+{
+    [ self.viewController showMenu ];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken

@@ -7,6 +7,7 @@
 //
 
 #import "DDPullToRefreshView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation DDPullToRefreshView
 
@@ -23,12 +24,12 @@
 {
     if (( self = [ super init ]))
     {
-        _statusLabel.textColor = [ UIColor whiteColor ];
-        _lastUpdatedLabel.textColor = [ UIColor whiteColor ];
-        _activityView.color = [ UIColor whiteColor ];
+        self.statusLabel.textColor = [ UIColor whiteColor ];
+        self.lastUpdatedLabel.textColor = [ UIColor whiteColor ];
+        self.activityView.color = [ UIColor whiteColor ];
         
-        _statusLabel.layer.shadowRadius = 0;
-        _lastUpdatedLabel.layer.shadowRadius = 0;
+        self.statusLabel.layer.shadowRadius = 0;
+        self.lastUpdatedLabel.layer.shadowRadius = 0;
     }
     
     return self;

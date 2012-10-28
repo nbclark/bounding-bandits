@@ -8,11 +8,14 @@
 
 #import "MessageView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "BBAppDelegate.h"
 
 @implementation MessageView
 
 @synthesize label = _label, activityIndicator = _activityIndicator, messageFrame = _messageFrame ;
 @synthesize button = _button;
+@synthesize quitButton = _quitButton;
+@synthesize delegate;
 
 @synthesize showMessageFrame;
 
@@ -36,6 +39,11 @@
     [ self sendActionsForControlEvents:UIControlEventTouchUpInside ];
 }
 
+-(void)quitTapped:(id)sender
+{
+    [[ BBAppDelegate sharedDelegate ] quitGame ];
+}
+
 -(UIButton *)button
 {
 	if ( !_button )
@@ -56,6 +64,27 @@
 	}
 	
 	return _button ;
+}
+
+-(UIButton *)quitButton
+{
+	if ( !_quitButton )
+	{
+		UIButton * button = [[ UIButton alloc ] initWithFrame:CGRectZero ] ;
+		button.backgroundColor = [ UIColor clearColor ] ;
+		button.opaque = NO ;
+        
+        UIImage* img = [ UIImage imageNamed:@"img/close.png" ] ;
+        
+        button.frame = CGRectMake(0,0,img.size.width,img.size.height);
+        
+        [ button setImage:img forState:UIControlStateNormal ];
+		[ button addTarget:self action:@selector(quitTapped:) forControlEvents:UIControlEventTouchUpInside ];
+		[ self addSubview:button ] ;
+		_quitButton = button ;
+	}
+	
+	return _quitButton ;
 }
 
 -(UIActivityIndicatorView *)activityIndicator
@@ -140,6 +169,8 @@
 	self.button.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2);
     self.messageFrame.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2);
     self.imageView.center = CGRectGetCenter(self.bounds);
+    
+	self.quitButton.center = CGPointMake(bounds.size.width / 2 + self.imageView.image.size.width / 2 - 10, bounds.size.height / 2 - self.imageView.image.size.height / 2 + 10);
     
 	self.label.center = CGPointMake(bounds.size.width / 2, bounds.size.height / 2 - self.imageView.image.size.height / 2 + self.label.bounds.size.height / 2 + 30 );
 }

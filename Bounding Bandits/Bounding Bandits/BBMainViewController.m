@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "BBAppDelegate.h"
 #import "BBMainViewController.h"
 #import "BBViewController.h"
 #import "BBGamesTableViewController.h"
@@ -14,8 +15,7 @@
 #import "AnimationDelegate.h"
 #import "JSONKit.h"
 #import "DDAlertManager.h"
-
-#import "InventoryKit.h"
+#import "BBFirstRunViewController.h"
 
 #define ANIM_MULTIPLIER 1
 
@@ -116,7 +116,7 @@
 
 - (void)handlePan:(UIPanGestureRecognizer*)recognizer
 {
-    if (self.isMenuVisible) return;
+    if (self.isMenuVisible || [ BBAppDelegate sharedDelegate ].isInGame) return;
     
     CGPoint translation = [recognizer translationInView:recognizer.view];
     
@@ -165,18 +165,64 @@
 
 -(void)startGame:(GAME_TYPE)_gameType
 {
-    [ self.boardController loadGameWithGameType:_gameType gameState:@"null" generateState:NO isActive:YES elapsed:0 ];
-    [ self hideMenu ];
+    if (_gameType == GAME_TYPE_TURN)
+    {
+        return;
+    }
+    
+    VoidBlock launchGame = ^()
+    {
+        [ self.boardController loadGameWithGameType:_gameType gameState:@"null" generateState:NO isActive:YES elapsed:0 ];
+        [ self hideMenu ];
+    };
+    
+    NSNumber* firstRun = [[ BBAppDelegate sharedDelegate ] getSetting:@"IsFirstRun" ];
+    
+    if (!firstRun || ![ firstRun boolValue ])
+    {
+        BBFirstRunViewController* vc = [[ BBFirstRunViewController alloc ] init ];
+        [ self.navigationController presentModalViewController:vc animated:YES ];
+        vc.delegate = launchGame;
+        
+        [[ BBAppDelegate sharedDelegate ] saveSetting:[ NSNumber numberWithBool:YES ] forKey:@"IsFirstRun" ];
+    }
+    else
+    {
+        launchGame();
+    }
 }
 
 -(void)selectGame:(CollabGame*)game isNew:(BOOL)isNew
 {
     if (isNew)
     {
-        if (self.gamesController.activeGames >= 5)
+        if (self.gamesController.activeGames >= 2)
         {
             NSString* proProduct = @"MMMultiMode";
             
+            if (![ BBAppDelegate sharedDelegate ].isUpgraded)
+            {
+                [ DDAlertManager alertWithTitle:@"Game Limit Reached" message:@"You have reached the limit of active games (2) for the free version. Would you like to upgrade?" closeBlock:^(int buttonIndex) {
+                    
+                    if (buttonIndex > 0)
+                    {
+                        [PFPurchase buyProduct:proProduct block:^(NSError *error) {
+                            if (!error)
+                            {
+                                // Run UI logic that informs user the product has been purchased, such as displaying an alert view.
+                                [ BBAppDelegate sharedDelegate ].isUpgraded = YES;
+                                [ self selectGame:game isNew:isNew ];
+                            }
+                            else
+                            {
+                                [[[ UIAlertView alloc ] initWithTitle:@"Error Purchasing" message:[ error localizedDescription ] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil ] show ];
+                            }
+                        }];
+                    }
+                } cancelButtonTitle:@"No, Thanks" otherButtonTitles:@"Upgrade", nil ];
+                return;
+            }
+            /*
             if (![ InventoryKit productActivated:proProduct ])
             {
                 [ DDAlertManager alertWithTitle:@"Game Limit Reached" message:@"You have reached the limit of active games (5) for the free version. Would you like to upgrade?" closeBlock:^(int buttonIndex) {
@@ -199,6 +245,7 @@
                 
                 return;
             }
+        */
         }
     }
     
@@ -276,10 +323,14 @@
     {
         [ self.gamesController gameCreated:currentGame ];
     }
+    
+    [ BBAppDelegate sharedDelegate ].isInGame = YES;
 }
 
 -(void)endGame:(NSDictionary *)results
 {
+    [ BBAppDelegate sharedDelegate ].isInGame = NO;
+    
     if (self.gameType == GAME_TYPE_TURN)
     {
         if ([self.currentGame.activeUser.objectId isEqualToString:[ PFUser currentUser ].objectId ])
@@ -343,7 +394,7 @@
         }];
         
         // Show the round score here...
-        [ self.gamesController showResults:self.currentGame fromRect:self.view.bounds onClose:nil ];
+        //[ self.gamesController showResults:self.currentGame fromRect:self.view.bounds onClose:nil ];
 
         [ self.currentGame saveInBackground ];
     }

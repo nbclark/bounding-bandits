@@ -22,7 +22,9 @@
 #import "DDPullToRefreshView.h"
 #import <UIKit/UIKit.h>
 #import "BBResultsViewController.h"
+#import "NSThread+BlockPerform.h"
 #import "BBGameCell.h"
+#import "EmptyCell.h"
 
 @interface BBGamesTableViewController ()<PF_EGORefreshTableHeaderDelegate,UIPopoverControllerDelegate>
 
@@ -73,12 +75,26 @@
     self.myTurnGames = [ NSMutableArray array ];
     self.theirTurnGames = [ NSMutableArray array ];
     self.isLoading = YES;
+    self.view.clipsToBounds = YES;
     
     // 2C2E32
-    self.tableView.backgroundColor = [ UIColor colorWithRed:24/256.0 green:24/256.0 blue:24/256.0 alpha:1 ];
-    //self.tableView.backgroundColor = [ UIColor clearColor ];
+    self.tableView.opaque = NO;
+    self.tableView.backgroundColor = [ UIColor colorWithWhite:0.25 alpha:0.25 ];
+    
     UIImage* img = [ UIImage imageNamed:@"img/bg-app.jpg" ];
-    //self.tableView.backgroundView = [[ UIImageView alloc ] initWithImage:img];
+    UIImageView* iv = [[ UIImageView alloc ] initWithImage:img];
+    iv.contentMode = UIViewContentModeScaleAspectFill;
+    iv.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    iv.clipsToBounds = YES;
+    self.tableView.backgroundView = nil;
+    iv.alpha = 0.3;
+    
+    UIView* bv = [[ UIView alloc ] initWithFrame:iv.bounds ];
+    [ bv addSubview:iv ];
+    
+    iv.bounds = CGRectInset(iv.bounds, 25, 25);
+    
+    self.tableView.backgroundView = bv;
     //self.tableView.backgroundView.frame = self.tableView.bounds;
     
     [[ NSNotificationCenter defaultCenter ] addObserver:self selector:@selector(userDidLogIn) name:@"kUserDidLogIn" object:nil ];
@@ -172,7 +188,9 @@
         
         [ query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
          {
-             [ self processLoadedGames:objects fromCache:NO ];
+             [ NSThread performBlockInBackground:^{
+                 [ self processLoadedGames:objects fromCache:NO ];
+             }];
              
          } ];
     }
@@ -224,34 +242,6 @@
             }
         }
     }
-    
-    /*
-    for (CollabGame* game in games)
-    {
-        game.rounds = [ NSMutableArray array ];
-        int index = 0;
-        for (PFObject* roundObj in game.legacyRounds)
-        {
-            CollabRound* round = [ CollabRound objectWithObject:roundObj ];
-            
-            NSDictionary* dictionary = [ NSDictionary dictionaryWithObjectsAndKeys:
-                                        [ NSNumber numberWithInteger:index ], @"Index",
-                                        round.userId, @"UserId",
-                                        [ NSNumber numberWithBool:round.completed ], @"Completed",
-                                        [ NSNumber numberWithBool:round.success ], @"Success",
-                                        [ NSNumber numberWithFloat:round.duration ], @"Duration",
-                                        [ NSNumber numberWithFloat:round.elapsed ], @"Elapsed",
-                                        [ NSNumber numberWithInteger:round.moves ], @"Moves",
-                                        round.moveLog, @"MoveLog",
-                                        round.state, @"State",
-                                        nil ];
-            
-            [ game.rounds addObject:dictionary ];
-            index++;
-        }
-        
-        [ game save ];
-    }*/
     
     [ self.completedGames removeAllObjects ];
     [ self.myTurnGames removeAllObjects ];
@@ -308,20 +298,65 @@
     
     if (indexPath.section == 0)
     {
-        
         NSArray* gameList = [ self dataForSection:indexPath.section ];
-        [ self.gameDelegate selectGame:[ gameList objectAtIndex:indexPath.row ] isNew:NO ];
+        
+        if (![ gameList count ])
+        {
+            // start a new game
+            PFQuery* query = [ PFUser query ];
+            [ query whereKey:@"objectId" notEqualTo:[ PFUser currentUser ].objectId ];
+            NSUInteger count = [ query countObjects ];
+            
+            NSUInteger index = MIN(((double)rand() / RAND_MAX) * count, count - 1);
+            
+            [ query setSkip:index ];
+            [ query setLimit:1 ];
+            
+            NSArray* users = [ query findObjects ];
+            
+            if ([ users count ])
+            {
+                CollabGame* currentGame = [ CollabGame object ];
+                currentGame.completed = NO;
+                currentGame.creator = [ PFUser currentUser ];
+                currentGame.activeUser = [ PFUser currentUser ];
+                currentGame.users = [ NSMutableArray arrayWithObjects:[ PFUser currentUser ], [ users objectAtIndex:0 ], nil ];
+                currentGame.rounds = [ NSMutableArray array ];
+                
+                [ self.myTurnGames insertObject:currentGame atIndex:0 ];
+                
+                [ self.gameDelegate selectGame:currentGame isNew:YES ];
+            }
+            else
+            {
+                UIAlertView* v = [[ UIAlertView alloc ] initWithTitle:@"No Matches Found" message:@"No matching players were found" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil ];
+                
+                [ v show ];
+            }
+        }
+        else
+        {
+            [ self.gameDelegate selectGame:[ gameList objectAtIndex:indexPath.row ] isNew:NO ];
+        }
     }
     else
     {
         // show some details on the game here
+        NSArray* gameList = [ self dataForSection:indexPath.section ];
         
-        CollabGame* game = [[ self dataForSection:indexPath.section ] objectAtIndex:indexPath.row ];
-        
-        CGRect aFrame = [ self.tableView convertRect:[self.tableView rectForRowAtIndexPath:indexPath] toView:self.view.superview ];
-        aFrame = CGRectMake(aFrame.origin.x, aFrame.origin.y, 50, 50);
-        
-        [ self showResults:game fromRect:aFrame onClose:nil ];
+        if (![ gameList count ])
+        {
+            // start a new game
+        }
+        else
+        {
+            CollabGame* game = [gameList objectAtIndex:indexPath.row ];
+            
+            CGRect aFrame = [ self.tableView convertRect:[self.tableView rectForRowAtIndexPath:indexPath] toView:self.view.superview ];
+            aFrame = CGRectMake(aFrame.origin.x, aFrame.origin.y, 50, 50);
+            
+            [ self showResults:game fromRect:aFrame onClose:nil ];
+        }
     }
 }
 
@@ -365,11 +400,11 @@
     switch (section)
     {
         case 0:
-            return [ self.myTurnGames count ];
+            return MAX([ self.myTurnGames count ], 1);
         case 1:
-            return [ self.theirTurnGames count ];
+            return MAX([ self.theirTurnGames count ], 1);
         case 2:
-            return [ self.completedGames count ];
+            return MAX([ self.completedGames count ], 1);
     }
     
     return 0;
@@ -389,7 +424,7 @@
     gradient.frame = CGRectMake(0,0,_tableView.bounds.size.width,30);
     gradient.colors = [ NSArray arrayWithObjects:(id)[[ UIColor whiteColor ] CGColor ], (id)[[ UIColor colorWithRed:0.839 green:0.863 blue:0.898 alpha:1 ] CGColor ], nil];
     
-    UIView* backgroundView = [[ UIView alloc ] initWithFrame:CGRectMake(0, 0, 20, 30) ];
+    UIView* backgroundView = [[ UIImageView alloc ] initWithImage:[ UIImage imageNamed:@"img/bg-sectionheader.png" ]]; //[[ UIView alloc ] initWithFrame:CGRectMake(0, 0, 20, 30) ];
     UIView* containerView = [[ UIView alloc ] initWithFrame:CGRectMake(0, 0, 20, 31) ];
     UILabel* textView = [[ UILabel alloc ] initWithFrame:CGRectMake(6, 0, 0, 30) ];
     containerView.backgroundColor = [ UIColor blackColor ];
@@ -400,10 +435,12 @@
     textView.text = [ self tableView:_tableView titleForHeaderInSection:section ];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    backgroundView.clipsToBounds = YES;
+    containerView.clipsToBounds = YES;
     
     [ containerView addSubview:backgroundView ];
     [ containerView addSubview:textView ];
-    [ backgroundView.layer insertSublayer:gradient atIndex:0 ];
+    //[ backgroundView.layer insertSublayer:gradient atIndex:0 ];
     
     return containerView;
 }
@@ -419,27 +456,46 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	BBGameCell * cell = [ _tableView dequeueReusableCellWithIdentifier:@"BBGameCell" ] ;
-    
-    if (!cell)
-    {
-        cell = [ BBGameCell cell ];
-    }
-    
+{    
     NSArray* list;
+    NSString* emptyMessage;
     
     switch (indexPath.section)
     {
         case 0:
             list = self.myTurnGames;
+            emptyMessage = @"Tap to start play a random opponent...";
             break;
         case 1:
             list = self.theirTurnGames;
+            emptyMessage = @"Your opponents are waiting...";
             break;
         case 2:
             list = self.completedGames;
+            emptyMessage = @"No completed games...yet...";
             break;
+    }
+    
+    if (![ list count ])
+    {
+        EmptyCell* ec = [ _tableView dequeueReusableCellWithIdentifier:@"EmptyCell " ];
+        ec.selectionStyle = UITableViewCellSelectionStyleGray;
+        
+        if (!ec)
+        {
+            ec = [[ EmptyCell alloc ] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EmptyCell" ];
+        }
+        
+        ec.emptyLabel.text = emptyMessage;
+        
+        return ec;
+    }
+    
+	BBGameCell * cell = [ _tableView dequeueReusableCellWithIdentifier:@"BBGameCell" ] ;
+    
+    if (!cell)
+    {
+        cell = [ BBGameCell cell ];
     }
     
     CollabGame* obj = [ list objectAtIndex:indexPath.row ];

@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "Models.h"
 
+@protocol BBShowReplayDelegate
+
+@required
+-(void)selectCell:(id)cell;
+
+@end
+
 @interface BBResultsCell : UITableViewCell<UIWebViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIButton* moves1;
@@ -22,6 +29,8 @@
 
 @property (nonatomic) BOOL replayVisible;
 @property (nonatomic) BOOL user1Active;
+
+@property (nonatomic, strong) id<BBShowReplayDelegate> delegate;
 
 +(id)cell;
 

@@ -10,4 +10,6 @@
 
 @interface BBMainViewController : UIViewController
 
+-(void) showMenu;
+
 @end

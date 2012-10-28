@@ -8,6 +8,7 @@
 
 #import "BBSignUpViewController.h"
 #import "UIView+Loading.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation BBSignUpViewController
 

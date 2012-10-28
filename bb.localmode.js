@@ -375,7 +375,7 @@
                             moveContainer.style.top = '50px';
                             moveContainer.style.left = '50px';
                             
-                            var token = that.createToken('animatedToken', node.firstChild.style.backgroundColor);
+                            var token = that.createToken('animatedToken', node.firstChild['data-color']);
                             
                             moveContainer.appendChild(token);
                             
@@ -392,7 +392,6 @@
                             node.style.visibility = 'hidden';
                             
                             animatedToken = moveContainer;
-                            
                             break;
                         }
                     }
@@ -418,7 +417,7 @@
                     $("#animatedToken").animate({
                       marginLeft:-pos.x + startX + 10,
                       marginTop:-pos.y + startY + 10
-                    }, 1000, 'ease-out', function()
+                    }, 600, 'ease-out', function()
                     {
                         animatedToken.parentNode.removeChild(animatedToken);
                         

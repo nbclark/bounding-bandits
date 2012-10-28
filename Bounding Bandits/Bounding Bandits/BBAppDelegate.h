@@ -22,9 +22,12 @@
 @property (strong, nonatomic) BBMainViewController *viewController;
 @property (strong, nonatomic) NSArray* gamePieces;
 @property (nonatomic) BOOL isOnline;
+@property (nonatomic) BOOL isUpgraded;
+@property (nonatomic) BOOL isInGame;
 
 +(BBAppDelegate*)sharedDelegate;
 -(void)saveSetting:(id)object forKey:(NSString*)key;
 -(id)getSetting:(NSString*)key;
+-(void)quitGame;
 
 @end

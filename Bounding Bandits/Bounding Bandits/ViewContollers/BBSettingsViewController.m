@@ -14,7 +14,7 @@
 
 typedef void (^VoidBlock)() ;
 
-@interface BBSettingsViewController ()<UIActionSheetDelegate>
+@interface BBSettingsViewController ()<UIActionSheetDelegate, PF_FBRequestDelegate>
 
 @property (nonatomic, strong) IBOutlet UISwitch* facebookSwitch;
 @property (nonatomic, strong) IBOutlet UISwitch* twitterSwitch;
@@ -55,6 +55,11 @@ typedef void (^VoidBlock)() ;
 -(void)userDidLogIn
 {
     [ self loadData ];
+    
+    [ self.facebookSwitch setOn:[ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]]];
+    [ self.twitterSwitch setOn:[ PFTwitterUtils isLinkedWithUser:[ PFUser currentUser ]]];
+    
+    [ self.yourTurnNotSwitch setOn:[[[ PFUser currentUser ] objectForKey:@"receiveNotifications" ] boolValue ]];
 }
 
 - (void)viewDidLoad
@@ -96,13 +101,15 @@ typedef void (^VoidBlock)() ;
         {
             [ PFFacebookUtils linkUser:[ PFUser currentUser ] permissions:[ NSArray arrayWithObjects:@"email,user_birthday", nil ] block:^(BOOL succeeded, NSError *error)
             {
-                [[ PFUser currentUser ] saveInBackground ];
+                [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me?fields=id" andDelegate:self ];
             }];
         }
     }
     else {
         self.destroyBlock = ^{
             [ PFFacebookUtils unlinkUser:[ PFUser currentUser ] ];
+            [[ PFUser currentUser ] setObject:@"" forKey:@"facebookId" ];
+            [[ PFUser currentUser ] saveInBackground ];
         };
         self.cancelBlock = ^{
             self.facebookSwitch.on = YES;
@@ -114,6 +121,13 @@ typedef void (^VoidBlock)() ;
     }
 }
 
+- (void)request:(PF_FBRequest *)request didLoad:(id)result
+{
+    // Store the current user's Facebook ID on the user so that we can query for it.
+    [[ PFUser currentUser ] setObject:[ result objectForKey:@"id" ] forKey:@"facebookId" ];
+    [[ PFUser currentUser ] saveInBackground ];
+}
+
 -(IBAction)twitterToggled:(id)sender
 {
     if (self.twitterSwitch.on)
@@ -121,14 +135,17 @@ typedef void (^VoidBlock)() ;
         if (![ PFTwitterUtils isLinkedWithUser:[ PFUser currentUser ]])
         {
             [ PFTwitterUtils linkUser:[ PFUser currentUser ] block:^(BOOL succeeded, NSError *error)
-            {
-                [[ PFUser currentUser ] saveInBackground ];
+             {
+                 [[ PFUser currentUser ] setObject:[[ PFTwitterUtils twitter ] screenName ] forKey:@"twitterSN" ];
+                 [[ PFUser currentUser ] saveInBackground ];
             } ];
         }
     }
     else {
         self.destroyBlock = ^{
             [ PFTwitterUtils unlinkUser:[ PFUser currentUser ] ];
+            [[ PFUser currentUser ] setObject:@"" forKey:@"twitterSN" ];
+            [[ PFUser currentUser ] saveInBackground ];
         };
         self.cancelBlock = ^{
             self.twitterSwitch.on = YES;
@@ -176,9 +193,12 @@ typedef void (^VoidBlock)() ;
 
 -(IBAction)createGameClicked:(id)sender
 {
-    self.peopleViewController.view.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height);
+    self.peopleViewController.view.frame = CGRectMake(self.view.bounds.size.width, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     self.peopleViewController.view.hidden = NO;
     
+    [ self.peopleViewController show ];
+    
+    /*
     [ UIView beginAnimations:nil context:nil ];
     [ UIView setAnimationDuration:0.5 ];
     [ UIView setAnimationDelay:0 ];
@@ -186,7 +206,7 @@ typedef void (^VoidBlock)() ;
     
     self.peopleViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     
-    [UIView commitAnimations];
+    [UIView commitAnimations];*/
 }
 
 - (void)viewDidUnload
@@ -202,7 +222,16 @@ typedef void (^VoidBlock)() ;
 }
 
 -(void)startGame:(GAME_TYPE)gameType
-{     
+{
+    [ UIView animateWithDuration:0.15 animations:^{
+        self.peopleViewController.view.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height);
+        self.peopleViewController.view.alpha = 0;
+    } completion:^(BOOL finished) {
+        [ self.gameDelegate startGame:gameType ];
+        self.peopleViewController.view.alpha = 1;
+        self.peopleViewController.view.hidden = YES;
+    }];
+    /*
     [ UIView beginAnimations:nil context:nil ];
     [ UIView setAnimationDuration:0.15 ];
     [ UIView setAnimationDelay:0 ];
@@ -210,15 +239,27 @@ typedef void (^VoidBlock)() ;
     
     [ UIView setAnimationDelegate:[ AnimationDelegate delegateWithEndBlock:^(CAAnimation * anim, BOOL something) {
         [ self.gameDelegate startGame:gameType ];
+        self.peopleViewController.view.hidden = YES;
     }]];
     
     self.peopleViewController.view.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height);
     
     [UIView commitAnimations];
+    */
 }
 
 -(void)selectGame:(CollabGame*)game isNew:(BOOL)isNew
-{         
+{
+    [ UIView animateWithDuration:0.15 animations:^{
+        self.peopleViewController.view.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height);
+        self.peopleViewController.view.alpha = 0;
+    } completion:^(BOOL finished) {
+        [ self.gameDelegate selectGame:game isNew:isNew ];
+        self.peopleViewController.view.alpha = 1;
+        self.peopleViewController.view.hidden = YES;
+    }];
+    
+    /*
     [ UIView beginAnimations:nil context:nil ];
     [ UIView setAnimationDuration:0.15 ];
     [ UIView setAnimationDelay:0 ];
@@ -226,11 +267,13 @@ typedef void (^VoidBlock)() ;
     
     [ UIView setAnimationDelegate:[ AnimationDelegate delegateWithEndBlock:^(CAAnimation * anim, BOOL something) {        
         [ self.gameDelegate selectGame:game isNew:isNew ];
+        self.peopleViewController.view.hidden = YES;
     }]];
     
     self.peopleViewController.view.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, self.view.bounds.size.height);
     
     [UIView commitAnimations];
+    */
 }
 
 -(void)endGame:(NSDictionary*)results;

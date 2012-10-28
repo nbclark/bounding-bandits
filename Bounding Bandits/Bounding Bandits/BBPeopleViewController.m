@@ -20,14 +20,19 @@
 #import <Parse/Parse.h>
 #import "DDPullToRefreshView.h"
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import <AddressBook/AddressBook.h>
+#import <Twitter/Twitter.h>
+#import <Social/Social.h>
 
 #import "UIWebView+Stylizer.h"
 
-@interface BBPeopleViewController ()<PF_EGORefreshTableHeaderDelegate,PF_FBRequestDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface BBPeopleViewController ()<PF_EGORefreshTableHeaderDelegate,PF_FBRequestDelegate,UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) NSMutableArray* friends;
 @property (nonatomic, strong) NSMutableArray* sections;
 @property (nonatomic, strong) NSMutableArray* objects;
+@property (nonatomic, strong) FacebookFriend* inviteFriend;
 @property (nonatomic, assign) IBOutlet UITableView* tableView;
 @property (nonatomic, assign) IBOutlet UIButton* randomButton;
 @property (nonatomic, assign) IBOutlet UIButton* localModeButton;
@@ -49,6 +54,7 @@
 @synthesize refreshHeaderView;
 @synthesize randomButton;
 @synthesize localModeButton;
+@synthesize inviteFriend;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,7 +67,7 @@
 
 -(void)userDidLogIn
 {
-    [ self loadData ];
+    [ self loadData:NO ];
 }
 
 - (void)viewDidLoad
@@ -74,11 +80,91 @@
     
     self.sections = [ NSMutableArray arrayWithCapacity:26 ];
     self.objects = [ NSMutableArray arrayWithCapacity:26 ];
-    self.tableView.backgroundColor = [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
+    self.tableView.backgroundColor = [ UIColor clearColor ];//[ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
     [[ NSNotificationCenter defaultCenter ] addObserver:self selector:@selector(userDidLogIn) name:@"kUserDidLogIn" object:nil ];
+    
+    UIPanGestureRecognizer* gesture = [[ UIPanGestureRecognizer alloc ] initWithTarget:self action:@selector(handlePan:) ];
+    [ self.view addGestureRecognizer:gesture ];
 }
 
--(void)loadData
+-(CGPoint)positionWithTranslationInView:(UIView*)view
+{
+    if (view.transform.tx || view.transform.ty)
+    {
+        float x = view.transform.tx;
+        float y = view.transform.ty;
+        
+        CGPoint pos = view.layer.position;
+        
+        return CGPointMake(view.layer.position.x + x, view.layer.position.y + y);
+    }
+    
+    return view.layer.position;
+}
+
+-(void)moveView:(UIView*)view fromPoint:(CGPoint)from toPoint:(CGPoint)to duration:(float)duration
+{    
+    CABasicAnimation * anim = [ CABasicAnimation animationWithKeyPath:@"position" ] ;
+    anim.fillMode = kCAFillModeForwards;
+    anim.removedOnCompletion = NO;
+    anim.toValue = [ NSValue valueWithCGPoint:to ] ;
+    anim.duration = 1 * duration ;
+    anim.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    
+    anim.delegate = [ AnimationDelegate delegateWithEndBlock:(void(^)(CAAnimation*, BOOL))^(CABasicAnimation * anim, BOOL didFinish )
+                     {
+                         if ( didFinish )
+                         {
+                             view.layer.position = to;
+                         }
+                     }];
+    
+    view.layer.position = from;
+    
+    [ view.layer addAnimation:anim forKey:@"menuPosition" ] ;
+}
+
+- (void)handlePan:(UIPanGestureRecognizer*)recognizer
+{
+    CGPoint translation = [recognizer translationInView:recognizer.view];
+    
+    float x = MAX(MIN(translation.x, (self.view.bounds.size.width+5)), 0);
+    
+    translation = CGPointMake(x, 0);
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan)
+    {    
+    }
+    else if (recognizer.state == UIGestureRecognizerStateChanged)
+    {
+        self.view.transform = CGAffineTransformMakeTranslation(translation.x, 0);
+    }
+    else if (recognizer.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint pos;
+        
+        if (translation.x < self.view.bounds.size.width / 4)
+        {
+            pos = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+        }
+        else
+        {
+            pos = CGPointMake(self.view.bounds.size.width * 1.5, self.view.bounds.size.height / 2);
+        }
+        
+        [ self moveView:self.view fromPoint:[ self positionWithTranslationInView:self.view ] toPoint:pos duration:0.25 ];
+        
+        self.view.transform = CGAffineTransformIdentity;
+    }
+}
+
+-(void)show
+{
+    CGPoint pos = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [ self moveView:self.view fromPoint:[ self positionWithTranslationInView:self.view ] toPoint:pos duration:0.25 ];
+}
+
+-(void)loadData:(BOOL)force
 {
     BOOL willLoad = NO;
     
@@ -86,7 +172,7 @@
     {
         NSDate* lastSyncFriends = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_LastSyncFBFriends ];
         
-        if ([ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]] && (nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1)) // 1 day
+        if (([ PFFacebookUtils isLinkedWithUser:[ PFUser currentUser ]] && (force || nil == lastSyncFriends || [ lastSyncFriends timeIntervalSinceNow ] > 60 * 24 * 1))) // 1 day
         {
             willLoad = YES;
             [[ PFFacebookUtils facebook ] requestWithGraphPath:@"me/friends" andDelegate:self ];
@@ -130,7 +216,7 @@
                     
                     [[ BBAppDelegate sharedDelegate ] saveSetting:userData forKey:kBB_TWFriends ];
                     [[ BBAppDelegate sharedDelegate ] saveSetting:[ NSDate date ] forKey:kBB_LastSyncTWFriends ];
-                    
+
                     [ self processFriends ];
                     
                 }];
@@ -231,13 +317,28 @@
 
 - (void)tableView:(UITableView *)_tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [ _tableView deselectRowAtIndexPath:indexPath animated:YES ];
+    
     if (indexPath.section == 0)
     {
-        [ _tableView deselectRowAtIndexPath:indexPath animated:YES ];
     }
     else
     {
+        FacebookFriend* friend = [[ self.objects objectAtIndex:indexPath.section ] objectAtIndex:indexPath.row ];
+        
+        NSString* st = [[ friend.name lowercaseString ] hasSuffix:@"twitter" ] ? SLServiceTypeTwitter : SLServiceTypeFacebook;
+        
+        SLComposeViewController* vc = [ SLComposeViewController composeViewControllerForServiceType:st ];
+        [ vc setInitialText:@"Check out #BoundingBandits, a fun new board game for the iPad! http://goo.gl/VvFkr" ];
+        [ vc addImage:[ UIImage imageNamed:@"img/Icon-72@2x" ]];
+        
+        [ self presentModalViewController:vc animated:YES ];
         return;
+        
+        self.inviteFriend = friend;
+        UIActionSheet* as = [[ UIActionSheet alloc ] initWithTitle:[ NSString stringWithFormat:@"Invite %@ to Bounding Bandits", friend.name ] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Send Invite" otherButtonTitles:@"Cancel", nil ];
+        
+        [ as showInView:self.view ];
     }
 
     FacebookFriend* friend = [((NSMutableArray*)[ self.objects objectAtIndex:indexPath.section ]) objectAtIndex:indexPath.row ];
@@ -253,6 +354,9 @@
         currentGame.rounds = [ NSMutableArray array ];
         
         [ self.gameDelegate selectGame:currentGame isNew:YES ];
+    }
+    else
+    {
     }
     
     /*
@@ -320,9 +424,12 @@
 
 -(UIView*)tableView:(UITableView *)_tableView viewForHeaderInSection:(NSInteger)section
 {
+    // 217, 30, 64
+    UIColor* startGradColor = [ UIColor colorWithRed:217/256.0 green:30/256.0 blue:64/256.0 alpha:1 ];//[ UIColor whiteColor ];
+    UIColor* gradColor = [ UIColor colorWithRed:217/256.0 green:30/256.0 blue:64/256.0 alpha:1 ];//[ UIColor colorWithRed:0.839 green:0.863 blue:0.898 alpha:1 ];
     CAGradientLayer *gradient = [ CAGradientLayer layer ];
-    gradient.frame = CGRectMake(0,0,_tableView.bounds.size.width,30);
-    gradient.colors = [ NSArray arrayWithObjects:(id)[[ UIColor whiteColor ] CGColor ], (id)[[ UIColor colorWithRed:0.839 green:0.863 blue:0.898 alpha:1 ] CGColor ], nil];
+    gradient.frame = CGRectMake(0,0,600,30);
+    gradient.colors = [ NSArray arrayWithObjects:(id)[startGradColor CGColor ], (id)[gradColor CGColor ], nil];
     
     UIView* backgroundView = [[ UIView alloc ] initWithFrame:CGRectMake(0, 0, 20, 30) ];
     UIView* containerView = [[ UIView alloc ] initWithFrame:CGRectMake(0, 0, 20, 31) ];
@@ -331,7 +438,7 @@
     
     textView.font = [ UIFont boldSystemFontOfSize:12 ];
     textView.backgroundColor = [ UIColor clearColor ];
-    textView.textColor = [ UIColor colorWithWhite:0 alpha:1 ];
+    textView.textColor = [ UIColor colorWithWhite:1 alpha:1 ];
     textView.text = [ self tableView:_tableView titleForHeaderInSection:section ];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -360,6 +467,8 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
+    if ([[ self sections ] count ] < 15) return nil;
+    
     NSMutableArray* s = [ NSMutableArray arrayWithArray:self.sections ];
     
     if ([ s count ])
@@ -379,11 +488,12 @@
         cell = [[ UITableViewCell alloc ] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BBPersonCell" ];
         cell.accessoryView = [[ UIImageView alloc ] initWithFrame:CGRectMake(0, 0, 50, 50) ];
         // cell.backgroundView = [[ UIImageView alloc ] initWithImage:[ UIImage imageNamed:@"img/cell-gradient.png" ]];
-        cell.backgroundColor =  [ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
+        cell.backgroundColor =  [UIColor colorWithWhite:0 alpha:0.4 ];//[ UIColor colorWithRed:0.173 green:0.18 blue:0.196 alpha:1 ];
         cell.detailTextLabel.backgroundColor = [ UIColor clearColor ];
         cell.textLabel.backgroundColor = [ UIColor clearColor ];
         cell.textLabel.textColor = [ UIColor whiteColor ];
         cell.textLabel.font = [ UIFont boldSystemFontOfSize:14 ];
+        cell.contentView.backgroundColor = cell.backgroundColor;
         
         UIView* spacer = [[ UIImageView alloc ] initWithImage:[ UIImage imageNamed:@"img/cell-border.png" ]];
         spacer.frame = CGRectMake(0, cell.bounds.size.height - 2, cell.bounds.size.width, 2);
@@ -400,13 +510,21 @@
     // cell.selectionStyle = UITableViewCellSelectionStyleGray;
     
     cell.textLabel.text = friend.name;
+    cell.detailTextLabel.text = friend.email;
     
      ((UIImageView*)cell.accessoryView).image = nil;
     
-    [ ((UIImageView*)cell.accessoryView) loadImageWithURL:[ NSURL URLWithString:friend.pictureUrl ] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:^
-     {
-         //[ self performSelectorOnMainThread:@selector(refreshRow:) withObject:indexPath waitUntilDone:NO ];
-     }];
+    if ([ friend.pictureUrl hasPrefix:@"img/" ])
+    {
+        [((UIImageView*)cell.accessoryView) setImage:[ UIImage imageNamed:friend.pictureUrl ]];
+    }
+    else
+    {
+        [ ((UIImageView*)cell.accessoryView) loadImageWithURL:[ NSURL URLWithString:friend.pictureUrl ] defaultImage:[ UIImage imageNamed:@"img/noface.png" ] onComplete:^
+         {
+             //[ self performSelectorOnMainThread:@selector(refreshRow:) withObject:indexPath waitUntilDone:NO ];
+         }];
+    }
     
     return cell;
 }
@@ -450,7 +568,31 @@
     NSArray* fbData = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_FBFriends ];
     NSArray* twData = [[ BBAppDelegate sharedDelegate ] getSetting:kBB_TWFriends ];
     
-    self.friends = [ NSMutableArray array ];
+    ABAddressBookRef addressBook = ABAddressBookCreate( );
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople( addressBook );
+    CFIndex nPeople = ABAddressBookGetPersonCount( addressBook );
+    NSMutableDictionary* emails = [ NSMutableDictionary dictionaryWithCapacity:nPeople ];
+    
+    for ( int i = 0; i < nPeople; i++ )
+    {
+        ABRecordRef ref = CFArrayGetValueAtIndex( allPeople, i );
+        NSString* firstName = [[ NSString stringWithFormat:@"%@", ABRecordCopyValue(ref, kABPersonFirstNameProperty) ] stringByTrimmingCharactersInSet:[ NSCharacterSet whitespaceCharacterSet ]];
+        NSString* lastName = [[ NSString stringWithFormat:@"%@", ABRecordCopyValue(ref, kABPersonLastNameProperty) ] stringByTrimmingCharactersInSet:[ NSCharacterSet whitespaceCharacterSet ]];
+        
+        ABMultiValueRef emRef = ABRecordCopyValue(ref, kABPersonEmailProperty);
+        NSArray* ems = (__bridge_transfer NSArray*)ABMultiValueCopyArrayOfAllValues(emRef);
+        CFRelease(emRef);
+        
+        for (NSString* email in ems)
+        {
+            [ emails setObject:email forKey:[ NSString stringWithFormat:@"%@ %@", firstName, lastName ]];
+        }
+    }
+    
+    CFRelease(allPeople);
+    CFRelease(addressBook);
+    
+    NSMutableArray* fs = [ NSMutableArray array ];
     NSMutableArray* ids = [ NSMutableArray array ];
     
     NSMutableDictionary* dict = [ NSMutableDictionary dictionaryWithCapacity:26 ];
@@ -467,28 +609,50 @@
         friend.userId = userId;
         friend.pictureUrl = [ NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", friend.userId ];
         
-        NSRange range = [ name rangeOfString:@" " ];
-        NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
+        /*
+        NSString* email = [ emails objectForKey:name ];
         
-        if (range.length)
+        if (email)
         {
-            lastChar = [[[ name substringFromIndex:range.location + 1 ] substringToIndex:1 ] uppercaseString ];
-        }
-        
-        NSMutableArray* group = [ dict objectForKey:lastChar ];
-        
-        if (!group)
-        {
-            group = [ NSMutableArray array ];
+            friend.email = email;
             
-            [ dict setValue:group forKey:lastChar ];
+            NSRange range = [ name rangeOfString:@" " ];
+            NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
+            
+            if (range.length)
+            {
+                lastChar = [[[ name substringFromIndex:range.location + 1 ] substringToIndex:1 ] uppercaseString ];
+            }
+            
+            NSMutableArray* group = [ dict objectForKey:lastChar ];
+            
+            if (!group)
+            {
+                group = [ NSMutableArray array ];
+                
+                [ dict setValue:group forKey:lastChar ];
+            }
+            
+            [ group addObject:friend ];
         }
+        */
         
-        [ group addObject:friend ];
-        
-        [self.friends addObject:friend ];
+        [ fs addObject:friend ];
         [ ids addObject:userId ];
     }
+    
+    NSMutableArray* invite = [ NSMutableArray array ];
+    FacebookFriend* twitter = [[ FacebookFriend alloc ] init ];
+    twitter.name = @"Invite from Twitter";
+    twitter.pictureUrl = @"img/tw.png";
+    [ invite addObject:twitter ];
+    
+    FacebookFriend* facebook = [[ FacebookFriend alloc ] init ];
+    facebook.name = @"Invite from Facebook";
+    facebook.pictureUrl = @"img/fb.png";
+    [ invite addObject:facebook ];
+    
+    [ dict setValue:invite forKey:@"INVITE FRIENDS" ];
     
     for (NSDictionary* item in twData)
     {
@@ -503,26 +667,35 @@
         friend.userId = userId;
         friend.pictureUrl = pictureUrl;
         
-        NSRange range = [ name rangeOfString:@" " ];
-        NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
+        /*
+        NSString* email = [ emails objectForKey:name ];
         
-        if (range.length)
+        if (email)
         {
-            lastChar = [[[ name substringFromIndex:range.location + 1 ] substringToIndex:1 ] uppercaseString ];
-        }
-        
-        NSMutableArray* group = [ dict objectForKey:lastChar ];
-        
-        if (!group)
-        {
-            group = [ NSMutableArray array ];
+            friend.email = email;
+
+            NSRange range = [ name rangeOfString:@" " ];
+            NSString* lastChar = [[ name substringToIndex:1 ] uppercaseString ];
             
-            [ dict setValue:group forKey:lastChar ];
+            if (range.length)
+            {
+                lastChar = [[[ name substringFromIndex:range.location + 1 ] substringToIndex:1 ] uppercaseString ];
+            }
+            
+            NSMutableArray* group = [ dict objectForKey:lastChar ];
+            
+            if (!group)
+            {
+                group = [ NSMutableArray array ];
+                
+                [ dict setValue:group forKey:lastChar ];
+            }
+            
+            [ group addObject:friend ];
         }
+         */
         
-        [ group addObject:friend ];
-        
-        [self.friends addObject:friend ];
+        [ fs addObject:friend ];
         [ ids addObject:userId ];
     }
     
@@ -546,13 +719,13 @@
     
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objs, NSError *error)
      {
-         NSMutableArray* activeFriends = [ self.objects objectAtIndex:0 ];
+         NSMutableArray* activeFriends = [ NSMutableArray array ];
          
          for (PFUser* user in objs)
          {
              NSString* facebookId = [ user objectForKey:@"facebookId" ];
              
-             for (FacebookFriend* friend in self.friends)
+             for (FacebookFriend* friend in fs)
              {
                  if ([ friend.userId isEqualToString:facebookId ])
                  {
@@ -563,6 +736,9 @@
              }
          }
          
+         [ self.objects replaceObjectAtIndex:0 withObject:activeFriends ];
+         
+         self.friends = fs;
          [ self.friends sortUsingSelector:@selector(sortByLoyalty:) ];
          [ self performSelectorOnMainThread:@selector(loadFriends) withObject:nil waitUntilDone:NO ];
      }];
@@ -576,7 +752,7 @@
     if (!self.isLoading)
     {
         self.forceRefresh = YES;
-        [ self loadData ];
+        [ self loadData:YES ];
     }
 }
 
@@ -595,6 +771,28 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     [self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+# pragma mark action sheet delegate
+
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    MFMailComposeViewController *picker = [[ MFMailComposeViewController alloc ] init ];
+    NSString *emailBody = [ NSString stringWithFormat:@"<html>Hey %@,<p>I would like to play you in a game on Bounding Bandits!</p></html>", self.inviteFriend.name ];
+    
+    [ picker setToRecipients:[ NSArray arrayWithObject:self.inviteFriend.email ]];
+    [ picker setSubject:@"Join me on Bounding Bandits" ];
+    [ picker setMessageBody:emailBody isHTML:YES ];
+    [ picker setModalPresentationStyle:UIModalPresentationFormSheet ];
+    [ picker setMailComposeDelegate:self ];
+    
+    [ self presentModalViewController:picker animated:YES ];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [ controller dismissModalViewControllerAnimated:YES ];
 }
 
 @end

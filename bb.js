@@ -30,20 +30,27 @@
             
     ];
  
-     var colors = [ 'rgb(176,101,185)', 'rgb(50,164,57)', 'rgb(216,136,56)', 'rgb(0,172,189)' ];
-     var pieceImages = [ 'img/piece-purple.png', 'img/piece-green.png', 'img/piece-orange.png', 'img/piece-blue.png' ];
+     var colors = [ 'rgb(176,101,185)', 'rgb(50,164,57)', 'rgb(230,70,100)', 'rgb(0,172,189)' ];
+     var pieceImages = [ 'img/piece-purple.png', 'img/piece-green.png', 'img/piece-red.png', 'img/piece-blue.png' ];
  //var pieceImagesHD = [ 'piece-purple@2x.png', 'piece-green@2x.png', 'piece-orange@2x.png', 'piece-blue@2x.png' ];
  var pieceImagesHD = {};
+ var tokenImagesHD = {};
  
  for (var i = 0; i < colors.length; ++i)
  {
-    pieceImagesHD[colors[i]] = new Image();
+ pieceImagesHD[colors[i]] = new Image();
+ tokenImagesHD[colors[i]] = new Image()
  }
  
  pieceImagesHD[colors[0]].src = 'img/piece-purple@2x.png';
  pieceImagesHD[colors[1]].src = 'img/piece-green@2x.png';
- pieceImagesHD[colors[2]].src = 'img/piece-orange@2x.png';
+ pieceImagesHD[colors[2]].src = 'img/piece-red@2x.png';
  pieceImagesHD[colors[3]].src = 'img/piece-blue@2x.png';
+ 
+ tokenImagesHD[colors[0]].src = 'img/goal-purple@2x.png';
+ tokenImagesHD[colors[1]].src = 'img/goal-green@2x.png';
+ tokenImagesHD[colors[2]].src = 'img/goal-red@2x.png';
+ tokenImagesHD[colors[3]].src = 'img/goal-blue@2x.png';
     
     Array.prototype.select = function(lambda)
     {
@@ -454,12 +461,14 @@
         this.id = id;
     	this.color = colors[groupId];
     	this.groupId = groupId;
+        this.image = tokenImagesHD[this.color];
     	
     	this.render = function (context, x, y, size) {
-    	    var hSize = size / 4;
+    	    var hSize = 6;
     	    
-    		context.ctx.fillStyle = this.color;
-    		context.ctx.fillRect(x + hSize, y + hSize, size - 2*hSize, size - 2*hSize);
+            context.ctx.fillStyle = this.color;
+            context.ctx.fillRect(x + hSize, y + hSize, size - 2*hSize, size - 2*hSize);
+            context.ctx.drawImage(this.image, x + hSize, y + hSize, size - 2*hSize, size - 2*hSize);
     	};
     	
     	this.clone = function ( )
@@ -586,11 +595,13 @@
         {
             var tokenCont = document.createElement('div');;
             tokenCont.id = id;
-            var token = document.createElement('div');
- token.style['background-color'] = color;
- //token.style['background-image'] = 'url(' + pieceImagesHD[color] + ')';
- token.style['background-size'] = '100%';
- token.style['background-height'] = '100%';
+             var token = document.createElement('div');
+             token['data-color'] = color;
+             token.style['background-color'] = color;
+
+            token.style['background-image'] = 'url(' + tokenImagesHD[color].src + ')';
+            token.style['background-size'] = '100%';
+            token.style['background-height'] = '100%';
             // token.innerHTML = id;
 
             tokenCont.appendChild(token);
@@ -1242,12 +1253,28 @@
                 _movers.push({ groupId: this.tiles[i].piece.groupId, position: i });
             }
         }
+	
+        var _targets = Array();
+        
+        for (var i = 0; i < this.targets.length; ++i)
+        {
+            _targets.push(new target(this.targets[i].id, this.targets[i].groupId));
+	    _targets[i].image = null;
+        }
+	
+	var at = null;
+	
+	if (this.activeTarget)
+	{
+	    at = this.activeTarget.clone();
+	    at.image = null;
+	}
         
         return {
             'boardPieces': this.activeBoardPieces,
             'movers': _movers,
-            'targets': this.targets,
-            'activeTarget': this.activeTarget
+            'targets': _targets,
+            'activeTarget': at
         };
     };
     
